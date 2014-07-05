@@ -3,10 +3,10 @@ __pycache__/
 *.py[cod]
 
 # private files/dirs
-.json
-.p
-.csv
-.log
+*.json
+*.p
+*.csv
+*.log
 logs/
 private/
 docs/
