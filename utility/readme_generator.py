@@ -30,8 +30,8 @@ def generate_markdown(folder_path, title):
     for file in py_files:
         filename = file + '.py'
         docstring = __import__(file).__doc__
-        markdown += '---\n`{}`\n\n{}\n\n'.format(filename, docstring)
-    markdown.strip('---')
+        markdown += '\n`{}`\n\n{}\n\n---'.format(filename, docstring)
+    markdown = markdown.strip('---')
     return markdown
 
 
