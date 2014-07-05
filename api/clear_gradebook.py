@@ -1,4 +1,6 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+"""Clear the gradebook in all sections section_ids"""
+
 
 import qs
 from tqdm import *

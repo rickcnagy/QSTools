@@ -1,4 +1,8 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+"""Delete assignments with specified ids from the specified sections.
+Put in all of the sections known and assignments known and the script will match them.
+This has the advantage that the specific assignment-section mapping doesn't have to be known.
+"""
 
 import qs
 import api_logging

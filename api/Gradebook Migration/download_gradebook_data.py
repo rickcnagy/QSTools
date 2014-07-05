@@ -1,15 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""
-Directions:
-(Q1 is old semester, Q2 is new semester)
-- activate Q1
-- run this script to download all assignments from Q1 in the time range
-- activate Q2
-- save each gradebook in QS
-- run upload_gradebook_data.py to upload to Q2
-- reactivate Q1
-- run delete_assignments.py to delete the assignments posted to Q2
-"""
+"""Download gradebook data for gradebook migration."""
 
 from tqdm import *
 from datetime import datetime
