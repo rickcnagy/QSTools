@@ -1,5 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Check that SOURCE_SEMESTER matches the current semester in both enrollment and sections."""
+"""Putting back. Check that SOURCE_SEMESTER matches the current semester in both enrollment and sections."""
 
 
 import qs
