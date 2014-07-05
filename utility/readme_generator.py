@@ -47,7 +47,7 @@ def generate_markdown(folder_path, title):
     if not doc: return ''
 
     markdown = '{}\n===\n\n'.format(title) if title else ''
-    for filename in sorted([i.lower() for i in doc]):
+    for filename in sorted(doc.keys()):
         docstring = doc[filename]
         if docstring == 'folder':
             filename = filename + '/'
