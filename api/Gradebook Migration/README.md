@@ -1,5 +1,9 @@
-Directions
+Gradebook Migration
 ===
+Migrate gradebook data between semesters
+
+Directions
+---
 (Q1 is old semester, Q2 is new semester)
 
 1. activate Q1

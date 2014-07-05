@@ -23,3 +23,7 @@ Check that all sections in source_semester have a match in the active semester
 ---
 Fills every assignment in every section with fake gradebook data - useful
 for creating fake gradebook data for demo schools or support trial schools.
+
+Gradebook Migration/
+---
+Migrate gradebook data between semesters
