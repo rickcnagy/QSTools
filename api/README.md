@@ -3,15 +3,15 @@ API Scripts
 
 ####`Gradebook Import/`
 
-folder
+
 
 ####`Gradebook Migration/`
 
-folder
+
 
 ####`Report Card Grades to Transcripts/`
 
-folder
+
 
 ####`check_section_and_enrollment_match.py`
 

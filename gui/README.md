@@ -8,11 +8,11 @@ GUI Scripts
 
 ####`Report Cards/`
 
-folder
+
 
 ####`Transcripts/`
 
-folder
+
 
 ####`clearEnrollments.js`
 

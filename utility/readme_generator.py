@@ -51,6 +51,7 @@ def generate_markdown(folder_path, title):
         docstring = doc[filename]
         if docstring == 'folder':
             filename = filename + '/'
+            docstring = ''
         markdown += '####`{}`\n\n{}\n\n'.format(filename, docstring)
     markdown = markdown.strip()
     return markdown
