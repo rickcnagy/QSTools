@@ -46,7 +46,7 @@ def generate_markdown(folder_path, title):
     markdown = '{}\n===\n\n'.format(title) if title else ''
     for filename in sorted(doc.keys()):
         docstring = doc[filename]
-        markdown += '#####`{}`\n\n{}\n\n'.format(filename, docstring)
+        markdown += '####`{}`\n\n{}\n\n'.format(filename, docstring)
     markdown = markdown.strip()
     return markdown
 
