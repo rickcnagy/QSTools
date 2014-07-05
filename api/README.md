@@ -3,7 +3,7 @@ API Scripts
 ---
 `check_section_and_enrollment_match.py`
 
-Putting back. Check that SOURCE_SEMESTER matches the current semester in both enrollment and sections.
+Done? Check that SOURCE_SEMESTER matches the current semester in both enrollment and sections.
 
 ---
 `check_section_name_match.py`
