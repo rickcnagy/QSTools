@@ -1,5 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Check that all sections in source_semester have a match in the active semester"""
+"""Check that all sections in source_semester have an exact match in the active semester"""
 
 
 

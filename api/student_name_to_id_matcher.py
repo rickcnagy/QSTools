@@ -1,9 +1,9 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+"""Take a CSV with student names and add a student ID column with Student IDs matched by name"""
+
 
 import qs
 import csv_tools
-import string
-import random
 
 csv_filename = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Gradebook Import/INTVLA/INTVLA Grades to Upload.csv'
 
@@ -18,10 +18,6 @@ def main():
     for row in csv:
         row['Student ID'] = student_dir[row['Student Name']]
     csv.save()
-
-
-def rand_string(size=5, chars=string.ascii_letters + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
 
 
 if __name__ == '__main__':

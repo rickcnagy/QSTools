@@ -1,4 +1,7 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+"""Check that all sections in a term have a match by name in the other term.
+Useful for Zeus related scripts.
+"""
 
 import qs
 
