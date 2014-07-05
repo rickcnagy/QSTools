@@ -1,3 +1,7 @@
+/**
+ * Save all Gradebooks visible in the Gradebook module.
+ */
+
 var iter = new QSGradebookIterator(function()
     this.click("Edit it anyways");
     this.click("Save");

@@ -4,8 +4,9 @@
 //  2014-07-03
 //
 
-/* Import inquiries from QSImporter
- * QSImoprter should have a JSONArray, each with an object with fields
+/**
+ * Import inquiries from QSImporter
+ * QSImporter should have a JSONArray, each with an object with fields
  * matching the Add Inquiry Page
  */
 

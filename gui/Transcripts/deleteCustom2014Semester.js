@@ -1,8 +1,10 @@
-/*
- * Check that all the subjects have been hidden correctly - by number.
+/**
+ * Delete custom semesters on transcripts from a specific year
  */
 
-var yearBoxSel = "td[style='width: 286px; padding: 0px;']:contains(2014)";
+year = '2014'
+
+var yearBoxSel = "td[style='width: 286px; padding: 0px;']:contains(" + year + ")";
 var students = QSImporter.data();
 
 var iter = new QSIterator("*", function() {

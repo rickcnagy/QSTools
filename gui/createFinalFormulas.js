@@ -1,3 +1,7 @@
+/**
+ * Create a final formula that consists of Assignments in each gradebook
+ */
+
 new QSGradebookIterator(function() {
     if ($(".formulaColumn").length) return;
     debugger;

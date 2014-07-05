@@ -1,140 +1,37 @@
 GUI Scripts
 ===
 
-####`AllEnrollments.js`
+####`Copy & Paste Switches.js`
+
+* Copy & Paste switches between Zeus templates.
+#TODO: move to qs-supporttools
+
+####`Report Cards`
 
 
 
-####`ClearEnrollments - old.js`
-
-
-
-####`DeleteSubjects - old.js`
-
-
-
-####`EditSubjectCredits.js`
-
-
-
-####`EnrolledCount.js`
-
-
-
-####`GetEnrollments.js`
-
-
-
-####`SaveAllGradebooks - old.js`
-
-
-
-####`SaveAllStudentRecords.js`
-
-
-
-####`Select all List items.js`
-
-
-
-####`SetEnrollments.js`
-
-
-
-####`TotalEnrollments.js`
-
-
-
-####`addCustomSubjects(SA).js`
-
-
-
-####`addSwitch.js`
-
-
-
-####`cavsCJSFhecker.js`
-
-
-
-####`checkHiddenSubjects(SA).js`
+####`Transcripts`
 
 
 
 ####`clearEnrollments.js`
 
-
-
-####`clickAllComments.js`
-
-
-
-####`copy paste switches.js`
-
-
+* Clear all enrollmonts visible on the Global Subject Setup screen.
 
 ####`createFinalFormulas.js`
 
-
-
-####`deleteCustom2014Semester(SA).js`
-
-
+* Create a final formula that consists of Assignments in each gradebook
 
 ####`deleteSubjects.js`
 
-
-
-####`disableSiblingBoxForParents.js`
-
-
-
-####`enrollmentImporter.js`
-
-
-
-####`hideSubjects(SA).js`
-
-
-
-####`importApplicants.js`
-
-
-
-####`importCustomTranscriptData(SA).js`
-
-
+* Delete all subjects visible on the screen. Includes clearing enrollment.
 
 ####`importInquiries.js`
 
-
-
-####`intvlaTranscriptExport.js`
-
-
-
-####`openSuperUser.js`
-
-
-
-####`removeTagFromName - All Semesters.js`
-
-
-
-####`removeTagFromName.js`
-
-
+* Import inquiries from QSImporter
+QSImporter should have a JSONArray, each with an object with fields
+matching the Add Inquiry Page
 
 ####`saveAllGradebooks.js`
 
-
-
-####`setMarksFromDefaultVal - old.js`
-
-
-
-####`shekinahRefreshAverages.js`
-
-
-
-####`ticketsToMysteries.js`
+* Save all Gradebooks visible in the Gradebook module.

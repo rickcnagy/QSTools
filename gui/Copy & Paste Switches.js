@@ -1,3 +1,8 @@
+/**
+ * Copy & Paste switches between Zeus templates.
+ * #TODO: move to qs-supporttools
+ */
+
 var switches = [];
 $(".easySelectorWidget span").each(function() {
     switches.push($(this).text());

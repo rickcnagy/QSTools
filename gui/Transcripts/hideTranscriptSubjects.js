@@ -1,3 +1,7 @@
+/**
+ * Hide custom subjects in transcripts
+ */
+
 var yearBoxSel = "td[style='width: 286px; padding: 0px;']";
 var subjectSel = "div[style='padding-bottom: 0px; line-height: normal; font-family: Verdana; font-size: 8px; color: rgb(0, 0, 0);']";
 

@@ -25,6 +25,7 @@ def generate_markdown(folder_path, title):
     sys.path.append(folder_path)
     walk = next(i for i in os.walk(folder_path))
     folder_path = walk[0]
+    dirs = walk[1]
     filenames = walk[2]
     filenames = list(set(filenames))
     py_files = [i for i in filenames if i[-2:] == 'py']
@@ -36,6 +37,8 @@ def generate_markdown(folder_path, title):
         docstring = docstring or ''
         doc[filename] = docstring
 
+    for dirname in dirs:
+        doc[dirname] = ''
     for filename in py_files:
         set_docstring(filename, parse_py(filename))
     for filename in js_files:

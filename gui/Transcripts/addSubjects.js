@@ -1,5 +1,5 @@
-/*
- * Check that all the subjects have been hidden correctly - by number.
+/**
+ * Add a set number of transcript subjects to a set of students.
  */
 
 var yearBoxSel = "td[style='width: 286px; padding: 0px;']";

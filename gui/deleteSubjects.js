@@ -1,3 +1,7 @@
+/**
+ * Delete all subjects visible on the screen. Includes clearing enrollment.
+ */
+
 var iter = new QSIterator(".dttd .linkWidget", function() {
     if (this.elem.text() !== "0") {
         this.elem.click();
