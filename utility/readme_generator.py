@@ -38,7 +38,7 @@ def generate_markdown(folder_path, title):
         doc[filename] = docstring
 
     for dirname in dirs:
-        doc[dirname] = ''
+        doc[dirname] = 'folder'
     for filename in py_files:
         set_docstring(filename, parse_py(filename))
     for filename in js_files:
@@ -49,6 +49,8 @@ def generate_markdown(folder_path, title):
     markdown = '{}\n===\n\n'.format(title) if title else ''
     for filename in sorted(doc.keys()):
         docstring = doc[filename]
+        if docstring == 'folder':
+            filename = filename + '/'
         markdown += '####`{}`\n\n{}\n\n'.format(filename, docstring)
     markdown = markdown.strip()
     return markdown
