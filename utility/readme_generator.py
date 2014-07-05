@@ -8,6 +8,9 @@ Command Line Args (in order):
 
 import os
 import sys
+import re
+
+file_extensions = ['py', 'js']
 
 
 def main():
@@ -21,24 +24,52 @@ def main():
 def generate_markdown(folder_path, title):
     sys.path.append(folder_path)
     walk = next(i for i in os.walk(folder_path))
+    folder_path = walk[0]
     filenames = walk[2]
-    py_files = [os.path.splitext(i)[0] for i in filenames if '.py' in i]
-    py_files = list(set(py_files))
-    py_files.sort()
+    filenames = list(set(filenames))
+    py_files = [i for i in filenames if i[-2:] == 'py']
+    js_files = [i for i in filenames if i[-2:] == 'js']
 
-    markdown = '{}\n===\n'.format(title) if title else ''
-    for file in py_files:
-        filename = file + '.py'
-        docstring = __import__(file).__doc__
-        markdown += '\n`{}`\n\n{}\n\n---'.format(filename, docstring)
-    markdown = markdown.strip('---')
+    # {filename: docstring}
+    doc = {}
+    def set_docstring(filename, docstring):
+        docstring = docstring or ''
+        doc[filename] = docstring
+
+    for filename in py_files:
+        set_docstring(filename, parse_py(filename))
+    for filename in js_files:
+        set_docstring(filename, parse_js(filename, folder_path))
+
+    if not doc: return ''
+
+    markdown = '{}\n===\n\n'.format(title) if title else ''
+    for filename in sorted(doc.keys()):
+        docstring = doc[filename]
+        markdown += '##`{}`\n\n{}\n\n'.format(filename, docstring)
+    markdown = markdown.strip()
     return markdown
 
 
+def parse_py(filename):
+    mod_name = filename.replace('.py', '')
+    return __import__(mod_name).__doc__
+
+
+def parse_js(filename, folder_path):
+    """Matches javadocs like: /** this is a javadoc! */"""
+    with open(folder_path + '/' + filename) as f:
+        match = re.findall(r'/\*\*\s+(.+)\s+\*\/', f.read(), flags=re.DOTALL)
+        if match:
+            javadoc = match[0]
+            javadoc = re.sub(r'\n\s+\* ', '\n', javadoc).strip()
+            return javadoc
+
+
 def test():
-    generate_markdown(
-        '/Users/Rick/Dropbox/code/QuickSchools/QSTools/api',
-        'API Scripts',
+    print generate_markdown(
+        '/Users/Rick/code/QuickSchools/QSTools/gui',
+        'GUI Scripts',
     )
 
 
