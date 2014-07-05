@@ -1,7 +1,7 @@
 QSTools
 =======
 
-A suite of tools for programmatically interacting with the QuickSchools API and GUI.
+A suite of tools for programmatically interacting efficiently with the QuickSchools API and GUI.
 
 
 Rules:
