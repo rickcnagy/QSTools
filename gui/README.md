@@ -1,140 +1,140 @@
 GUI Scripts
 ===
 
-######`AllEnrollments.js`
+#####`AllEnrollments.js`
 
 
 
-######`ClearEnrollments - old.js`
+#####`ClearEnrollments - old.js`
 
 
 
-######`DeleteSubjects - old.js`
+#####`DeleteSubjects - old.js`
 
 
 
-######`EditSubjectCredits.js`
+#####`EditSubjectCredits.js`
 
 
 
-######`EnrolledCount.js`
+#####`EnrolledCount.js`
 
 
 
-######`GetEnrollments.js`
+#####`GetEnrollments.js`
 
 
 
-######`SaveAllGradebooks - old.js`
+#####`SaveAllGradebooks - old.js`
 
 
 
-######`SaveAllStudentRecords.js`
+#####`SaveAllStudentRecords.js`
 
 
 
-######`Select all List items.js`
+#####`Select all List items.js`
 
 
 
-######`SetEnrollments.js`
+#####`SetEnrollments.js`
 
 
 
-######`TotalEnrollments.js`
+#####`TotalEnrollments.js`
 
 
 
-######`addCustomSubjects(SA).js`
+#####`addCustomSubjects(SA).js`
 
 
 
-######`addSwitch.js`
+#####`addSwitch.js`
 
 
 
-######`cavsCJSFhecker.js`
+#####`cavsCJSFhecker.js`
 
 
 
-######`checkHiddenSubjects(SA).js`
+#####`checkHiddenSubjects(SA).js`
 
 
 
-######`clearEnrollments.js`
+#####`clearEnrollments.js`
 
 
 
-######`clickAllComments.js`
+#####`clickAllComments.js`
 
 
 
-######`copy paste switches.js`
+#####`copy paste switches.js`
 
 
 
-######`createFinalFormulas.js`
+#####`createFinalFormulas.js`
 
 
 
-######`deleteCustom2014Semester(SA).js`
+#####`deleteCustom2014Semester(SA).js`
 
 
 
-######`deleteSubjects.js`
+#####`deleteSubjects.js`
 
 
 
-######`disableSiblingBoxForParents.js`
+#####`disableSiblingBoxForParents.js`
 
 
 
-######`enrollmentImporter.js`
+#####`enrollmentImporter.js`
 
 
 
-######`hideSubjects(SA).js`
+#####`hideSubjects(SA).js`
 
 
 
-######`importApplicants.js`
+#####`importApplicants.js`
 
 
 
-######`importCustomTranscriptData(SA).js`
+#####`importCustomTranscriptData(SA).js`
 
 
 
-######`importInquiries.js`
+#####`importInquiries.js`
 
 
 
-######`intvlaTranscriptExport.js`
+#####`intvlaTranscriptExport.js`
 
 
 
-######`openSuperUser.js`
+#####`openSuperUser.js`
 
 
 
-######`removeTagFromName - All Semesters.js`
+#####`removeTagFromName - All Semesters.js`
 
 
 
-######`removeTagFromName.js`
+#####`removeTagFromName.js`
 
 
 
-######`saveAllGradebooks.js`
+#####`saveAllGradebooks.js`
 
 
 
-######`setMarksFromDefaultVal - old.js`
+#####`setMarksFromDefaultVal - old.js`
 
 
 
-######`shekinahRefreshAverages.js`
+#####`shekinahRefreshAverages.js`
 
 
 
-######`ticketsToMysteries.js`
+#####`ticketsToMysteries.js`
