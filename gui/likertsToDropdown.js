@@ -3,6 +3,7 @@
  * This maintains the value in each criteria, but makes what was a likert value
  * into a drop down.
  * This requires that ALL criteria in each criteria set is a Likert.
+ * First written for lapazschool (#32879)
  */
 
 var criteriaSel = "div[style='padding-bottom: 0px; line-height: normal; font-family: Arial; font-size: 12px; color: rgb(0, 0, 0); min-height: 1em;']";
