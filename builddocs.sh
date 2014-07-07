@@ -6,8 +6,24 @@
 source ~/.bash_profile
 wd=$(pwd);
 
-'./utility/readme_generator.py' "$wd/api" "API Scripts"
-git add api/README.md
+# params: directory, name
+function build_doc {
+	dir="$wd$1"
+	name=$2
+	'./utility/readme_generator.py' "$dir" $name
+	if [ $? -ne 0 ]; then
+		echo "Doc build failed for dir: $dir" > ./build.log
+		exit 1;
+	fi
+}
 
-'./utility/readme_generator.py' "$wd/gui" "GUI Scripts"
-git add gui/README.md
+function finished {
+	d=$(date)
+	echo "Docs built successfully on $d" > ./build.log
+}
+
+build_doc '/api' 'API Scripts'
+build_doc '/gui' 'GUI Scripts'
+build_doc '/gui/Report Cards' 'Report Card GUI Scripts'
+build_doc '/gui/Transcripts' 'Transcript GUI Scripts'
+finished
