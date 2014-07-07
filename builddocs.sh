@@ -15,6 +15,7 @@ function build_doc {
 		echo "Doc build failed for dir: $dir" > ./build.log
 		exit 1;
 	fi
+	git add "./$1/README.md"
 }
 
 function finished {

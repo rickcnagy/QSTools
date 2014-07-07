@@ -23,7 +23,7 @@ GUI Scripts
 
 ####[`likertsToDropdown.js`](../gui/likertsToDropdown.js)
 
- Convert Likerts to dropdowns. This maintains the value in each criteria, but makes what was a likert value into a drop down. This requires that ALL criteria in each criteria set is a Likert. 
+ Convert Likerts to dropdowns. This maintains the value in each criteria, but makes what was a likert value into a drop down. This requires that ALL criteria in each criteria set is a Likert. First written for lapazschool (\#32879) 
 
 ####[`saveAllGradebooks.js`](../gui/saveAllGradebooks.js)
 
