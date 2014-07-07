@@ -10,7 +10,7 @@ wd=$(pwd);
 function build_doc {
 	dir="$wd$1"
 	name=$2
-	'./utility/readme_generator.py' "$dir" $name
+	'./utility/readme_generator.py' "$dir" "$name"
 	if [ $? != 0 ]; then
 		echo "Doc build failed for dir: $dir" > ./build.log
 		exit 1;
@@ -19,7 +19,7 @@ function build_doc {
 
 function finished {
 	d=$(date)
-	echo "Docs built successfully on $d" > ./build.log
+	echo "All docs built successfully on $d" > ./build.log
 }
 
 build_doc '/api' 'API Scripts'

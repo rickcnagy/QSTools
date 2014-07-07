@@ -1,4 +1,4 @@
-Transcript
+Transcript GUI Scripts
 ===
 
 ####[`addSubjects.js`](../gui/Transcripts/addSubjects.js)

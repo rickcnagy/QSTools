@@ -1,4 +1,4 @@
-API
+API Scripts
 ===
 
 ####[`check_section_and_enrollment_match.py`](../api/check_section_and_enrollment_match.py)

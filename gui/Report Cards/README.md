@@ -1,4 +1,4 @@
-Report
+Report Card GUI Scripts
 ===
 
 ####[`importRCGrades(CDSG).js`](../gui/Report Cards/importRCGrades(CDSG).js)
