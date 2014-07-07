@@ -33,6 +33,7 @@ def generate_markdown(folder_path, title):
 
     # {filename: docstring}
     doc = {}
+
     def set_docstring(filename, docstring):
         docstring = docstring or ''
         doc[filename] = docstring
@@ -69,7 +70,8 @@ def parse_js(filename, folder_path):
         if match:
             javadoc = match[0]
             javadoc = javadoc.replace('*', '')
-            javadoc = re.sub(r'\n\s+ ', '\n ', javadoc).strip()
+            javadoc = re.sub(' +', ' ', javadoc)
+            javadoc = re.sub(r'\n\s+', '\n\n', javadoc).strip()
             return javadoc
 
 
