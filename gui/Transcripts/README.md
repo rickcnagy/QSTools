@@ -1,14 +1,14 @@
 Transcript GUI Scripts
 ===
 
-####[`addSubjects.js`](../gui/Transcripts/addSubjects.js)
+####[`addCustomSubjects.js`](../gui/Transcripts/addCustomSubjects.js)
 
- Add a set number of transcript subjects to a set of students. 
+ Add a set number of transcript subjects to a set of students by student name. QSImporter's data should be like: `[{name: Rick, subjects:[subjectName1, subjectName2]}] 
 
-####[`deleteCustom2014Semester.js`](../gui/Transcripts/deleteCustom2014Semester.js)
+####[`deleteCustomSemester.js`](../gui/Transcripts/deleteCustomSemester.js)
 
- Delete custom semesters on transcripts from a specific year 
+ Delete custom semesters on transcripts with a specific string in the year header box. For instance, to delete all the subjects in 2014, set `deleteString` to 2014. 
 
-####[`hideTranscriptSubjects.js`](../gui/Transcripts/hideTranscriptSubjects.js)
+####[`hideSubjects.js`](../gui/Transcripts/hideSubjects.js)
 
- Hide custom subjects in transcripts
+ Hide a specific subjects on transcripts by subject name. QSImporter's data should be like so: `[{name: Rick, subjects: [subjectName1, subjectName2]}]`

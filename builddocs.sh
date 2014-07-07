@@ -24,7 +24,6 @@ function finished {
 
 build_doc '/api' 'API Scripts'
 build_doc '/gui' 'GUI Scripts'
-build_doc '/gui/Report Cards' 'Report Card GUI Scripts'
 build_doc '/gui/Transcripts' 'Transcript GUI Scripts'
 build_doc '/utility' 'Utility Scripts'
 build_doc '/modules' 'QSTools Modules'

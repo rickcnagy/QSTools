@@ -1,5 +1,7 @@
 /**
- * Add a set number of transcript subjects to a set of students.
+ * Add a set number of transcript subjects to a set of students by student name.
+ * QSImporter's data should be like:
+ * `[{name: Rick, subjects:[subjectName1, subjectName2]}]
  */
 
 var yearBoxSel = "td[style='width: 286px; padding: 0px;']";
@@ -14,6 +16,11 @@ var iter = new QSIterator("*", function() {
     console.log("Starting student", student)
     $(".dttd:contains(" + student.name + ")").click();
     this.afterLoad(function() {
+        var yearBoxButton = $(yearBoxSel).last();
+        student.subjects.forEach(function(subjectName) {
+            // TODO: actually add the subject by name by clicking yearBoxButton
+        })
+
         var yearBox = $(yearBoxSel).eq(-2);
         $(emptySubjectNameSel).filter(isBlank).each(enterSpace);
         yearBox.find(emptyGradeSel)

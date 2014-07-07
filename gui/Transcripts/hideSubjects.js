@@ -1,5 +1,7 @@
 /**
- * Hide custom subjects in transcripts
+ * Hide a specific subjects on transcripts by subject name.
+ * QSImporter's data should be like so:
+ * `[{name: Rick, subjects: [subjectName1, subjectName2]}]`
  */
 
 var yearBoxSel = "td[style='width: 286px; padding: 0px;']";
@@ -11,7 +13,7 @@ new QSIterator("*", function() {
     var student = students[this.currentIndex];
     $(".dttd:contains(" + student.Name + ")").click();
     this.afterLoad(function() {
-        var subjects = student.Subjects;
+        var subjects = student.subjects;
         var subjectIter = new QSIterator("*", function() {
             var subjectName = subjects[this.currentIndex];
             var yearBox = $(yearBoxSel).eq(-2);

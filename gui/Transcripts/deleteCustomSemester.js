@@ -1,10 +1,11 @@
 /**
- * Delete custom semesters on transcripts from a specific year
+ * Delete custom semesters on transcripts with a specific string in the year header box.
+ * For instance, to delete all the subjects in 2014, set `deleteString` to 2014.
  */
 
-year = '2014'
+deleteString = '2014'
 
-var yearBoxSel = "td[style='width: 286px; padding: 0px;']:contains(" + year + ")";
+var yearBoxSel = "td[style='width: 286px; padding: 0px;']:contains(" + deleteString + ")";
 var students = QSImporter.data();
 
 var iter = new QSIterator("*", function() {

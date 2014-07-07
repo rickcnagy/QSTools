@@ -5,7 +5,7 @@
 //
 
 /**
- * Import inquiries from QSImporter
+ * Import inquiries from QSImporter.
  * QSImporter should have a JSONArray, each with an object with fields
  * matching the Add Inquiry Page
  */
