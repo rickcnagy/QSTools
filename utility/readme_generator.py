@@ -68,7 +68,8 @@ def parse_js(filename, folder_path):
         match = re.findall(r'/\*\*\s+(.+)\s+\*\/', f.read(), flags=re.DOTALL)
         if match:
             javadoc = match[0]
-            javadoc = re.sub(r'\n\s+\* ', '\n', javadoc).strip()
+            javadoc = javadoc.replace('*', '')
+            javadoc = re.sub(r'\n\s+ ', '\n ', javadoc).strip()
             return javadoc
 
 
