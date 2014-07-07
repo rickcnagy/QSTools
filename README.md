@@ -13,6 +13,6 @@ A toolset for programmatically interacting with the QuickSchools API and GUI qui
     * [**modules**](../master/modules): Files that can be *imported*, *included*, etc in scripts in other folders. Provides boilerplate code to make scripts simpler. This folder should be added to your `PYTHONPATH` if you want to run scripts locally.
     * [**utility**](../master/utility): Anything that you run locally that’s a utility - like converting stuff, counting stuff, etc. These generally don't rely on QSTools modules (though can) but more just are useful utilities for automating things locally.
     * [**deprecated**](../master/deprecated): When something changes in the API, GUI, etc to make a script either useless or impossible, it is moved here. These scripts are here just for archive purposes and won't be maintained.
-    * [**fun**](../master/fun): Fun stuff, like changing the labels for `Tickets` on Zendesk to `Mysteries` :smiley:
+    * [**fun**](../master/fun): Fun stuff, like changing the labels on Zendesk for `Tickets` to `Mysteries` :smiley:
 * If a script has a docstring at the top, it will not be deleted. Instead, it will be maintained to continue to match that docstring, even if the implementation completely changes.
    * Furthermore, in these "public" scripts, the implementation will be kept up to date to ensure that they can be used quickly and reliably under a deadline.
