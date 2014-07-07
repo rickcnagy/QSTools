@@ -1,4 +1,4 @@
-GUI Scripts
+GUI
 ===
 
 ####[`Copy & Paste Switches.js`](../gui/Copy & Paste Switches.js)

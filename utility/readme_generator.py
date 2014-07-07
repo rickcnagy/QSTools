@@ -25,6 +25,7 @@ def main():
 
 def generate_markdown(folder_path, title):
     sys.path.append(folder_path)
+    print folder_path
     walk = next(i for i in os.walk(folder_path))
     folder_path = walk[0]
     dirs = walk[1]
@@ -48,8 +49,8 @@ def generate_markdown(folder_path, title):
 
 def test():
     print generate_markdown(
-        '/Users/Rick/code/QuickSchools/QSTools/gui',
-        'GUI Scripts',
+        '/Users/Rick/code/QuickSchools/QSTools/gui/Report Cards',
+        'API Scripts',
     )
 
 
@@ -106,7 +107,7 @@ class ScriptEntry(ReadmeEntry):
             return self.javadoc()
 
     def py_docstring(self):
-        mod_name = filename.replace('.py', '')
+        mod_name = self.name.replace('.py', '')
         return __import__(mod_name).__doc__
 
     def javadoc(self):
