@@ -62,8 +62,11 @@ class ReadmeEntry(object):
     def key(self):
         return ''.join([i.lower() for i in self.name if i.isalnum()])
 
+    def title(self):
+        return self.name
+
     def md_title(self):
-        return '[`{}`]({})'.format(self.name, self.repo_link())
+        return '[`{}`]({})'.format(self.title(), self.repo_link())
 
     def repo_link(self):
         path = self.folder_path.split('/')

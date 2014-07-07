@@ -17,10 +17,10 @@ GUI Scripts
 
  Import inquiries from QSImporter QSImporter should have a JSONArray, each with an object with fields matching the Add Inquiry Page 
 
-####[`Report Cards`](../gui/Report Cards)
+####[`Report Cards/`](../gui/Report Cards)
 
 ####[`saveAllGradebooks.js`](../gui/saveAllGradebooks.js)
 
  Save all Gradebooks visible in the Gradebook module. 
 
-####[`Transcripts`](../gui/Transcripts)
+####[`Transcripts/`](../gui/Transcripts)
