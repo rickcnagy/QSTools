@@ -25,7 +25,6 @@ def main():
 
 def generate_markdown(folder_path, title):
     sys.path.append(folder_path)
-    print folder_path
     walk = next(i for i in os.walk(folder_path))
     folder_path = walk[0]
     dirs = walk[1]

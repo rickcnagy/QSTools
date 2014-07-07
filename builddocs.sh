@@ -11,7 +11,7 @@ function build_doc {
 	dir="$wd$1"
 	name=$2
 	'./utility/readme_generator.py' "$dir" $name
-	if [ $? -ne 0 ]; then
+	if [ $? != 0 ]; then
 		echo "Doc build failed for dir: $dir" > ./build.log
 		exit 1;
 	fi
