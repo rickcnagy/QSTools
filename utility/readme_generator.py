@@ -70,8 +70,8 @@ def parse_js(filename, folder_path):
         if match:
             javadoc = match[0]
             javadoc = javadoc.replace('*', '')
-            javadoc = re.sub(' +', ' ', javadoc)
-            javadoc = re.sub(r'\n\s+', '\n\n', javadoc).strip()
+            javadoc = javadoc.replace('#', '\#')
+            javadoc = re.sub('\s+', ' ')
             return javadoc
 
 
