@@ -13,9 +13,10 @@ QS_INFO = 35
 LOG_SENDER = 'QS API'
 has_been_configured = False
 file_out = False
+silent = False
 
 
-def config(sender, silent=True, log_filename=None):
+def config(sender, print_only=False, log_filename=None):
     """mirrors Logging.basicConfig(), especially setting the output stream
     sender should be sender's __file__
     file will be based on sender's name unless log_filename is specified
@@ -30,7 +31,7 @@ def config(sender, silent=True, log_filename=None):
     log_format = '%(levelname)s - %(message)s'
     log_path = filename(sender, log_filename)
 
-    if not silent:
+    if print_only:
         logging.basicConfig(
             format=log_format, level=QS_INFO)
     else:
@@ -44,6 +45,7 @@ def config(sender, silent=True, log_filename=None):
 
 def info(description, data, is_response=False, is_request=False, cc_print=False):
     """info level log messages, logs to syslog and default output stream"""
+    if not should_log(): return
     check_config()
     log_message = format_for_log(description, data, is_request, is_response)
     syslog.syslog(syslog.LOG_INFO, log_message)
@@ -53,6 +55,7 @@ def info(description, data, is_response=False, is_request=False, cc_print=False)
 
 def warning(description, data, is_response=False, is_request=False, cc_print=True):
     """same as info, but warning level"""
+    if not should_log(): return
     check_config()
     log_message = format_for_log(description, data, is_request, is_response)
     syslog.syslog(syslog.LOG_ERR, log_message)
@@ -62,6 +65,7 @@ def warning(description, data, is_response=False, is_request=False, cc_print=Tru
 
 def error(description, data, is_response=False, is_request=False, cc_print=True):
     """same as info, but error level"""
+    if not should_log(): return
     check_config()
     log_message = format_for_log(description, data, is_request, is_response)
     syslog.syslog(syslog.LOG_ERR, log_message)
@@ -71,6 +75,7 @@ def error(description, data, is_response=False, is_request=False, cc_print=True)
 
 def critical(description, data, is_request=False, is_response=False):
     """same as info, but critical and also prints stack trace, log message, and then exits execution"""
+    if not should_log(): return
     check_config()
     log_message = "CRITICAL:\n{}".format(
         format_for_log(description, data, is_request, is_response))
@@ -90,9 +95,16 @@ def error_or_critical(description, data, is_critical, is_request=False, is_respo
 
 
 def check_config():
+    """Check the config and do any necessary config.
+    Return whether or not to log.
+    """
     if not has_been_configured:
-        config(os.getcwd(), silent=False)
+        config(os.getcwd(), print_only=True)
+    return silent
 
+def should_log():
+    """Decide whether or not anything should be logged when a call is made"""
+    return not silent
 
 def out_is_file():
     """Tells whether the output is to file or stdout"""
