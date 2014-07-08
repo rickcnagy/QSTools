@@ -17,11 +17,15 @@ GUI Scripts
 
  Delete all subjects visible on the screen. Includes clearing enrollment. May be deprecated by Assembla \#2187. 
 
+####[`dropdownsToLikerts.js`](../gui/dropdownsToLikerts.js)
+
+ Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
+
 ####[`importInquiries.js`](../gui/importInquiries.js)
 
  Import inquiries from QSImporter. QSImporter should have a JSONArray, each with an object with fields matching the Add Inquiry Page 
 
-####[`likertsToDropdown.js`](../gui/likertsToDropdown.js)
+####[`likertsToDropdowns.js`](../gui/likertsToDropdowns.js)
 
  Convert Likerts to dropdowns. This maintains the value in each criteria, but makes what was a likert value into a drop down. This requires that ALL criteria in each criteria set is a Likert. First written for lapazschool (\#32879). 
 

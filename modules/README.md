@@ -18,6 +18,8 @@ Wrapper on top of the Logger for logging QuickSchools API requests
 
 Data migration via the QuickSchools API - utility module.
 
+####[`logs/`](../modules/logs)
+
 ####[`pld.py`](../modules/pld.py)
 
 ####[`qs.py`](../modules/qs.py)
