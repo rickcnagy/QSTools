@@ -5,6 +5,7 @@ is designed to interaction with *any* REST API easier.
 """
 
 import requests
+from qs import api_logging
 
 
 class BaseRequest(object):

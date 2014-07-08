@@ -2,7 +2,7 @@
 """Test that all is well with the api_base class."""
 
 import unittest
-import api_base
+from qs import api_base, api_logging
 
 
 class TestBasicGet(unittest.TestCase):
