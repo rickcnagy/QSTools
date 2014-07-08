@@ -37,7 +37,7 @@ class BaseRequest(object):
         request_data: A dictionary of request-specific data to include.
         critical: A boolean indicating whether or not to exit if this request
             fails.
-        silent: A boolean indicating whether or not this request should be
+        Logged: A boolean indicating whether or not this request should be
             logged or stay silent.
         verb: The HTTP verb to use, in all caps, such as: 'GET' or 'POST'
         base_uri:
@@ -45,12 +45,12 @@ class BaseRequest(object):
         (filled after make_request())
         response: Raw, complete Request object. To check if the request has
             been made, check if response is not None.
-        success: A boolean indicating whether the request was successful.
+        successful: A boolean indicating whether the request was successfulful.
         data: The data cleaned from the request. This carries the actual body.
             of the data, and subclasses should ensure that if there's usable
             data in the response, self.data reflects this.
     """
-    base_url = 'http://www.google.com'
+    base_url = ''
     base_params = {}
     base_request_data = {}
     base_headers = {}
@@ -63,26 +63,23 @@ class BaseRequest(object):
         self.request_data = {}
         self.headers = {}
         self.critical = False
-        self.silent = False
+        self.logged = True
         self.verb = 'GET'
 
-        response = None
-        text = None
-        json = None
-        data = None
-        success = None
-        status_code = None
+        self.response = None
+        self.data = None
+        self.successful = None
 
     def make_request(self):
         """Make the request at the uri with specified data and params.
 
-        If silent is False, then the data will be logged before and after the
+        If logged is True, then the data will be logged before and after the
         request with vital information. If critical is True, then if the
         request fails, sys.exit() will be called.
 
         Returns:
             The data received in the response. This reflects the actual body
-            of the data, such as a list of students, not the success tag.
+            of the data, such as a list of students, not the successful tag.
         """
         self.prepare()
         self._log_before()
@@ -105,25 +102,25 @@ class BaseRequest(object):
 
     def process_response(self):
         """Process the response after the fact and collect necessary info.
-        This should be overridden to extract more info than success and data.
+        This should be overridden to extract more info than successful and data.
         """
-        self.success = self.set_success()
-        self.data = self.set_data()
+        self.successful = self.get_successful()
+        self.data = self.get_data()
 
-    def set_data(self):
-        """Set self.data based on the content of the response."""
+    def get_data(self):
+        """Return to fill self.data based on the content of the response."""
         return self.response.json()
 
-    def set_success(self):
+    def get_successful(self):
         return self.response.status_code == 200
 
     def _log_before(self):
-        if self.silent: return
+        if not self.logged: return
         api_logging.info(self.description, self._log_dict(), is_request=True)
 
     def _log_after(self):
-        if self.silent: return
-        if self.success:
+        if not self.logged: return
+        if self.successful:
             api_logging.info(
                 self.description,
                 self._log_dict(),
@@ -138,16 +135,15 @@ class BaseRequest(object):
         """The dict-based description of this request, mainly for logging"""
         desc = {
             'URI': self.uri,
-            'full URI': self._full_uri(),
+            'full URI': self._full_url(),
             'params': self._full_params(),
             'request data': self._full_data(),
             'headers': self._full_headers(),
             'verb': self.verb
         }
         if self.response:
-            desc['response'] = self.response
             desc['HTTP status code'] = self.response.status_code
-            desc['success'] = self.success
+            desc['successful'] = self.successful
             desc['response data'] = self.data
         return desc
 
