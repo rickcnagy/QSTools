@@ -2,7 +2,6 @@
 """Data migration via the QuickSchools API - utility module."""
 
 import qs
-import api_logging
 import json
 import os
 import random

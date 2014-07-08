@@ -48,9 +48,8 @@ def generate_markdown(folder_path, title):
 
 def test():
     print generate_markdown(
-        '/Users/Rick/code/QuickSchools/QSTools/gui/Report Cards',
-        'API Scripts',
-    )
+        '/Users/Rick/code/QuickSchools/QSTools/gui',
+        'GUI Scripts',)
 
 
 class ReadmeEntry(object):

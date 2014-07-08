@@ -4,7 +4,6 @@
 from tqdm import *
 from datetime import datetime
 import qs
-import api_logging
 import data_migration
 
 """set the source semester by id, otherwise it'll use the active semester"""
@@ -23,7 +22,7 @@ section_class_id = None
 
 def main():
     data_migration.create_file("download")
-    api_logging.config(__file__, log_filename=data_migration.get_filename())
+    qs.api_logging.config(__file__, log_filename=data_migration.get_filename())
     data_migration.check(compare_date=start_date)
 
     valid_assignments = {}
@@ -49,7 +48,7 @@ def main():
         for assignment in assignments:
             valid = valid_assignment(assignment, section)
             if valid != True:
-                api_logging.info("Invalid assignment", assignment)
+                qs.api_logging.info("Invalid assignment", assignment)
                 continue
 
             # get grades
@@ -76,7 +75,7 @@ def main():
     # = Output data and complete execution =
     # ======================================
     data_migration.save(valid_assignments)
-    api_logging.info(
+    qs.api_logging.info(
         "downloaded {} assignments and {} grades from semester {} "
         "between {} and {}, spanning {} sections. {} total errors."
         "".format(

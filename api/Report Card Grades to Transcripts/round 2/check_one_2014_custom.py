@@ -4,10 +4,9 @@ transcripts, per (1) on #32387
 """
 
 import qs
-import api_logging
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     for student_id in [i['id'] for i in qs.get_students()]:
         print student_id
         data = qs.get_transcript_data(student_id)

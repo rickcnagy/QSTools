@@ -2,14 +2,13 @@
 
 import json
 import qs
-import api_logging
 
 cycle_3_semester_id = '15993'
 sem1_file = '/Users/Rick/Dropbox/code/QuickSchools/modules/sa/report cards sem 1.json'
 sem2_file = '/Users/Rick/Dropbox/code/QuickSchools/modules/sa/report cards sem 2.json'
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     sem1 = json.load(open(sem1_file))
     sem2 = json.load(open(sem2_file))
 

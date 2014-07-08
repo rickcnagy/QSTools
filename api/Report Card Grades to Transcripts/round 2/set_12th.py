@@ -2,14 +2,13 @@
 
 import json
 import qs
-import api_logging
 from tqdm import *
 
 data_file = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Report Card Grades to Transcripts/round 2/Custom Subjects - hand checked.json'
 
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     data = json.load(open(data_file))
     for student_id in tqdm(data, desc='GET'):
         transcript = qs.get_transcript(student_id)

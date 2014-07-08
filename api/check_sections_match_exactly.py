@@ -4,12 +4,11 @@
 
 
 import qs
-import api_logging
 
 source_semester = '17900'
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
 
     source_sections = qs.get_sections(semester_id=source_semester)
     bad = good = 0
@@ -20,7 +19,7 @@ def main():
             bad += 1
             mismatches.append(section['id'])
         else:
-            api_logging.info('Match: {} in {} --> {}'.format(
+            qs.api_logging.info('Match: {} in {} --> {}'.format(
                 section['id'], source_semester, match['id']), {
                     'source': section,
                     'match': match,

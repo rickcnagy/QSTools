@@ -6,14 +6,13 @@ transcripts, per (1) on #32387
 import qs
 import json
 from tqdm import tqdm
-import api_logging
 
 output_filename = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Report Card Grades to Transcripts/round 2/Custom Subjects.json'
 twelfth_grade_id = '219063'
 
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     twelfth_grader_ids = [
         i['id'] for i in qs.get_students()
         if 'classId' in i and i['classId'] == twelfth_grade_id

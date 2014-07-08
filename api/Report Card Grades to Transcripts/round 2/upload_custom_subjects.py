@@ -2,13 +2,12 @@
 
 import json
 import qs
-import api_logging
 
 custom_subject_filename = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Report Card Grades to Transcripts/round 2/Custom Subjects - hand checked.json'
 
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     custom_subjects = json.load(open(custom_subject_filename))
     for student_id, subjects in custom_subjects.iteritems():
         online_custom_ids = get_custom_subject_ids(student_id)

@@ -5,7 +5,7 @@ Usage is as follows:
 ./csv2json.py 'filepath1', 'filepath2'
 """
 
-import csv_tools
+from qs import csv_tools
 import sys
 
 

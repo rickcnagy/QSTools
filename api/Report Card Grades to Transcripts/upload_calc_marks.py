@@ -1,6 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 
-import api_logging
 import qs
 import json
 from tqdm import tqdm
@@ -9,7 +8,7 @@ calc_marks_filename = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Report Card 
 marks_upload_identifier = 'marks-calc'
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     calc_marks = json.load(open(calc_marks_filename))
 
     for student_id, section_dicts in tqdm(calc_marks.iteritems(), desc='POST', total=len(calc_marks)):

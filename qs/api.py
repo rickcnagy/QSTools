@@ -10,7 +10,6 @@ import json
 import random
 import requests
 import time
-import api_logging
 
 # api key should be stored in separate file and pasted in
 api_key = ''

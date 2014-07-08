@@ -2,14 +2,13 @@
 
 import data_migration
 import qs
-import api_logging
 
 REPORT_CYCLE_ID = '5865'
 
 
 def main():
     data_migration.create_file('report card data download')
-    api_logging.config(__file__, log_filename=data_migration.get_filename())
+    qs.api_logging.config(__file__, log_filename=data_migration.get_filename())
     data_migration.check_before_run()
 
     # { studentID: {sectionId1: {marks: 100, grade: A}, sectionID2:{..}}, studentId2: {..}}

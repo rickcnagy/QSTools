@@ -8,13 +8,12 @@ This will be done after the upload is complete."""
 import json
 import qs
 import tqdm
-import api_logging
 
 filename = '/Users/Rick/Dropbox/code/QuickSchools/QS API/Report Card Grades to Transcripts/SA transcript upload data.json'
 end_of_year_session = ''
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     to_upload = json.load(open(filename))
     for student_id in to_upload:
         print qs.get_student(student_id)['fullName']

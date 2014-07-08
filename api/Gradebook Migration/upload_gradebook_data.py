@@ -5,7 +5,6 @@ Upload gradebook data downloaded via download_gradebook_data.py
 
 from tqdm import *
 import qs
-import api_logging
 import data_migration
 import os
 
@@ -24,7 +23,7 @@ match_teacher = False
 
 def main():
     data_migration.create_file(prefix='upload', existing_file=True)
-    api_logging.config(__file__, log_filename=data_migration.get_filename())
+    qs.api_logging.config(__file__, log_filename=data_migration.get_filename())
     data_migration.check_before_run()
     assignments = data_migration.load('download')
 
@@ -48,7 +47,7 @@ def main():
             qs.post_grades(new_section_id, assignment_id, grades, critical=True)
             posted_grade_count += len(grades)
 
-    api_logging.info(
+    qs.api_logging.info(
         "Complete. {} errors, {} successeful assignments, {} successful grades."
         "".format(qs.get_error_count(), len(posted_assignment_ids), posted_grade_count),
         {}, cc_print=True)

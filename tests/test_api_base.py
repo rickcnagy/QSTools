@@ -3,7 +3,6 @@
 
 import unittest
 import api_base
-import api_logging
 
 
 class TestBasicGet(unittest.TestCase):

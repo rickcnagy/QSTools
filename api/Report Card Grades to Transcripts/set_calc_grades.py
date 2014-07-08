@@ -1,6 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 
-import api_logging
 import qs
 import json
 from tqdm import tqdm
@@ -14,7 +13,7 @@ current_year_id = '11627'
 
 
 def main():
-    api_logging.config(__file__)
+    qs.api_logging.config(__file__)
     calc_marks = json.load(open(calc_marks_filename))
 
     for student_id, sections in tqdm(calc_marks.iteritems(), total=len(calc_marks), desc='GET'):

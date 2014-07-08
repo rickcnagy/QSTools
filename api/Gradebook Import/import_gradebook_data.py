@@ -5,7 +5,6 @@ Upload gradebook data downloaded via download_gradebook_data.py
 
 from tqdm import *
 import qs
-import api_logging
 import data_migration
 import os
 import json
@@ -20,32 +19,32 @@ ignore_student_ids = []
 def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     data_migration.create_file(prefix="upload", existing_file=True)
-    api_logging.basicConfig(__file__, log_filename=data_migration.get_filename())
+    qs.api_logging.basicConfig(__file__, log_filename=data_migration.get_filename())
     data_migration.check()
     assignments = data_migration.load()
 
     posted_assignment_ids = []
     posted_grade_count = 0
     for section_id, assignments in tqdm(
-            assignments.iteritems(), 
+            assignments.iteritems(),
             total=len(assignments),
             desc='POST',
-            leave=True):    
+            leave=True):
         for assignment in assignments:
             # post assignment to section
             posted_assignment = qs.post_assignment(section_id, assignment)
             assignment_id = posted_assignment['id']
-            posted_id = (assignment['assignmentId'] 
-                if 'assignmentId' in assignment.keys() 
+            posted_id = (assignment['assignmentId']
+                if 'assignmentId' in assignment.keys()
                 else assignment_id)
             posted_assignment_ids.append(posted_id or section_id)
-        
+
             # post grades to newly posted assignment
             grades = valid_grades(assignment['grades'])
             qs.post_grades(section_id, assignment_id, grades)
             posted_grade_count += len(grades)
 
-    api_logging.info(
+    qs.api_logging.info(
         "Complete. {} errors, {} successeful assignments, {} successful grades."
         "".format(qs.get_error_count(), len(posted_assignment_ids), posted_grade_count),
         {}, cc_print=True)

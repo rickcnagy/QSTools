@@ -1,6 +1,7 @@
-# Byte-compiled / optimized / DLL files
+# Python stuff
 __pycache__/
 *.py[cod]
+build/
 
 # private files/dirs
 *.json

@@ -2,7 +2,6 @@
 
 import csv_tools
 import qs
-import api_logging
 from tqdm import *
 
 SEMESTER_IDS = ['20267', '20270', '20273', '20276', '20266', '20269', '20272', '20275', '20265', '20268', '20271', '20274', '20261', '20262', '20263', '20264', '18473', '18714']
@@ -10,12 +9,12 @@ csv = csv_tools.CSV('/Users/Rick/Dropbox/code/QuickSchools/QS API/Gradebook Impo
 
 
 def main():
-    api_logging.basicConfig(__file__)
+    qs.api_logging.basicConfig(__file__)
     for semester_id in tqdm(SEMESTER_IDS):
         semester = [i for i in qs.get_semesters() if i['id'] == semester_id][0]
         quarter = quarter_from_name(semester['semesterName'])
         year = semester['yearName']
-    
+
         # {section_id: [student_id1, student_id2]}
         csv_enrollment = {}
         for row in [i for i in csv if i['School Year'] == year]:
