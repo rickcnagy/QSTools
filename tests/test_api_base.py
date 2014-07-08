@@ -18,7 +18,7 @@ class TestBasicGet(unittest.TestCase):
             '/users/{}/repos'.format('br1ckb0t'))
         self.request.make_request()
 
-    def test_success(self):
+    def test_request_success(self):
         self.assertTrue(self.request.successful)
 
     def test_content_is_correct(self):
