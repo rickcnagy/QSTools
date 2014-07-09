@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
 include =
-    qs/api_base*
+    modules/qs/api_base*
 omit =
     *__init__*
