@@ -8,6 +8,6 @@ install:
     - python setup.py install
 # command to run tests
 script:
-    - coverage run --source=qs ./tests/*.py -v
+    - coverage run -m unittest discover -v -s ./tests
 after_success:
     coveralls
