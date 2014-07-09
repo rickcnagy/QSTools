@@ -1,5 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Test that all is well with the api_base class."""
+"""Test the api_base module."""
 
 import unittest
 import qs
