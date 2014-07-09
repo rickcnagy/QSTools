@@ -27,5 +27,6 @@ build_doc '/api' 'API Scripts'
 build_doc '/gui' 'GUI Scripts'
 build_doc '/gui/Transcripts' 'Transcript GUI Scripts'
 build_doc '/utility' 'Utility Scripts'
-build_doc '/qs' 'QSTools Modules'
+build_doc '/modules' 'QSTools Modules'
+build_doc '/modules/qs' 'QS Python Package'
 finished

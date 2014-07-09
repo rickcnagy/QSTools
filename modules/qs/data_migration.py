@@ -24,6 +24,7 @@ def create_file(prefix='', existing_file=False):
     set_filename(new_filename + FILE_EXTENSION)
     return get_filename()
 
+
 def load(prefix=''):
     prefix += '_' if prefix else ''
     old_fullname = prefix + basename(get_existing_filename()) + FILE_EXTENSION
@@ -89,7 +90,7 @@ def check_before_run(compare_date=None):
 
 def complete():
     api_logging.info("Complete. {} errors."
-        .format(qs.get_error_count()),{}, cc_print=True)
+        .format(qs.get_error_count()), {}, cc_print=True)
 
 
 def confirm(statement='Confirm before proceeding (y):'):

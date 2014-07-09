@@ -7,9 +7,6 @@ from collections import OrderedDict
 
 """Convenience static methods that don't require a CSV object"""
 
-def p(obj):
-    print json.dumps(obj, indent=4)
-
 def write_csv(rows, filepath, keys=None, flatten_delim=' | '):
     """Save a dict to CSV with header rows, ordered keys, flattened vals, etc"""
     keys = keys or rows[0].keys()
@@ -29,7 +26,6 @@ def write_csv(rows, filepath, keys=None, flatten_delim=' | '):
         writer.writeheader()
         for row in flattened_rows:
             writer.writerow(row)
-        return
 
 
 def dict_to_csv(data_dict, cols):

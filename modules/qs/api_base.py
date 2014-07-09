@@ -5,8 +5,12 @@ is designed to interaction with *any* REST API easier.
 """
 
 import requests
-from qs import api_logging
+from qs import *
 
+GET = 'GET'
+PUT = 'PUT'
+POST = 'POST'
+DELETE = 'DELETE'
 
 class BaseRequest(object):
     """Generic base request for subclassing to handle any REST API.
@@ -116,17 +120,17 @@ class BaseRequest(object):
 
     def _log_before(self):
         if not self.logged: return
-        api_logging.info(self.description, self._log_dict(), is_request=True)
+        logger.info(self.description, self._log_dict(), is_request=True)
 
     def _log_after(self):
         if not self.logged: return
         if self.successful:
-            api_logging.info(
+            logger.info(
                 self.description,
                 self._log_dict(),
                 is_response=True)
         else:
-            api_logging.error_or_critical(
+            logger.error_or_critical(
                 self.description,
                 self._log_dict(),
                 self.critical)

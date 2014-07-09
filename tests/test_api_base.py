@@ -2,16 +2,16 @@
 """Test that all is well with the api_base class."""
 
 import unittest
-from qs import api_base, api_logging
+import qs
 
 
 class TestBasicGet(unittest.TestCase):
 
-    class TestRequest(api_base.BaseRequest):
+    class TestRequest(qs.BaseRequest):
         base_url = 'https://api.github.com'
 
     def setUp(self):
-        api_logging.silent = True
+        qs.logger.silence()
         self.request = self.TestRequest(
             'Test Request',
             '/users/{}/repos'.format('br1ckb0t'))

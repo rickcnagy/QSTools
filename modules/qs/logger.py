@@ -110,6 +110,15 @@ def out_is_file():
     """Tells whether the output is to file or stdout"""
     return file_out
 
+def silence():
+    """Silence all log output, even everything is all configured."""
+    global silent
+    silent = True
+
+def unsilence():
+    global silent
+    silent = False
+
 
 def maybe_print(log_message, cc_print):
     if cc_print and out_is_file():

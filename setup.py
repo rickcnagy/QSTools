@@ -1,6 +1,9 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 
 from distutils.core import setup
+import os
+
+os.chdir('./modules')
 
 setup(
     name='QSTools',
