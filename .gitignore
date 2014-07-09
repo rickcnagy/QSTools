@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 build/
 
+# Coverage
+.coverage
+
 # private files/dirs
 *.json
 *.p
