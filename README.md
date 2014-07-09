@@ -1,6 +1,7 @@
 QSTools
 =======
 [![Build Status](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master)](https://travis-ci.org/br1ckb0t/QSTools)
+[![Coverage Status](https://img.shields.io/coveralls/br1ckb0t/QSTools.svg)](https://coveralls.io/r/br1ckb0t/QSTools?branch=master)
 
 A toolset for programmatically interacting with the QuickSchools API and GUI quickly and efficiently.
 
