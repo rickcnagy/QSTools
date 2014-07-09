@@ -6,7 +6,6 @@ import json
 import os
 import random
 import sys
-from tqdm import tqdm
 
 filename = None
 existing_filename = None
@@ -96,12 +95,3 @@ def complete():
 def confirm(statement='Confirm before proceeding (y):'):
     """Confirm that the user is ok with what's happening before proceeding"""
     return raw_input(statement).lower() == 'y'
-
-
-def indicator(iterable, description):
-    """Wrapper around tqdm.
-
-    Params:
-        description: some meaningful description, such as 'GET'
-    """
-    return tqdm(iterable, desc=description, leave=True)
