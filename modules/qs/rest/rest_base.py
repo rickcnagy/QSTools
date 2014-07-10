@@ -12,6 +12,7 @@ PUT = 'PUT'
 POST = 'POST'
 DELETE = 'DELETE'
 
+
 class BaseRequest(object):
     """Generic base request for subclassing to handle any REST API.
 
@@ -106,7 +107,7 @@ class BaseRequest(object):
 
     def process_response(self):
         """Process the response after the fact and collect necessary info.
-        This should be overridden to extract more info than successful and data.
+        This should be overridden to extract more info than given here.
         """
         self.successful = self.get_successful()
         self.data = self.get_data()

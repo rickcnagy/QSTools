@@ -5,6 +5,6 @@ import data_migration
 import logger
 
 # classes + functions + variables
-from rest.rest_base import BaseRequest, GET, PUT, POST, DELETE
+from qs.rest.rest_base import BaseRequest, GET, PUT, POST, DELETE
 from csv_tools import write_csv, CSV, dict_to_csv, CSVMatch
 from util import dumps
