@@ -100,7 +100,7 @@ class ScriptEntry(ReadmeEntry):
                 and ('#NOT TESTED' not in self.get_docstring()))
 
     def is_py(self):
-        return self.name[-3:] == '.py'
+        return self.name[-3:] == '.py' and '__init__' not in self.name
 
     def is_js(self):
         return self.name[-3:] == '.js'

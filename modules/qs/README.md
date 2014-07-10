@@ -9,7 +9,12 @@ Data migration via the QuickSchools API - utility module.
 
 Wrapper on top of the Logger for logging QuickSchools API requests
 
-####[`rest/`](./rest)
+####[`rest_base.py`](./rest_base.py)
+
+Base-level API interaction tools to be extended upon for different uses.
+Generally, the intent is for extension towards the QS API, but this module
+is designed to interaction with *any* REST API easier.
+
 
 ####[`util.py`](./util.py)
 
