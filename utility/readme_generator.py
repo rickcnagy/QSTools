@@ -40,7 +40,7 @@ def generate_markdown(folder_path, title):
     markdown = '{}\n===\n\n'.format(title) if title else ''
     for entry in entries:
         markdown += '####{}\n\n'.format(entry.md_title())
-        docstring = entry.docstring()
+        docstring = entry.get_docstring()
         markdown += '{}\n\n'.format(docstring) if docstring else ''
     markdown = markdown.strip()
     return markdown
@@ -57,9 +57,13 @@ class ReadmeEntry(object):
     def __init__(self, folder_path, name):
         self.folder_path = folder_path
         self.name = name
+        self.docstring = None
 
     def key(self):
         return ''.join([i.lower() for i in self.name if i.isalnum()])
+
+    def get_docstring(self):
+        return self.docstring
 
     def title(self):
         return self.name
@@ -86,7 +90,14 @@ class FolderEntry(ReadmeEntry):
 class ScriptEntry(ReadmeEntry):
 
     def is_valid(self):
+        return self.is_valid_file() and self.is_valid_docstring()
+
+    def is_valid_file(self):
         return self.is_py() or self.is_js()
+
+    def is_valid_docstring(self):
+        return (self.get_docstring() is not None
+                and ('#NOT TESTED' not in self.get_docstring()))
 
     def is_py(self):
         return self.name[-3:] == '.py'
@@ -94,15 +105,18 @@ class ScriptEntry(ReadmeEntry):
     def is_js(self):
         return self.name[-3:] == '.js'
 
-    def docstring(self):
-        if self.is_py():
-            return self.py_docstring()
-        elif self.is_js():
-            return self.javadoc()
+    def get_docstring(self):
+        if not self.docstring:
+            if self.is_py():
+                self.docstring = self.py_docstring()
+            elif self.is_js():
+                self.docstring = self.javadoc()
+        return self.docstring
 
     def py_docstring(self):
         mod_name = self.name.replace('.py', '')
-        return __import__(mod_name).__doc__
+        self.docstring = __import__(mod_name).__doc__
+        return self.docstring
 
     def javadoc(self):
         """Matches javadocs like: /** this is a javadoc! */"""
@@ -113,7 +127,8 @@ class ScriptEntry(ReadmeEntry):
                 javadoc = javadoc.replace('*', '')
                 javadoc = javadoc.replace('#', '\#')
                 javadoc = re.sub('\s+', ' ', javadoc)
-                return javadoc
+                self.docstring = javadoc
+        return self.docstring
 
 
 if __name__ == '__main__':
