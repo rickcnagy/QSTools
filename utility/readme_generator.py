@@ -68,11 +68,7 @@ class ReadmeEntry(object):
         return '[`{}`]({})'.format(self.title(), self.repo_link())
 
     def repo_link(self):
-        path = self.folder_path.split('/')
-        start = path.index('QSTools')
-        dir_path = '/'.join([dir_name for i, dir_name in enumerate(path) if i > start])
-        dir_path = dir_path + '/' + self.name
-        return '../' + dir_path
+        return './{}'.format(self.name)
 
     def docstring(self):
         pass

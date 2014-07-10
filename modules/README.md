@@ -1,4 +1,4 @@
 QSTools Modules
 ===
 
-####[`qs/`](../modules/qs)
+####[`qs/`](./qs)
