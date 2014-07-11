@@ -5,13 +5,13 @@
 
 Data migration via the QuickSchools API - utility module.
 
-####[`limit_rate.py`](./limit_rate.py)
-
-Limit request rates on REST servers by request base URL.
-
 ####[`logger.py`](./logger.py)
 
 Wrapper on top of the Logger for logging QuickSchools API requests
+
+####[`rate_limiting.py`](./rate_limiting.py)
+
+Limit request rates on REST servers by request base URL.
 
 ####[`rest_base.py`](./rest_base.py)
 
