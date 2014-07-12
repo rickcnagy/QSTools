@@ -10,5 +10,4 @@ install:
 script:
     - nosetests --with-coverage -v
 after_success:
-    - coverage report
     - coveralls
