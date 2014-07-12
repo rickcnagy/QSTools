@@ -5,7 +5,7 @@ is designed to interaction with *any* REST API easier.
 """
 
 import requests
-from qs import *
+import qs
 
 GET = 'GET'
 PUT = 'PUT'
@@ -86,52 +86,56 @@ class BaseRequest(object):
             The data received in the response. This reflects the actual body
             of the data, such as a list of students, not the successful tag.
         """
-        self.prepare()
+        self._before_request()
         self._log_before()
+        qs.rate_limiting.register_request(self._full_url())
         self.response = requests.request(
             self.verb,
             self._full_url(),
             params=self._full_params(),
             data=self._full_data(),
             headers=self._full_headers())
-        self.process_response()
+        qs.rate_limiting.register_response(self.response)
+        self._process_response()
+        self._after_response()
         self._log_after()
         return self.data
 
-    def prepare(self):
-        """Make any specific preparations to the request before making it.
-        This should be overriden on a per-subclass basis to alter requests as
-        necessary
-        """
+    def _before_request(self):
+        """Hook to make any modifications to the request before making it."""
         pass
 
-    def process_response(self):
+    def _after_response(self):
+        """Hook after response (and after _process_response)"""
+        pass
+
+    def _process_response(self):
         """Process the response after the fact and collect necessary info.
         This should be overridden to extract more info than given here.
         """
-        self.successful = self.get_successful()
-        self.data = self.get_data()
+        self.successful = self._get_successful()
+        self.data = self._get_data()
 
-    def get_data(self):
+    def _get_data(self):
         """Return to fill self.data based on the content of the response."""
         return self.response.json()
 
-    def get_successful(self):
+    def _get_successful(self):
         return self.response.status_code == 200
 
     def _log_before(self):
         if not self.logged: return
-        logger.info(self.description, self._log_dict(), is_request=True)
+        qs.logger.info(self.description, self._log_dict(), is_request=True)
 
     def _log_after(self):
         if not self.logged: return
         if self.successful:
-            logger.info(
+            qs.logger.info(
                 self.description,
                 self._log_dict(),
                 is_response=True)
         else:
-            logger.error_or_critical(
+            qs.logger.error_or_critical(
                 self.description,
                 self._log_dict(),
                 self.critical)

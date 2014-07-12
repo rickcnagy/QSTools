@@ -2,5 +2,7 @@
 [run]
 include =
     */rest_base*
+    */rate_limiting*
+
 omit =
     *__init__*

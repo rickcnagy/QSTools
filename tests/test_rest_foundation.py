@@ -33,6 +33,12 @@ class TestBasicGet(unittest.TestCase):
         by_id = {i['id']: i for i in self.github.data}
         self.assertEqual(by_id[21495975]['name'], 'QSTools')
 
+    def test_rate_limit_tracking_matches_request(self):
+        server = qs.rate_limiting.get_server('github.com')
+        self.assertIsNotNone(server.remaining)
+        self.assertEqual(
+            server.remaining,
+            self.github.response.headers[qs.rate_limiting._GITHUB_LIMIT_HEADER])
 
 if __name__ == '__main__':
     unittest.main()

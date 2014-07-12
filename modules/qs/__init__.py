@@ -8,4 +8,4 @@ import logger
 from rest_base import BaseRequest, GET, PUT, POST, DELETE
 from csv_tools import write_csv, CSV, dict_to_csv, CSVMatch
 from util import dumps
-from rate_limiting import process_request, process_response, get_server
+from rate_limiting import register_request, register_response, get_server

@@ -16,26 +16,26 @@ _GITHUB_LIMIT_HEADER = 'X-RateLimit-Remaining'
 _servers = {}
 
 
-def process_request(request_url):
+def register_request(request_url):
     """Process a request that's about to me made, which will automatically
     trigger a wait (or whatever else for that server) when appropriate
     """
-    server = _lookup_server(request_url)
+    server = get_server(request_url)
     if not server:
         logger.warning('Tried to make a request at an unrecognized URL', url)
     else:
         server.register_request(request_url)
 
 
-def process_response(response):
+def register_response(response):
     """Process a response that was received by the server. Any appriate action
     will be taken based on the response itself.
 
     Args:
         response: a completed response object
     """
-    url = response.url()
-    server = _lookup_server(url)
+    url = response.url
+    server = get_server(url)
     if not server:
         logger.warning('Received a response at an unrecognized URL', url)
     else:
@@ -67,7 +67,9 @@ def _init_servers():
             'qs_backup',
             _QS_BACKUP_LIMIT,
             _QS_BACKUP_WAIT_TIME),
-        'github': _HeaderBasedServer(_GITHUB_LIMIT_HEADER)
+        'github': _HeaderBasedServer(
+            'github',
+            _GITHUB_LIMIT_HEADER),
     }
     return _servers
 
@@ -82,7 +84,7 @@ class _ServerWithLimit(object):
     servers/behaviors.
     """
 
-    def __init__(self, identitifer):
+    def __init__(self, identifier):
         self._identifier = identifier
         self._request_count = 0
         self._response_count = 0
@@ -101,7 +103,7 @@ class _ServerWithLimit(object):
             self._identifier)
 
 
-class _ServerWithKnownLimit(object):
+class _ServerWithKnownLimit(_ServerWithLimit):
     """A server with a known limit ahead of time
 
     e.g. 5 requests then 1 wait
@@ -140,15 +142,14 @@ class _HeaderBasedServer(_ServerWithLimit):
         self._remaining_header_field = remaining_header_field
         self._should_terminate = False
         self.remaining = None
-        super(_HeaderBasedServer, self).__init__(identifier, 0)
+        super(_HeaderBasedServer, self).__init__(identifier)
 
     def register_request(self, request):
-        super(_HeaderBasedServer, self).register_response(response)
+        super(_HeaderBasedServer, self).register_response(request)
         if self._should_terminate:
             self._limit_reached()
 
     def register_response(self, response):
         super(_HeaderBasedServer, self).register_response(response)
         self.remaining = response.headers[self._remaining_header_field]
-        import pudb; pudb.set_trace()
-        # TODO: figure out if int or str and set _should_terminate
+        self._should_terminate = self.remaining != '0'
