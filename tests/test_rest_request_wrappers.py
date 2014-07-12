@@ -13,7 +13,6 @@ class TestQSRequest(unittest.TestCase):
 
     def setUp(self):
         qs.logger.silence()
-
         self.paged_list = qs.QSRequest('Paged List Request', '/students')
         self.paged_list.params = {'itemsPerPage': 1}
         self.paged_list.set_api_key(config.API_KEY)
@@ -38,13 +37,15 @@ class TestQSRequest(unittest.TestCase):
         self.flat_list.make_request()
 
     def test_paged_list(self):
-        self.assertIsInstance(self.paged_list.data, dict)
+        self.assertIsInstance(self.paged_list.data, list)
+        self.assertIsInstance(self.paged_list.data[0], dict)
 
     def test_single_object(self):
-        self.assertIsInstance(self.paged_list.data, dict)
+        self.assertIsInstance(self.single_object.data, dict)
 
     def test_flat_list(self):
-        self.assertIsIstance(self.paged_list.data, list)
+        self.assertIsInstance(self.flat_list.data, list)
+        self.assertIsInstance(self.flat_list.data[0], dict)
 
     def test_qs_live_request_url(self):
         semesters_url = 'https://api.quickschools.com/sms/v1/semesters'
@@ -52,12 +53,12 @@ class TestQSRequest(unittest.TestCase):
 
     def test_qs_params(self):
         full_params = self.flat_list._full_params()
-        self.assertIn(full_params, 'some_param')
+        self.assertIn('some_param', full_params)
         self.assertEquals(full_params['some_param'], _MAGIC_VAL)
 
     def test_qs_headers(self):
         full_headers = self.flat_list._full_headers()
-        self.assertIn(full_headers, 'some_header')
+        self.assertIn('some_header', full_headers)
         self.assertEquals(full_headers['some_header'], _MAGIC_VAL)
 
 
