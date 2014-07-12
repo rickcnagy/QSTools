@@ -1,9 +1,10 @@
 # .coveragerc to control coverage.py
 [run]
 include =
-    */rest_base.py
-    */rate_limiting.py
-    */rest_request_wrappers.py
+    */qs/rest_base.py
+    */qs/rate_limiting.py
+    */qs/rest_request_wrappers.py
+    */qs/util.py
 
 omit =
     *__init__*

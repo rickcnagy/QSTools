@@ -11,7 +11,7 @@ def dumps(arbitry_obj):
 
 
 def bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
-        mininterval=0.5, miniters=1):
+        mininterval=0.5, miniters=1):  # pragma: no cover
     """Status bar for iterables, using tqdm: github.com/noamraph/tqdm
 
     Get an iterable object, and return an iterator which acts exactly like the
