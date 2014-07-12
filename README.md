@@ -30,9 +30,10 @@ The coverage metric ([![Coverage Status](https://img.shields.io/coveralls/br1ckb
 ###More On Testing
 Since the purpose of this repo is to provide lots of ready-made tools for quickly and efficiently making imports and manipulating data, it's *really* important that one can rely that the repo actually does what it says it does. As a result, there's a testing system to ensure that all implementations match their docstrings:
 * **Any script with a docstring** is considered testable.
-* If a file is testable, there are two options:
+* If a file is testable, there are three options:
     1. If it's a Python file, a test should exist for it in [tests/](../tests). Regardless of whether a test exists for it, it'll be included in the coverage number. **The coverage number reflects the amount of documented Python code that is covered by tests.**
     2. If it's a JavaScript file, it'll be hand-tested at regular intervals, and the status of the test will be included at the beginning of the docstring, like so:
+    3. It can be exempted from testing. For instance, [logger.py](./modules/qs/logger.py) is hard to test, and the output is being viewed all the time anyways. So, for similar instances, files can be tagged as `#TEST EXEMPT`, and the file will be included in its folders `README` without being included in the coverage metric.
 ```
 /**
  * Last test: 7/14/14: #PASSED
