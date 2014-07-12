@@ -61,5 +61,11 @@ python setup.py install
 ```
 After doing this, a `qs` module will be importable from all Python scripts and provide access the package's API.
 
+###Contributing
+At this point, there are `3` dependencies:
+* Python requests (`pip install requests`)
+* Python reindent (`pip install reindent`)
+* QS Support Tools ([install extension here](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh))
+
 ###Support
 If you have any questions on this repo, feel free to contact me on HipChat :smile:

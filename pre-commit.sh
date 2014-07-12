@@ -18,15 +18,19 @@ function build_doc {
 	git add "./$1/README.md"
 }
 
-function finished {
+function docs_finished {
 	d=$(date)
 	echo "All docs built successfully on $d" > ./build.log
 }
 
+# build all docs
 build_doc '/api' 'API Scripts'
 build_doc '/gui' 'GUI Scripts'
 build_doc '/gui/Transcripts' 'Transcript GUI Scripts'
 build_doc '/utility' 'Utility Scripts'
 build_doc '/modules' 'QSTools Modules'
 build_doc '/modules/qs' '`qs` Python Package'
-finished
+docs_finished
+
+# fix all whitespace in Python files
+reindent --recurse .

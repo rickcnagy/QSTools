@@ -14,7 +14,7 @@ def main():
         if not section_id in q1_sections:
             q1_sections[section_id] = 0
         q1_sections[section_id] += 1
-        
+
     for section_id, count in q1_sections.iteritems():
         enrollment = len(qs.get_section_enrollment(section_id))
         if enrollment != count:

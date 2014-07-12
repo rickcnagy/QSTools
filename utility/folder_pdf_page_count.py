@@ -17,7 +17,7 @@ def main():
     print "\n{} rc's over 4 pages:".format(len(over_four))
     for c in over_four:
         print c
-        
+
     print "\n\n{} rc's under 5 pages.".format(len(under_five))
     # for c in under_five:
     #     print c
@@ -82,7 +82,7 @@ class LongReportCard(object):
         name = os.path.splitext(name)[0]
         name = name[name.find('-') + 1:]
         return name.strip()
-    
+
     def compare(self, other):
         if other.length > self.length:
             return -1

@@ -28,7 +28,7 @@ def main():
         if int(class_code) < 10:
             class_code = '0' + class_code
         class_code = 'G' + class_code
-        
+
         output_list.append({
             'Student Name': student_name,
             'Class Abbreviation': class_code,

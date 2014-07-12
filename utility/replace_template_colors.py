@@ -16,19 +16,19 @@ def main():
     file_path = raw_input(wrapper.fill("Drag and drop the raw data dump into this window. If you are making multiple changes to the file (such as changing changing color a to color b and changing color c to color d), use the output from the previous run.") + '\n').strip().replace('\\', '')
     validate_and_format_xml(file_path)
     print "Nice - that looks like a valid raw data dump!\n"
-    
+
     # now that it's been validated and formatted, actually parse
     tree = ElementTree()
     tree.parse(f)
     colored_elements = find_colored_elements(raw_input(wrapper.fill("What is the identifier of an element with the color you'd like to replace? For example, type \"att-tardy\" to replace the color of the att-tardy element over the whole report card. Be sure that the identifier is unique.") + '\n').strip())
-    
+
     s = 's' if len(colored_elements) else ''
     print(wrapper.fill("Great! Found an element with that identifier and {} element{} with the same color ".format(len(colored_elements), s)))
-    
+
     new_elem_dec = get_decimal_value(raw_input('\n' + wrapper.fill("What color would you like to replace the color with? Input the value in hex format (i.e. \"#ffffff\"). Leave blank to leave the elements with this color as they are.") + '\n'))
-    
+
     new_text_dec = get_decimal_value(raw_input('\n' + wrapper.fill("Would you like to change the text color of all text fields that are children of a box with this color (i.e. text with this background color)? If you are changing from a light to dark background (or vice-versa), it's often good to invert the text color. For a light text color, usually a light gray - such as #f0f0f0 - works better than white. Leave this blank to leave the text colors as they are.") + '\n'))
-    
+
     replace_colored_elements_and_children(colored_elements, new_elem_dec, new_text_dec)
     new_file_path = iterative_file_name(file_path)
     tree.write(new_file_path)
@@ -56,7 +56,7 @@ def validate_and_format_xml(file_path):
 
 def find_colored_elements(identifier):
     colored_element = None
-    
+
     # find the first element with that identifier
     for elem in tree.iter():
         for attrib in elem.findall('s'):
@@ -66,16 +66,16 @@ def find_colored_elements(identifier):
         return find_colored_elements(raw_input("Didn't find any elements with that identifier. Try a different one...\n").strip())
     else:
         colored_elements = [colored_element]
-        
+
         # find all the elements with the same color
         old_color = colored_element.find('i').text
         for elem in tree.iter():
             color = elem.find('i')
             if (color is not None and color.text == old_color):
                 colored_elements.append(elem)
-                
+
         return colored_elements
-        
+
 def get_decimal_value(hex):
     hex = hex.strip().lstrip('#')
     try:
@@ -85,7 +85,7 @@ def get_decimal_value(hex):
         return str(dec)
     except:
         return get_decimal_value(raw_input("That doesn't look like a valid hex value. Try again...\n"))
-        
+
 def replace_colored_elements_and_children(colored_elements, new_color, new_text_color):
     elem_replace_count = 0
     text_replace_count = 0
@@ -93,9 +93,9 @@ def replace_colored_elements_and_children(colored_elements, new_color, new_text_
         # change all text
         for elem in colored_elements:
             if new_color != '':
-                elem.find('i').text = new_color 
+                elem.find('i').text = new_color
                 elem_replace_count += 1
-        
+
             # work with children elements if it's a box
             elem_name = elem.attrib.get('n')
             if (elem_name is not None and elem_name == 'Box' and new_text_color != ''):
@@ -127,7 +127,7 @@ def iterative_file_name(old_path):
         file_number += 1
         filename = filename[0:-2] + str(file_number) + ').xml'
     return filename
-                         
+
 class NotXMLError(Exception):
     pass
 
