@@ -1,5 +1,3 @@
-#!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-
 """Test the util module"""
 
 import qs
