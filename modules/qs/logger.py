@@ -23,8 +23,7 @@ def config(sender, print_only=False, log_filename=None):
     sender should be sender's __file__
     file will be based on sender's name unless log_filename is specified
     """
-    global has_been_configured
-    global file_out
+    global has_been_configured, file_out
 
     file_out = silent
     # for logging INFO events while ignoring usual INFO level logs
