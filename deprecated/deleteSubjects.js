@@ -1,7 +1,8 @@
 /**
  * Delete all subjects visible on the screen.
  * Includes clearing enrollment.
- * May be deprecated by Assembla #2187.
+ *
+ * #DEPRECATED by Assembla #2187
  */
 
 var iter = new QSIterator(".dttd .linkWidget", function() {

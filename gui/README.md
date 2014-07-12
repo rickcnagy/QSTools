@@ -13,10 +13,6 @@ GUI Scripts
 
  Create a final formula that consists of Assignments in each gradebook 
 
-####[`deleteSubjects.js`](./deleteSubjects.js)
-
- Delete all subjects visible on the screen. Includes clearing enrollment. May be deprecated by Assembla \#2187. 
-
 ####[`dropdownsToLikerts.js`](./dropdownsToLikerts.js)
 
  Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
