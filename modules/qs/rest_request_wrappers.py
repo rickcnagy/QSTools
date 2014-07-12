@@ -4,6 +4,8 @@ part of that wrapper) can be used for another REST API, it should be moved to
 rest_base.py
 """
 
+import qs
 
-# def QSRequest(rest_base.BaseRequest):
 
+class GitHubRequest(qs.BaseRequest):
+    base_url = 'https://api.github.com'

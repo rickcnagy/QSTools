@@ -7,22 +7,12 @@ import qs
 qs.logger.silence()
 
 
-class GitHubRequest(qs.BaseRequest):
-    base_url = 'https://api.github.com'
-
-
-class GitHubRepoRequest(GitHubRequest):
-
-    def __init__(self):
-        super(GitHubRequest, self).__init__(
-            'Test Request',
-            '/users/{}/repos'.format('br1ckb0t'))
-
-
 class TestBasicGet(unittest.TestCase):
 
     def setUp(self):
-        self.github = GitHubRepoRequest()
+        self.github = qs.GitHubRequest(
+            'Test Request',
+            '/users/{}/repos'.format('br1ckb0t'))
         self.github.make_request()
 
     def test_request_success(self):
