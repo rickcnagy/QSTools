@@ -8,7 +8,7 @@ install:
     - python setup.py install
 # command to run tests
 script:
-    - coverage run -m unittest discover -v -s ./tests
+    - nosetests --with-coverage -v
 after_success:
     - coverage report
     - coveralls
