@@ -5,7 +5,8 @@ import data_migration
 import logger
 
 # classes + functions + variables
-from rest_base import BaseRequest, GET, PUT, POST, DELETE
-from csv_tools import write_csv, CSV, dict_to_csv, CSVMatch
-from util import dumps
-from rate_limiting import register_request, register_response, get_server
+from rest_base import *
+from csv_tools import *
+from util import *
+from rate_limiting import *
+from rest_request_wrappers import *
