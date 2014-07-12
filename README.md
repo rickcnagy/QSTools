@@ -63,8 +63,8 @@ After doing this, a `qs` module will be importable from all Python scripts and p
 
 ###Contributing
 At this point, there are `3` dependencies:
-* Python requests (`pip install requests`)
-* Python reindent (`pip install reindent`)
+* Python requests (install via command line with `pip install requests`)
+* Python reindent (install via command line with `pip install reindent`)
 * QS Support Tools ([install extension here](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh))
 
 ###Support
