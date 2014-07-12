@@ -53,7 +53,8 @@ class BaseRequest(object):
         successful: A boolean indicating whether the request was successfulful.
         data: The data cleaned from the request. This carries the actual body.
             of the data, and subclasses should ensure that if there's usable
-            data in the response, self.data reflects this.
+            data in the response, self.data reflects this. If there was an
+            error, data will be {} to avoid errors in iterators that use it.
     """
     base_url = ''
     base_params = {}
@@ -88,6 +89,7 @@ class BaseRequest(object):
         """
         self._before_request()
         self._log_before()
+
         qs.rate_limiting.register_request(self._full_url())
         self.response = requests.request(
             self.verb,
@@ -96,6 +98,7 @@ class BaseRequest(object):
             data=self._full_data(),
             headers=self._full_headers())
         qs.rate_limiting.register_response(self.response)
+
         self._process_response()
         self._after_response()
         self._log_after()
@@ -118,7 +121,7 @@ class BaseRequest(object):
 
     def _get_data(self):
         """Return to fill self.data based on the content of the response."""
-        return self.response.json()
+        return self.response.json() if self.successful else {}
 
     def _get_successful(self):
         return self.response.status_code == 200

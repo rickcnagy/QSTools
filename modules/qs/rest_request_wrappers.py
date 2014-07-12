@@ -9,3 +9,23 @@ import qs
 
 class GitHubRequest(qs.BaseRequest):
     base_url = 'https://api.github.com'
+
+class QSRequest(qs.BaseRequest):
+    base_url = 'https://api.quickschools.com/sms/v1'
+
+    def __init__(self, description, uri, live=True):
+        if not live:
+            self.base_url = self.base_url.replace(
+                'quickschools',
+                'smartschoolcentral')
+        super(QSRequest, self).__init__(description, uri)
+
+    def _get_data(self):
+        if not self.successful: return []
+
+        parsed = self.response.json()
+        if 'list' in parsed:
+            return parsed['list']
+        if 'id' in parsed or type(parsed) is list:
+            return parsed
+        api_logging.critical("Unrecognized response data type", parsed)
