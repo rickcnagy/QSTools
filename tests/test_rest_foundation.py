@@ -22,25 +22,17 @@ class GitHubRepoRequest(GitHubRequest):
 class TestBasicGet(unittest.TestCase):
 
     def setUp(self):
-        self.request = self.GitHubRepoRequest()
-        self.request.make_request()
-        github_rate_limit_header = 'X-RateLimit-Remaining'
-        self.limit_remaining = self.request.headers.get(github_rate_limit_header)
+        self.github = GitHubRepoRequest()
+        self.github.make_request()
 
-    def request_success(self):
-        self.assertTrue(self.request.successful)
+    def test_request_success(self):
+        self.assertTrue(self.github.successful)
 
-    def content_is_correct(self):
-        by_id = {i['id']: i for i in self.request.data}
-        self.assertTrue(by_id[21495975]['name'], 'QSTools')
+    def test_content_is_correct(self):
+        self.assertIsInstance(self.github.data, list)
+        by_id = {i['id']: i for i in self.github.data}
+        self.assertEqual(by_id[21495975]['name'], 'QSTools')
 
-    def headers_are_correct(self):
-        self.assertIsInstance(self.limit_header_before, str)
-        self.assertNotEqual(self.limit_header_before, '')
-
-    def rate_limit_tracking_matches_request(self):
-        server = rate_limiting.get_server('github.com')
-        self.assertEqual(server.remaining, self.limit_remaining)
 
 if __name__ == '__main__':
     unittest.main()
