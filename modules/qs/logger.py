@@ -1,5 +1,7 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Wrapper on top of the Logger for logging QuickSchools API requests"""
+"""Wrapper on top of the Logger for logging QuickSchools API requests.
+#NOT TESTABLE
+"""
 
 import logging
 import json
