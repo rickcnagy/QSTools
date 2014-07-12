@@ -10,6 +10,7 @@ import qs
 class GitHubRequest(qs.BaseRequest):
     base_url = 'https://api.github.com'
 
+
 class QSRequest(qs.BaseRequest):
     base_url = 'https://api.quickschools.com/sms/v1'
 
