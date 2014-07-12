@@ -12,6 +12,7 @@ class GitHubRequest(qs.BaseRequest):
 
 
 class QSRequest(qs.BaseRequest):
+    base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'
 
     def __init__(self, description, uri, live=True):
@@ -20,6 +21,10 @@ class QSRequest(qs.BaseRequest):
                 'quickschools',
                 'smartschoolcentral')
         super(QSRequest, self).__init__(description, uri)
+
+    def set_api_key(self, api_key):
+        self._api_key = api_key
+        self.base_params = self._merge([{'apiKey': api_key}, self.base_params])
 
     def _get_data(self):
         if not self.successful: return []

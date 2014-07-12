@@ -163,15 +163,15 @@ class BaseRequest(object):
         return self.base_url + self.uri
 
     def _full_params(self):
-        return self._merge_dicts([self.base_params, self.params])
+        return self._merge([self.base_params, self.params])
 
     def _full_data(self):
-        return self._merge_dicts([self.base_request_data, self.request_data])
+        return self._merge([self.base_request_data, self.request_data])
 
     def _full_headers(self):
-        return self._merge_dicts([self.base_headers, self.headers])
+        return self._merge([self.base_headers, self.headers])
 
-    def _merge_dicts(self, dicts):
+    def _merge(self, dicts):
         all_items = []
         for unmerged in dicts:
             for item in unmerged.items():

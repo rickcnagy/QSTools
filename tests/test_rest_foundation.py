@@ -4,12 +4,11 @@
 import unittest
 import qs
 
-qs.logger.silence()
-
 
 class TestBasicGet(unittest.TestCase):
 
     def setUp(self):
+        qs.logger.silence()
         self.github = qs.GitHubRequest(
             'Test Request',
             '/users/{}/repos'.format('br1ckb0t'))
@@ -29,6 +28,11 @@ class TestBasicGet(unittest.TestCase):
         self.assertEqual(
             server.remaining,
             self.github.response.headers[qs.rate_limiting._GITHUB_LIMIT_HEADER])
+
+    def test_marge(self):
+        self.assertEquals(
+            self.github._merge([{1: 1}, {2: 2}, {3: 3}]),
+            {1: 1, 2: 2, 3:3})
 
 if __name__ == '__main__':
     unittest.main()
