@@ -5,6 +5,7 @@ include =
     */qs/rate_limiting.py
     */qs/rest_request_wrappers.py
     */qs/util.py
+    */qs/api_keys.py
 
 omit =
     *__init__*
