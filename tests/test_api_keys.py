@@ -1,4 +1,4 @@
-"""Test the API Keys module"""
+"""Test the API keys module"""
 
 from qs import api_keys
 import qs

@@ -1,6 +1,6 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 """Module for setting and getting API keys in the locally saved API key store,
-which is stored in ~/API Keys.json
+which is stored in ~/API keys.json
 """
 
 import json
@@ -54,9 +54,9 @@ def remove(key):
     if db_key in db:
         del db[db_key]
         _save_db(db)
-        print "Removed {} from the API Key store".format(db_key)
+        print "Removed {} from the API key store".format(db_key)
     else:
-        raise KeyError("{} isn't a key in the API Key store.".format(key))
+        raise KeyError("{} isn't a key in the API key store.".format(key))
 
 
 def _generate_key(str_or_list_key):

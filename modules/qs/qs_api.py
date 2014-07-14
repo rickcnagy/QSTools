@@ -57,7 +57,7 @@ class API(object):
     def _get_api_key(self, schoolcode):
         """Get the API key on file for that schoolcode"""
         #TODO: implement, as follows:
-        """setup.py should add a file: ~/QuickSchools API Keys.json which is
+        """setup.py should add a file: ~/QuickSchools API keys.json which is
         formatted like:
         {schoolcode: api_key, schoolcode-bak: api_key, pld: api_key, github: api_key}
         and created (with dummy data only) during setup.py
@@ -70,4 +70,4 @@ class API(object):
         api_key_store can access both QS and non qs api keys - it's just a key
         value store.
         """
-        raise NotImplementedError('Need to supply an API Key to qs.API()')
+        raise NotImplementedError('Need to supply an API key to qs.API()')
