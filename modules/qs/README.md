@@ -21,7 +21,7 @@ Wrapper on top of the Logger for logging QuickSchools API requests.
 
 Limit request rates on REST servers by request base URL.
 
-####[`rest_base.py`](./rest_base.py)
+####[`rest_foundation.py`](./rest_foundation.py)
 
 Base-level API interaction tools to be extended upon for different uses.
 Generally, the intent is for extension towards the QS API, but this module

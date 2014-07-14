@@ -6,7 +6,7 @@ import logger
 import api_keys
 
 # import __all__ from modules
-from rest_base import *
+from rest_foundation import *
 from csv_tools import *
 from util import *
 from rate_limiting import *

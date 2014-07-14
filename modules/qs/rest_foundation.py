@@ -55,6 +55,11 @@ class BaseRequest(object):
             of the data, and subclasses should ensure that if there's usable
             data in the response, self.data reflects this. If there was an
             error, data will be {} to avoid errors in iterators that use it.
+
+    Args:
+        description: a description of this request. It should be in the form of
+            "{verb} {noun}", like "GET data" or "POST results".
+        uri: the uri of the resource to make the request at, beginning with '/'
     """
     base_url = ''
     base_params = {}
@@ -128,18 +133,18 @@ class BaseRequest(object):
 
     def _log_before(self):
         if not self.logged: return
-        qs.logger.info(self.description, self._log_dict(), is_request=True)
+        qs.logger.info(self, self._log_dict(), is_request=True)
 
     def _log_after(self):
         if not self.logged: return
         if self.successful:
             qs.logger.info(
-                self.description,
+                self,
                 self._log_dict(),
                 is_response=True)
         else:
             qs.logger.error_or_critical(
-                self.description,
+                self,
                 self._log_dict(),
                 self.critical)
 
@@ -170,6 +175,12 @@ class BaseRequest(object):
 
     def _full_headers(self):
         return qs.merge([self.base_headers, self.headers])
+
+    def __repr__(self):
+        return '<{} to {} at {}>'.format(
+            self.__class__.__name__,
+            self.description,
+            self.uri)
 
 
 class APIWrapper(object):
