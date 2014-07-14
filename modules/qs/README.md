@@ -14,7 +14,7 @@ Data migration via the QuickSchools API - utility module.
 ####[`logger.py`](./logger.py)
 
 Wrapper on top of the Logger for logging QuickSchools API requests.
-#TEST EXEMPT
+\#TEST EXEMPT
 
 
 ####[`rate_limiting.py`](./rate_limiting.py)

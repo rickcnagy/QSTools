@@ -41,7 +41,9 @@ def generate_markdown(folder_path, title):
     for entry in entries:
         markdown += '####{}\n\n'.format(entry.md_title())
         docstring = entry.get_docstring()
-        markdown += '{}\n\n'.format(docstring) if docstring else ''
+        if docstring:
+            docstring = docstring.replace('#', '\#')
+            markdown += '{}\n\n'.format(docstring)
     markdown = markdown.strip()
     return markdown
 
@@ -97,7 +99,7 @@ class ScriptEntry(ReadmeEntry):
 
     def is_valid_docstring(self):
         return (self.get_docstring() is not None
-                and ('#NOT TESTED' not in self.get_docstring()))
+                    and ('#NOT TESTED' not in self.get_docstring()))
 
     def is_py(self):
         return self.name[-3:] == '.py' and '__init__' not in self.name
@@ -125,7 +127,6 @@ class ScriptEntry(ReadmeEntry):
             if match:
                 javadoc = match[0]
                 javadoc = javadoc.replace('*', '')
-                javadoc = javadoc.replace('#', '\#')
                 javadoc = re.sub('\s+', ' ', javadoc)
                 self.docstring = javadoc
         return self.docstring
