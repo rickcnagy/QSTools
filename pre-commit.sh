@@ -33,4 +33,4 @@ build_doc '/modules/qs' '`qs` Python Package'
 docs_finished
 
 # fix all whitespace in Python files
-reindent --recurse .
+reindent --recurse --nobackup .

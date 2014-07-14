@@ -5,7 +5,7 @@ import data_migration
 import logger
 import api_keys
 
-# classes + functions + variables
+# import __all__ from modules
 from rest_base import *
 from csv_tools import *
 from util import *

@@ -7,7 +7,7 @@ import json
 import qs
 import os
 
-KEY_STORE_PATH = '~/API Keys.json'
+KEY_STORE_PATH = '~/.apikeys.json'
 SAMPLE_API_KEY_STORE = {
     "qs:live:qstools": "qstools.053904ef-90c1-3f94-bc84-cc95168f4f20"
 }
@@ -23,7 +23,7 @@ def set(key, api_key):
         api_key: the value to store
     """
     if api_key:
-        db = _open_db()
+        db = _get_db()
         db_key = _generate_key(key)
         db[db_key] = api_key
         _save_db(db)
@@ -39,7 +39,7 @@ def get(key):
             keys, only a value that were stored with all values in the list
             will be returned.
     """
-    db = _open_db()
+    db = _get_db()
     db_key = _generate_key(key)
     if db_key in db:
         return db[db_key]
@@ -47,10 +47,23 @@ def get(key):
         raise KeyError("{} isn't a key in the API key store.".format(key))
 
 
+def remove(key):
+    """Remove a key from the key store"""
+    db = _get_db()
+    db_key = _generate_key(key)
+    if db_key in db:
+        del db[db_key]
+        _save_db(db)
+        print "Removed {} from the API Key store".format(db_key)
+    else:
+        raise KeyError("{} isn't a key in the API Key store.".format(key))
+
+
 def _generate_key(str_or_list_key):
     keys = []
     if not str_or_list_key:
-        raise ValueError("Key is {}, must not be None".format(str_or_list_key))
+        raise ValueError("Key is {}, must equate to True".format(
+            str_or_list_key))
     if type(str_or_list_key) is str:
         keys = [str_or_list_key]
     elif type(str_or_list_key) is list:
@@ -66,7 +79,7 @@ def _get_path():
     return os.path.expanduser(KEY_STORE_PATH)
 
 
-def _open_db():
+def _get_db():
     """Open and return the entire API key db. If the db isn't found,
     _create_db() is called
     """
@@ -76,12 +89,12 @@ def _open_db():
 
 
 def _save_db(db):
-    """Save the db to disk. Just as in _open_db(), if the db isn't found,
+    """Save the db to disk. Just as in _get_db(), if the db isn't found,
     _create_db() is called firstrna
     """
     _create_db_if_necessary()
     with open(_get_path(), 'w') as f:
-        json.dump(db, f, indent=4)
+        json.dump(db, f, indent=4, sort_keys=True)
 
 
 def _create_db_if_necessary():

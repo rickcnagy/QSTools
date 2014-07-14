@@ -6,7 +6,7 @@ from nose.tools import raises
 import json
 import config
 
-TEMP_STORE_PATH = "~/API Keys Testing.json"
+TEMP_STORE_PATH = "~/.apikeys_testing.json"
 
 
 def setup():
@@ -26,8 +26,22 @@ def test_generate_key_with_wrong_type():
     api_keys._generate_key(1)
 
 
+@raises(KeyError)
+def test_remove_nonexistent_key():
+    api_keys.remove(qs.rand_str())
+
+
 def test_get_api_key():
     assert api_keys.get(['qs', 'live', 'qstools']) == config.API_KEY
+
+
+def test_remove_api_key():
+    key = qs.rand_str()
+    val = qs.rand_str()
+    api_keys.set(key, val)
+    assert key in api_keys._get_db()
+    api_keys.remove(key)
+    assert key not in api_keys._get_db()
 
 
 @raises(ValueError)
