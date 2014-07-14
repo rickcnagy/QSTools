@@ -1,6 +1,7 @@
 """Test the foundation for rest requests."""
 
 import qs
+import config
 
 # Random keys just for testing
 KEY = '0zX4EX'
@@ -47,3 +48,9 @@ def test_rate_limit_tracking_matches_request():
         rate_limit_header_field = qs.rate_limiting._GITHUB_LIMIT_HEADER
         github_remaining = github.response.headers[rate_limit_header_field]
         assert server.remaining == github_remaining
+
+
+def test_api_wrapper_init():
+    wrapper = qs.APIWrapper(['qs', 'live', 'qstools'])
+    assert wrapper.identifier == ['qs', 'live', 'qstools']
+    assert wrapper.api_key == config.API_KEY

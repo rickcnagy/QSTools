@@ -175,16 +175,24 @@ class BaseRequest(object):
 class APIWrapper(object):
     """Generic class for making a wrapper around a REST API.
 
-    For now, this only supports APIs that authenticate with an API key or do not
-    authenticate at all.
+    For now, this only supports APIs that authenticate with an API key or do
+    not authenticate at all.
 
     The only constants within an API wrapper of a specific class is those that
     are passed as params to the __init__ function. If any value that was used
     to instantiate the objet changes, then a new APIWrapper should be made.
 
     Attributes:
-        api_key: the API Key used for authentication.
+        identifier: the identifier of the server/app being accessed
+        api_key: the API key for accessing that server, as per the API key
+            store
+    Args:
+        identifier: the identifier of the server/app being accessed. This will
+            be used to store and retrieve the API key from the API key store.
+            If the identifier is not already stored in the API key store, set
+            it via commandline with `qs.api_keys.set('identifier', 'value')`
     """
 
     def __init__(self, identifier):
-        self._identifier = identifier
+        self.identifier = identifier
+        self.api_key = qs.api_keys.get(identifier)
