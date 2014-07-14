@@ -25,6 +25,8 @@ class QSRequest(qs.BaseRequest):
             self.base_url = self.base_url.replace(
                 'quickschools',
                 'smartschoolcentral')
+        self.return_type = None
+        self.paging_info = None
         super(QSRequest, self).__init__(description, uri)
 
     def set_api_key(self, api_key):
@@ -36,7 +38,18 @@ class QSRequest(qs.BaseRequest):
 
         parsed = self.response.json()
         if 'list' in parsed:
+            self.return_type = 'Paged List'
+            self.paging_info = {
+                'items_per_page': parsed['itemsPerPage'],
+                'page': parsed['page'],
+                'number_of_pages': parsed['numberOfPages'],
+                'number_of_items': parsed['numberOfItems'],
+            }
             return parsed['list']
-        if 'id' in parsed or type(parsed) is list:
+        elif 'id' in parsed:
+            self.return_type = 'Single Object'
+            return parsed
+        elif type(parsed) is list:
+            self.return_type = 'Flat List'
             return parsed
         api_logging.critical("Unrecognized response data type", parsed)

@@ -38,15 +38,18 @@ def setup(module):
 def test_paged_list():
     assert type(paged_list.data) is list
     assert type(paged_list.data[0]) is dict
+    assert paged_list.return_type == 'Paged List'
 
 
 def test_single_object():
     assert type(single_object.data) is dict
+    assert single_object.return_type == 'Single Object'
 
 
 def test_flat_list():
     assert type(flat_list.data) is list
     assert type(flat_list.data[0]) is dict
+    assert flat_list.return_type == 'Flat List'
 
 
 def test_qs_live_request_url():
