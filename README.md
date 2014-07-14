@@ -6,7 +6,7 @@ QSTools
 A toolset for programmatically interacting with the QuickSchools API and GUI quickly and efficiently.
 
 ###How This Repo Works
-* This is a toolset designed to be the **building blocks for large and complicated scripts that can be written and run under a time pressure.** As a result, it consists of lots of small, contained, and useful scripts.
+* This is a toolset designed to be the **building blocks for large and complicated scripts that can be written and run under a time pressure *without failing*.** As a result, it consists of lots of small, contained, and useful scripts.
 * If a script has a docstring at the top, it will not be deleted. Instead, it will be maintained and tested to continue to match that docstring, even if the implementation has to completely change.
 * The scripts, utilities, and modules contained in this repo are organized by type:
     * [**api**](./api): any script that somehow leverages the [QuickSchools REST API](http://apidocs.quickschools.com/). This is currently all Python scripts, but could also be JavaScript (or any other language).
