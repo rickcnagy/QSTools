@@ -58,14 +58,14 @@ Included in this repo is a Python package that provides a simple API for doing l
 2. `cd` into the unzipped folder.
 3. Run:
 ```
+pip install reindent requests
 python setup.py install
 ```
 After doing this, a `qs` module will be importable from all Python scripts and provide access the package's API.
 
-###Contributing
-At this point, there are `3` dependencies:
-* Python requests (install via command line with `pip install requests`)
-* Python reindent (install via command line with `pip install reindent`)
+###Contributing and using
+At this point, there are `2` dependencies to running scripts in this repo:
+* The `qs` package (installation above).
 * QS Support Tools ([install extension here](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh))
 
 ###Support
