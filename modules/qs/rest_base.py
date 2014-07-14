@@ -163,20 +163,13 @@ class BaseRequest(object):
         return self.base_url + self.uri
 
     def _full_params(self):
-        return self._merge([self.base_params, self.params])
+        return qs.merge([self.base_params, self.params])
 
     def _full_data(self):
-        return self._merge([self.base_request_data, self.request_data])
+        return qs.merge([self.base_request_data, self.request_data])
 
     def _full_headers(self):
-        return self._merge([self.base_headers, self.headers])
-
-    def _merge(self, dicts):
-        all_items = []
-        for unmerged in dicts:
-            for item in unmerged.items():
-                all_items.append(item)
-        return dict(all_items)
+        return qs.merge([self.base_headers, self.headers])
 
 
 class APIWrapper(object):

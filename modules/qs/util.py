@@ -17,6 +17,15 @@ def rand_str(size=6, chars=string.letters + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+def merge(dict_list):
+    """Returned merged version of indefinite number of dicts in dict_list"""
+    all_items = []
+    for unmerged in dict_list:
+        for item in unmerged.items():
+            all_items.append(item)
+    return dict(all_items)
+
+
 def bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
         mininterval=0.5, miniters=1):  # pragma: no cover
     """Status bar for iterables, using tqdm: github.com/noamraph/tqdm

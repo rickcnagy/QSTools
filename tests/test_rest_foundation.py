@@ -29,5 +29,3 @@ def test_rate_limit_tracking_matches_request():
     assert server.remaining == github_remainaing
 
 
-def test_merge():
-    assert github._merge([{1: 1}, {2: 2}, {3: 3}]) == {1: 1, 2: 2, 3: 3}

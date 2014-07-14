@@ -25,3 +25,6 @@ def test_rand_str_chars():
 
 def test_rand_str_randomness():
     assert qs.rand_str() != qs.rand_str()
+
+def test_merge():
+    assert qs.merge([{1: 1}, {2: 2}, {3: 3}]) == {1: 1, 2: 2, 3: 3}
