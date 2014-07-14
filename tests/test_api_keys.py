@@ -30,6 +30,16 @@ def test_get_api_key():
     assert api_keys.get(['qs', 'live', 'qstools']) == config.API_KEY
 
 
+@raises(ValueError)
+def test_setting_with_bad_api_key():
+    api_keys.set('12345', '')
+
+
+@raises(ValueError)
+def test_setting_with_bad_key():
+    api_keys.set('', '12345')
+
+
 @raises(KeyError)
 def test_api_key_path_order():
     key_path = ['1', '2', '3']

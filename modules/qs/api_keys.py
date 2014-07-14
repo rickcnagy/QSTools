@@ -49,6 +49,8 @@ def get(key):
 
 def _generate_key(str_or_list_key):
     keys = []
+    if not str_or_list_key:
+        raise ValueError("Key is {}, must not be None".format(str_or_list_key))
     if type(str_or_list_key) is str:
         keys = [str_or_list_key]
     elif type(str_or_list_key) is list:
