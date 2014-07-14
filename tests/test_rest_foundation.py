@@ -5,7 +5,6 @@ import qs
 
 def setup(module):
     global github
-    qs.logger.silence()
     github = qs.GitHubRequest(
         'Test Request',
         '/users/{}/repos'.format('br1ckb0t'))
