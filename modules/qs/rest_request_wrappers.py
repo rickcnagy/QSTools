@@ -11,6 +11,11 @@ class GitHubRequest(qs.BaseRequest):
     base_url = 'https://api.github.com'
 
 
+class HTTPBinRequest(qs.BaseRequest):
+    """For test requests at HTTPBin: github.com/kennethreitz/httpbin"""
+    base_url = 'https://httpbin.org'
+
+
 class QSRequest(qs.BaseRequest):
     base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'

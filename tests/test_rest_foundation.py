@@ -2,30 +2,48 @@
 
 import qs
 
+# Random keys just for testing
+KEY = '0zX4EX'
+VAL = 'Ei5kWV'
+
 
 def setup(module):
-    global github
+    global basic_get, github, before_request_count, before_response_count
+
+    httpbin_server = qs.rate_limiting.get_server('httpbin')
+    before_request_count = httpbin_server.request_count
+    before_response_count = httpbin_server.response_count
+
+    basic_get = qs.HTTPBinRequest('Test Request', '/get')
+    basic_get.params = {KEY: VAL}
+    basic_get.make_request()
+
     github = qs.GitHubRequest(
         'Test Request',
         '/users/{}/repos'.format('br1ckb0t'))
     github.make_request()
 
 
+def test_request_count_in_rate_limit_server():
+    httpbin_server = qs.rate_limiting.get_server('httpbin')
+    assert before_request_count == httpbin_server.request_count - 1
+    assert before_response_count == httpbin_server.response_count - 1
+
+
 def test_request_success():
-    assert github.successful is True
+    assert basic_get.successful is True
 
 
 def test_content_is_correct():
-    assert type(github.data) is list
-    by_id = {i['id']: i for i in github.data}
-    assert by_id[21495975]['name'] == 'QSTools'
+    assert type(basic_get.data) is dict
+    assert KEY in basic_get.data['args']
+    assert basic_get.data['args'][KEY] == VAL
 
 
 def test_rate_limit_tracking_matches_request():
-    server = qs.rate_limiting.get_server('github.com')
+    server = qs.rate_limiting.get_server('github')
     assert server is not None
-    rate_limit_header_field = qs.rate_limiting._GITHUB_LIMIT_HEADER
-    github_remainaing = github.response.headers[rate_limit_header_field]
-    assert server.remaining == github_remainaing
-
-
+    if github.successful:
+        rate_limit_header_field = qs.rate_limiting._GITHUB_LIMIT_HEADER
+        github_remaining = github.response.headers[rate_limit_header_field]
+        assert server.remaining == github_remaining

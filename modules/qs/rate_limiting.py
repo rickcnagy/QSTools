@@ -21,9 +21,7 @@ def register_request(request_url):
     trigger a wait (or whatever else for that server) when appropriate
     """
     server = get_server(request_url)
-    if not server:
-        logger.warning('Tried to make a request at an unrecognized URL', url)
-    else:
+    if server:
         server.register_request(request_url)
 
 
@@ -36,20 +34,23 @@ def register_response(response):
     """
     url = response.url
     server = get_server(url)
-    if not server:
-        logger.warning('Received a response at an unrecognized URL', url)
-    else:
+    if server:
         server.register_response(response)
 
 
-def get_server(request_url):
+def get_server(url):
     _init_servers()
-    if 'quickschools.com' in request_url:
+    if 'quickschools' in url:
         return _servers['qs_live']
-    elif 'smartschoolcentral.com' in request_url:
+    elif 'smartschoolcentral' in url:
         return _servers['qs_backup']
-    elif 'github.com' in request_url:
+    elif 'github' in url:
         return _servers['github']
+    elif 'httpbin' in url:
+        return _servers['httpbin']
+    else:
+        logger.warning('Making request/response at unrecognized URL, so no '
+            'rate limiting or request tracking is in place for', url)
 
 # =============
 # = Protected =
@@ -70,12 +71,28 @@ def _init_servers():
         'github': _HeaderBasedServer(
             'github',
             _GITHUB_LIMIT_HEADER),
+        'httpbin': _Server('httpbin'),
     }
     return _servers
 
 
-class _ServerWithLimit(object):
-    """A class to keep track of rate limits on a server.
+class _Server(object):
+    """A server to make requests at. Rate limiting may not be necessary."""
+
+    def __init__(self, identifier):
+        self.identifier = identifier
+        self.request_count = 0
+        self.response_count = 0
+
+    def register_request(self, request):
+        self.request_count += 1
+
+    def register_response(self, response):
+        self.response_count += 1
+
+
+class _ServerWithLimit(_Server):
+    """A server with a rate limit.g
 
     register_request should be called right before every call to the server,
     and it will automatically trigger _limit_reached automatically.
@@ -85,22 +102,15 @@ class _ServerWithLimit(object):
     """
 
     def __init__(self, identifier):
-        self._identifier = identifier
-        self._request_count = 0
-        self._response_count = 0
         self._limit_has_been_reached = False
+        super(_ServerWithLimit, self).__init__(identifier)
 
-    def register_request(self, request):
-        self._request_count += 1
-
-    def register_response(self, response):
-        self._response_count += 1
 
     def _limit_reached(self):
         self._limit_has_been_reached = True
         logger.critical(
             'Tried to make request, but limit reached for server',
-            self._identifier)
+            self.identifier)
 
 
 class _ServerWithKnownLimit(_ServerWithLimit):
@@ -115,8 +125,8 @@ class _ServerWithKnownLimit(_ServerWithLimit):
 
     def register_request(self, request):
         super(_ServerWithKnownLimit, self).register_request(request)
-        if self._request_count >= self._limit:
-            self._request_count = 0
+        if self.request_count >= self._limit:
+            self.request_count = 0
             self._limit_reached()
 
 
