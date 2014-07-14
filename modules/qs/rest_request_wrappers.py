@@ -53,3 +53,11 @@ class QSRequest(qs.BaseRequest):
             self.return_type = 'Flat List'
             return parsed
         api_logging.critical("Unrecognized response data type", parsed)
+
+    def _after_response(self):
+        """For now, until QSPaginatedRequest is implemented, exit if more than
+        1000 entries are received
+        """
+        if (self.return_type == 'Paged List'
+                and int(self.paging_info['number_of_pages']) > 1):
+            qs.logger.critical('Receieved too may responses', self._log_dict())
