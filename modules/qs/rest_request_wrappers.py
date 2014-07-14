@@ -7,16 +7,16 @@ rest_base.py
 import qs
 
 
-class GitHubRequest(qs.BaseRequest):
+class GitHubRequest(qs.RestRequest):
     base_url = 'https://api.github.com'
 
 
-class HTTPBinRequest(qs.BaseRequest):
+class HTTPBinRequest(qs.RestRequest):
     """For test requests at HTTPBin: github.com/kennethreitz/httpbin"""
     base_url = 'https://httpbin.org'
 
 
-class QSRequest(qs.BaseRequest):
+class QSRequest(qs.RestRequest):
     base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'
 

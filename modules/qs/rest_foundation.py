@@ -13,7 +13,7 @@ POST = 'POST'
 DELETE = 'DELETE'
 
 
-class BaseRequest(object):
+class RestRequest(object):
     """Generic base request for subclassing to handle any REST API.
 
     This class handles the actual process of making a request, allowing

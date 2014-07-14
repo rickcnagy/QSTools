@@ -57,5 +57,5 @@ def test_api_wrapper_init():
 
 
 def test_request_repr():
-    basic = qs.BaseRequest('do something', '/uri')
-    assert '{}'.format(basic) == '<BaseRequest to do something at /uri>'
+    basic = qs.RestRequest('do something', '/uri')
+    assert '{}'.format(basic) == '<RestRequest to do something at /uri>'
