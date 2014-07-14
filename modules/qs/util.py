@@ -4,10 +4,17 @@
 import json
 import sys
 import time
+import string
+import random
 
 
 def dumps(arbitry_obj):
     return json.dumps(arbitry_obj, indent=4)
+
+
+def rand_str(size=6, chars=string.letters + string.digits):
+    """http://stackoverflow.com/a/2257449/1628796"""
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 def bar(iterable, desc='', total=None, leave=True, file=sys.stderr,

@@ -1,6 +1,12 @@
 `qs` Python Package
 ===
 
+####[`api_keys.py`](./api_keys.py)
+
+Module for setting and getting API keys in the locally saved API key store,
+which is stored in ~/API Keys.json
+
+
 ####[`data_migration.py`](./data_migration.py)
 
 Data migration via the QuickSchools API - utility module.
