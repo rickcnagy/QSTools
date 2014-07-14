@@ -177,3 +177,21 @@ class BaseRequest(object):
             for item in unmerged.items():
                 all_items.append(item)
         return dict(all_items)
+
+
+class APIWrapper(object):
+    """Generic class for making a wrapper around a REST API.
+
+    For now, this only supports APIs that authenticate with an API key or do not
+    authenticate at all.
+
+    The only constants within an API wrapper of a specific class is those that
+    are passed as params to the __init__ function. If any value that was used
+    to instantiate the objet changes, then a new APIWrapper should be made.
+
+    Attributes:
+        api_key: the API Key used for authentication.
+    """
+
+    def __init__(self, identifier):
+        self._identifier = identifier
