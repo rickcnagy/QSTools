@@ -12,8 +12,6 @@ import os
 import sys
 import re
 
-file_extensions = ['py', 'js']
-
 
 def main():
     folder = sys.argv[1]
