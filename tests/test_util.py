@@ -13,14 +13,14 @@ def test_dumps():
 
 
 def test_rand_str_length():
-    length = randint(5, 10)
+    length = random.randint(5, 10)
     rand_str = qs.rand_str(length)
     assert len(rand_str) == length
 
 
 def test_rand_str_chars():
-    filtered = [i for i in rand_str if i.isalnum()]
-    assert len(filtered) == length
+    filtered = [i for i in qs.rand_str() if i.isalnum()]
+    assert len(filtered) == len(qs.rand_str())
 
 
 def test_rand_str_randomness():

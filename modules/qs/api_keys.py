@@ -6,10 +6,11 @@ which is stored in ~/API Keys.json
 import json
 import qs
 import os
-import shutil
 
 KEY_STORE_PATH = '~/API Keys.json'
-DUMMY_KEY_STORE_PATH = './Sample API Keys.json'
+SAMPLE_API_KEY_STORE = {
+    "qs:live:qstools": "qstools.053904ef-90c1-3f94-bc84-cc95168f4f20"
+}
 
 
 def set(key, api_key):
@@ -22,6 +23,7 @@ def set(key, api_key):
         api_key: the value to store
     """
     if api_key:
+        db = _open_db()
         db_key = _generate_key(key)
         db[db_key] = api_key
         _save_db(db)
@@ -57,12 +59,17 @@ def _generate_key(str_or_list_key):
     return ':'.join(keys)
 
 
+def _get_path():
+    """Return the path of the key store"""
+    return os.path.expanduser(KEY_STORE_PATH)
+
+
 def _open_db():
     """Open and return the entire API key db. If the db isn't found,
     _create_db() is called
     """
     _create_db_if_necessary()
-    with open(_KEY_STORE_PATH) as f:
+    with open(_get_path()) as f:
         return json.load(f)
 
 
@@ -71,18 +78,23 @@ def _save_db(db):
     _create_db() is called firstrna
     """
     _create_db_if_necessary()
-    with open(_KEY_STORE_PATH) as f:
-        json.dump(f, indent=4)
+    with open(_get_path(), 'w') as f:
+        json.dump(db, f, indent=4)
 
 
 def _create_db_if_necessary():
-    """Create the db on disk by copying from _DUMMY_KEY_STORE_PATH if it's not
-    there already
+    """Create the db on disk by copying from SAMPLE_API_KEY_STORE
     """
     if not _db_exists():
-        shutil.copy(_DUMMY_KEY_STORE_PATH, _KEY_STORE_PATH)
+        with open(_get_path(), 'w') as f:
+            json.dump(SAMPLE_API_KEY_STORE, f)
+            return
 
 
 def _db_exists():
-    """Determine whether the db exists at _KEY_STORE_PATH"""
-    return os.isfile(_KEY_STORE_PATH)
+    """Determine whether the db exists at KEY_STORE_PATH"""
+    return os.path.isfile(_get_path())
+
+
+def _clear_db():
+    os.remove(_get_path())
