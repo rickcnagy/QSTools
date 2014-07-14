@@ -54,3 +54,8 @@ def test_api_wrapper_init():
     wrapper = qs.APIWrapper(['qs', 'live', 'qstools'])
     assert wrapper.identifier == ['qs', 'live', 'qstools']
     assert wrapper.api_key == config.API_KEY
+
+
+def test_request_repr():
+    basic = qs.BaseRequest('do something', '/uri')
+    assert '{}'.format(basic) == '<BaseRequest to do something at /uri>'
