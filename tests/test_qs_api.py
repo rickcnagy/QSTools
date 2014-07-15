@@ -9,9 +9,9 @@ def test_make_request():
     request = qs.QSRequest('Testing', '/students')
     q = qs.API()
     q.make_request(request, {'critical': True})
-    assert_equals(request.api_key, config.API_KEY)
+    assert_equals(request.api_key, q.api_key)
     assert_in('apiKey', request.params)
-    assert_equals(request.params['apiKey'], config.API_KEY)
+    assert_equals(request.params['apiKey'], q.api_key)
     assert_true(request.critical)
 
 
