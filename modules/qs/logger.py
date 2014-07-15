@@ -122,7 +122,7 @@ def unsilence():
 
 
 def maybe_print(log_message, cc_print):
-    if cc_print and out_is_file():
+    if (cc_print and out_is_file()) or (not out_is_file()):
         print '\n' + log_message
 
 
@@ -131,7 +131,8 @@ def format_for_log(description, data, is_request, is_response):
     description = repr(description)
     description += " - RESPONSE" if is_response else ''
     description += " - REQUEST" if is_request else ''
-    description += ('\n{}'.format(json.dumps(data, indent=4, sort_keys=True))
+    description += ('\n{}'.format(
+        json.dumps(data, indent=4, sort_keys=True))
         if data else '')
     return description
 
