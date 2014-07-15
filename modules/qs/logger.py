@@ -44,7 +44,7 @@ def config(sender, print_only=False, log_filename=None):
     has_been_configured = True
 
 
-def info(description, data, is_response=False, is_request=False, cc_print=False):
+def info(description, data={}, is_response=False, is_request=False, cc_print=False):
     """info level log messages, logs to syslog and default output stream"""
     if not should_log(): return
     check_config()
@@ -54,7 +54,7 @@ def info(description, data, is_response=False, is_request=False, cc_print=False)
     maybe_print(log_message, cc_print)
 
 
-def warning(description, data, is_response=False, is_request=False, cc_print=True):
+def warning(description, data={}, is_response=False, is_request=False, cc_print=True):
     """same as info, but warning level"""
     if not should_log(): return
     check_config()
@@ -64,7 +64,7 @@ def warning(description, data, is_response=False, is_request=False, cc_print=Tru
     maybe_print(log_message, cc_print)
 
 
-def error(description, data, is_response=False, is_request=False, cc_print=True):
+def error(description, data={}, is_response=False, is_request=False, cc_print=True):
     """same as info, but error level"""
     if not should_log(): return
     check_config()
@@ -74,7 +74,7 @@ def error(description, data, is_response=False, is_request=False, cc_print=True)
     maybe_print(log_message, cc_print)
 
 
-def critical(description, data, is_request=False, is_response=False):
+def critical(description, data={}, is_request=False, is_response=False):
     """same as info, but critical and also prints stack trace, log message, and then exits execution"""
     if not should_log(): return
     check_config()
