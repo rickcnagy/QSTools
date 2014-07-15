@@ -32,6 +32,21 @@ def test_request_count_in_rate_limit_server():
     assert_equals(before_response_count, httpbin_server.response_count - 1)
 
 
+def test_rate_limit_urls():
+    qs_url = 'https://api.quickschools.com/sms/v1'
+    backup_url = 'https://api.smartschoolcentral.com/sms/v1'
+    httpbin_url = 'https://www.httpbin.org'
+    github_url = 'https://api.github.com'
+    match_dict = {
+        qs.rate_limiting.get_server(qs_url): 'qs_live',
+        qs.rate_limiting.get_server(backup_url): 'qs_backup',
+        qs.rate_limiting.get_server(httpbin_url): 'httpbin',
+        qs.rate_limiting.get_server(github_url): 'github',
+    }
+    for server, identifier in match_dict.iteritems():
+        assert_equals(server.identifier, identifier)
+
+
 def test_request_success():
     assert_true(basic_get.successful)
 

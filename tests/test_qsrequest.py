@@ -4,6 +4,7 @@ import qs
 import config
 from nose.tools import *
 from qs import QSRequest
+from mock import MagicMock
 
 # just for testing correct param val...
 _MAGIC_VAL = '1546'
@@ -75,6 +76,23 @@ def test_headers():
     full_headers = flat_list._full_headers()
     assert_in('some_header', full_headers)
     assert_equals(full_headers['some_header'], _MAGIC_VAL)
+
+
+def test_weird_response():
+    request = qs.QSRequest('Weirdo', '/students')
+    request.set_api_key('qstools.053904ef-90c1-3f94-bc84-cc95168f4f20')
+
+    other_request = qs.HTTPBinRequest('Other', '/get')
+    other_request.make_request()
+
+    request.successful = True
+    request.response = other_request.response
+
+    qs.logger = MagicMock()
+    request._get_data()
+    qs.logger.critical.assert_called_once_with(
+        "Unrecognized response data type",
+        request.response.json())
 
 if __name__ == '__main__':
     unittest.main()
