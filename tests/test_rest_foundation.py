@@ -3,6 +3,7 @@
 import qs
 import config
 from nose.tools import *
+from mock import MagicMock
 
 # Random keys just for testing
 KEY = '0zX4EX'
@@ -32,7 +33,7 @@ def test_request_count_in_rate_limit_server():
     assert_equals(before_response_count, httpbin_server.response_count - 1)
 
 
-def test_rate_limit_urls():
+def test_rate_limit_with_valid_urls():
     qs_url = 'https://api.quickschools.com/sms/v1'
     backup_url = 'https://api.smartschoolcentral.com/sms/v1'
     httpbin_url = 'https://www.httpbin.org'
@@ -45,6 +46,15 @@ def test_rate_limit_urls():
     }
     for server, identifier in match_dict.iteritems():
         assert_equals(server.identifier, identifier)
+
+
+def test_get_server_at_bad_url():
+    bad_url = 'http://somerandomapi.com/nothing'
+    qs.logger = MagicMock()
+    qs.rate_limiting.get_server(bad_url)
+    qs.logger.warning.assert_called_once_with(
+        'Making request/response at unrecognized URL, so no '
+        'rate limiting or request tracking is in place for', bad_url)
 
 
 def test_request_success():

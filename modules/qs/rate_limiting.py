@@ -3,7 +3,7 @@
 
 import time
 import requests
-from qs import logger
+import qs
 
 _QS_LIVE_LIMIT = 5
 _QS_LIVE_WAIT_TIME = 1
@@ -48,10 +48,9 @@ def get_server(url):
         return _servers['github']
     elif 'httpbin' in url:
         return _servers['httpbin']
-    else:
-        logger.warning(
-            'Making request/response at unrecognized URL, so no '
-            'rate limiting or request tracking is in place for', url)
+    qs.logger.warning(
+        'Making request/response at unrecognized URL, so no '
+        'rate limiting or request tracking is in place for', url)
 
 # =============
 # = Protected =
@@ -108,7 +107,7 @@ class _ServerWithLimit(_Server):
 
     def _limit_reached(self):
         self._limit_has_been_reached = True
-        logger.critical(
+        qs.logger.critical(
             'Tried to make request, but limit reached for server',
             self.identifier)
 
