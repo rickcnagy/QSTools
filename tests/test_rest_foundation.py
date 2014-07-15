@@ -85,3 +85,13 @@ def test_api_wrapper_init():
 def test_request_repr():
     basic = qs.RestRequest('do something', '/uri')
     assert_equals('{}'.format(basic), '<RestRequest do something at /uri>')
+
+
+def test_limit_reached_on_server():
+    qs.logger = MagicMock()
+    server = qs.rate_limiting._ServerWithLimit('test_server')
+    server._limit_reached()
+    assert_true(server._limit_has_been_reached)
+    qs.logger.critical.assert_called_once_with(
+        'Tried to make request, but limit reached for server',
+        'test_server')
