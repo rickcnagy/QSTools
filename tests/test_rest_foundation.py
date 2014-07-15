@@ -2,6 +2,7 @@
 
 import qs
 import config
+from nose.tools import *
 
 # Random keys just for testing
 KEY = '0zX4EX'
@@ -27,35 +28,35 @@ def setup(module):
 
 def test_request_count_in_rate_limit_server():
     httpbin_server = qs.rate_limiting.get_server('httpbin')
-    assert before_request_count == httpbin_server.request_count - 1
-    assert before_response_count == httpbin_server.response_count - 1
+    assert_equals(before_request_count, httpbin_server.request_count - 1)
+    assert_equals(before_response_count, httpbin_server.response_count - 1)
 
 
 def test_request_success():
-    assert basic_get.successful is True
+    assert_true(basic_get.successful)
 
 
 def test_content_is_correct():
-    assert type(basic_get.data) is dict
-    assert KEY in basic_get.data['args']
-    assert basic_get.data['args'][KEY] == VAL
+    assert_is_instance(basic_get.data, dict)
+    assert_in(KEY, basic_get.data['args'])
+    assert_equals(basic_get.data['args'][KEY], VAL)
 
 
 def test_rate_limit_tracking_matches_request():
     server = qs.rate_limiting.get_server('github')
-    assert server is not None
+    assert_is_not_none(server)
     if github.successful:
         rate_limit_header_field = qs.rate_limiting._GITHUB_LIMIT_HEADER
         github_remaining = github.response.headers[rate_limit_header_field]
-        assert server.remaining == github_remaining
+        assert_equals(server.remaining, github_remaining)
 
 
 def test_api_wrapper_init():
     wrapper = qs.APIWrapper(['qs', 'live', 'qstools'])
-    assert wrapper.identifier == ['qs', 'live', 'qstools']
-    assert wrapper.api_key == config.API_KEY
+    assert_equals(wrapper.identifier, ['qs', 'live', 'qstools'])
+    assert_equals(wrapper.api_key, config.API_KEY)
 
 
 def test_request_repr():
     basic = qs.RestRequest('do something', '/uri')
-    assert '{}'.format(basic) == '<RestRequest to do something at /uri>'
+    assert_equals('{}'.format(basic), '<RestRequest do something at /uri>')

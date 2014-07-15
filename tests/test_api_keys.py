@@ -2,7 +2,7 @@
 
 from qs import api_keys
 import qs
-from nose.tools import raises
+from nose.tools import *
 import json
 import config
 
@@ -16,9 +16,9 @@ def setup():
 
 
 def test_generate_key():
-    assert api_keys._generate_key(['1', '2']) == '1:2'
-    assert api_keys._generate_key('1') == '1'
-    assert api_keys._generate_key('1:2') == '1:2'
+    assert_equals(api_keys._generate_key(['1', '2']), '1:2')
+    assert_equals(api_keys._generate_key('1'), '1')
+    assert_equals(api_keys._generate_key('1:2'), '1:2')
 
 
 @raises(TypeError)
@@ -32,16 +32,16 @@ def test_remove_nonexistent_key():
 
 
 def test_get_api_key():
-    assert api_keys.get(['qs', 'live', 'qstools']) == config.API_KEY
+    assert_equals(api_keys.get(['qs', 'live', 'qstools']), config.API_KEY)
 
 
 def test_remove_api_key():
     key = qs.rand_str()
     val = qs.rand_str()
     api_keys.set(key, val)
-    assert key in api_keys._get_db()
+    assert_in(key, api_keys._get_db())
     api_keys.remove(key)
-    assert key not in api_keys._get_db()
+    assert_not_in(key, api_keys._get_db())
 
 
 @raises(ValueError)
@@ -59,7 +59,7 @@ def test_api_key_path_order():
     key_path = ['1', '2', '3']
     val = qs.rand_str()
     api_keys.set(key_path, val)
-    assert api_keys.get(key_path) == val
+    assert_equals(api_keys.get(key_path), val)
     api_keys.get(['2', '1', '3'])
 
 
@@ -73,21 +73,21 @@ def test_set_api_key():
     val = qs.rand_str()
     api_keys.set(key, val)
     with open(api_keys._get_path()) as f:
-        assert json.load(f)[key] == val
+        assert_equals(json.load(f)[key], val)
 
 
 def test_api_key_with_key_path():
     key_path = [qs.rand_str(), qs.rand_str(), qs.rand_str()]
     val = qs.rand_str()
     api_keys.set(key_path, val)
-    assert api_keys.get(key_path) == val
+    assert_equals(api_keys.get(key_path), val)
 
 
 def test_api_key_with_str_key():
     key = qs.rand_str()
     val = qs.rand_str()
     api_keys.set(key, val)
-    assert api_keys.get(key) == val
+    assert_equals(api_keys.get(key), val)
 
 
 def teardown():

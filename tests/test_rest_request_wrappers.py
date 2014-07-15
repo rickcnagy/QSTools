@@ -2,6 +2,7 @@
 
 import qs
 import config
+from nose.tools import *
 
 # just for testing correct param val...
 _MAGIC_VAL = '1546'
@@ -16,8 +17,8 @@ def setup(module):
     paged_list.set_api_key(config.API_KEY)
     paged_list.make_request()
 
-    assert len(paged_list.data) == 1
-    assert 'id' in paged_list.data[0]
+    assert_equals(len(paged_list.data), 1)
+    assert_in('id', paged_list.data[0])
     student_id = paged_list.data[0]['id']
 
     single_object = qs.QSRequest(
@@ -36,37 +37,37 @@ def setup(module):
 
 
 def test_paged_list():
-    assert type(paged_list.data) is list
-    assert type(paged_list.data[0]) is dict
-    assert paged_list.return_type == 'Paged List'
+    assert_is_instance(paged_list.data, list)
+    assert_is_instance(paged_list.data[0], dict)
+    assert_equals(paged_list.return_type, 'Paged List')
 
 
 def test_single_object():
-    assert type(single_object.data) is dict
-    assert single_object.return_type == 'Single Object'
+    assert_is_instance(single_object.data, dict)
+    assert_equals(single_object.return_type, 'Single Object')
 
 
 def test_flat_list():
-    assert type(flat_list.data) is list
-    assert type(flat_list.data[0]) is dict
-    assert flat_list.return_type == 'Flat List'
+    assert_is_instance(flat_list.data, list)
+    assert_is_instance(flat_list.data[0], dict)
+    assert_equals(flat_list.return_type, 'Flat List')
 
 
 def test_qs_live_request_url():
     semesters_url = 'https://api.quickschools.com/sms/v1/semesters'
-    assert flat_list._full_url() == semesters_url
+    assert_equals(flat_list._full_url(), semesters_url)
 
 
 def test_qs_params():
     full_params = flat_list._full_params()
-    assert 'some_param' in full_params
-    assert full_params['some_param'] == _MAGIC_VAL
+    assert_in('some_param', full_params)
+    assert_equals(full_params['some_param'], _MAGIC_VAL)
 
 
 def test_qs_headers():
     full_headers = flat_list._full_headers()
-    assert 'some_header' in full_headers
-    assert full_headers['some_header'] == _MAGIC_VAL
+    assert_in('some_header', full_headers)
+    assert_equals(full_headers['some_header'], _MAGIC_VAL)
 
 if __name__ == '__main__':
     unittest.main()
