@@ -21,14 +21,14 @@ def test_generate_key():
     assert_equals(api_keys._generate_key('1:2'), '1:2')
 
 
-@raises(TypeError)
 def test_generate_key_with_wrong_type():
-    api_keys._generate_key(1)
+    with assert_raises(TypeError):
+        api_keys._generate_key(1)
 
 
-@raises(KeyError)
 def test_remove_nonexistent_key():
-    api_keys.remove(qs.rand_str())
+    with assert_raises(KeyError):
+        api_keys.remove(qs.rand_str())
 
 
 def test_get_api_key():
@@ -44,28 +44,28 @@ def test_remove_api_key():
     assert_not_in(key, api_keys._get_db())
 
 
-@raises(ValueError)
 def test_setting_with_bad_api_key():
-    api_keys.set('12345', '')
+    with assert_raises(ValueError):
+        api_keys.set('12345', '')
 
 
-@raises(ValueError)
 def test_setting_with_bad_key():
-    api_keys.set('', '12345')
+    with assert_raises(ValueError):
+        api_keys.set('', '12345')
 
 
-@raises(KeyError)
 def test_api_key_path_order():
     key_path = ['1', '2', '3']
     val = qs.rand_str()
     api_keys.set(key_path, val)
     assert_equals(api_keys.get(key_path), val)
-    api_keys.get(['2', '1', '3'])
+    with assert_raises(KeyError):
+        api_keys.get(['2', '1', '3'])
 
 
-@raises(KeyError)
 def test_get_api_key_with_bad_key():
-    api_keys.get(qs.rand_str())
+    with assert_raises(KeyError):
+        api_keys.get(qs.rand_str())
 
 
 def test_set_api_key():
