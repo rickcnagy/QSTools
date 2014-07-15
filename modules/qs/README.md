@@ -21,6 +21,10 @@ Wrapper on top of the Logger for logging QuickSchools API requests.
 
 Limit request rates on REST servers by request base URL.
 
+####[`rest_cache.py`](./rest_cache.py)
+
+Custom cache for the QS package, centered around caching REST responses.
+
 ####[`rest_foundation.py`](./rest_foundation.py)
 
 Base-level API interaction tools to be extended upon for different uses.
