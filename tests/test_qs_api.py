@@ -3,12 +3,14 @@
 import qs
 import config
 from nose.tools import *
+from mock import MagicMock
 
 
 def test_make_request():
     request = qs.QSRequest('Testing', '/students')
     q = qs.API()
-    q.make_request(request, {'critical': True})
+    data = q.make_request(request, {'critical': True})
+    assert_is_instance(data, list)
     assert_equals(request.api_key, q.api_key)
     assert_in('apiKey', request.params)
     assert_equals(request.params['apiKey'], q.api_key)
@@ -45,3 +47,5 @@ def test_live():
 
 def test_key_path():
     assert_equals(qs.API()._api_key_store_key_path(), ['qs', 'live', 'qstools'])
+
+# NOTE: all attributes need testing, including how and when the cache kicks in

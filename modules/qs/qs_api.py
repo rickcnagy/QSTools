@@ -36,6 +36,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self.schoolcode = None
         self.api_key = None
+        self.cache = QSCache()
 
         self._parse_access_key()
 
@@ -43,10 +44,19 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, desc='GET all students', **kwargs):
+    def get_students(self, desc='GET all students', class_id=None, **kwargs):
         """Get a list of all enrolled students from /students."""
-        request = QSRequest(desc, '/students')
-        return self.make_request(request, kwargs)
+        if self.cache.students is None or class_id:
+            request = QSRequest(desc, '/students')
+            if class_id:
+                request.params.update({'classId': class_id})
+            students = self.make_request(request, kwargs)
+            self.cache.add_students(students)
+        return self.cache.students
+
+    # =================
+    # = Other Methods =
+    # =================
 
     def make_request(self, request, original_kwargs):
         """Process any QSRequest in this class and make it.
@@ -64,7 +74,7 @@ class QSAPIWrapper(qs.APIWrapper):
         request.make_request()
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
-        return request
+        return request.data
 
     def _parse_access_key(self):
         """Parses self._access key, which could be a schoolcode or API key, and
@@ -82,3 +92,44 @@ class QSAPIWrapper(qs.APIWrapper):
     def _api_key_store_key_path(self):
         live = 'live' if self.live else 'backup'
         return ['qs', live, self.schoolcode]
+
+
+class QSCache(object):
+    """Class for caching responses in a QSAPIWrapper object"""
+
+    def __init__(self):
+        self._students = {}
+
+    # ============
+    # = Students =
+    # ============
+
+    @property
+    def students(self):
+        """The cache for the /students URI. Returns an alphabetized list.
+
+        Stored as a dictionary to avoid duplicating entries.
+        """
+        if self._students:
+            return sorted(
+                [v for k, v in self._students.iteritems()],
+                key=lambda x: x['fullName'])
+
+    def add_students(self, new_students):
+        """Add students to the students cache.
+
+        Args:
+            new_students: The new students to add. Must be a list.
+        Raises:
+            TypeError: new_students must be a list.
+        """
+        if type(new_students) is not list:
+            raise TypeError('new_students must be a list, is {}'.format(
+                type(new_students)))
+        if not all(type(i) is dict for i in new_students):
+            raise TypeError('new_students must contain only dicts')
+        self._students.update({i['id']: i for i in new_students})
+
+    def get_student(self, student_id):
+        """Get a specific student by id"""
+        return self._students.get(student_id)
