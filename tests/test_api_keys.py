@@ -91,6 +91,6 @@ def test_api_key_with_str_key():
 
 
 def teardown():
-    api_keys._clear_db()
-    assert not api_keys._db_exists()
+    api_keys.invalidate()
+    assert_false(api_keys._db_exists())
     api_keys.KEY_STORE_PATH = api_key_store_path

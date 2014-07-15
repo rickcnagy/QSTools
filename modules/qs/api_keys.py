@@ -59,6 +59,10 @@ def remove(key):
         raise KeyError("{} isn't a key in the API key store.".format(key))
 
 
+def invalidate():
+    os.remove(_get_path())
+
+
 def _generate_key(str_or_list_key):
     keys = []
     if not str_or_list_key:
@@ -109,7 +113,3 @@ def _create_db_if_necessary():
 def _db_exists():
     """Determine whether the db exists at KEY_STORE_PATH"""
     return os.path.isfile(_get_path())
-
-
-def _clear_db():
-    os.remove(_get_path())
