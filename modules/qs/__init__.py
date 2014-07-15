@@ -15,4 +15,3 @@ from qs_api import *
 
 # import specific variabls
 from qs_api import QSAPIWrapper as API
-from logger import CriticalError
