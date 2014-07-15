@@ -109,6 +109,10 @@ class RestRequest(object):
         self._log_after()
         return self.data
 
+    def set_api_key(self, api_key):
+        self.api_key = api_key
+        self.params.update({'apiKey': api_key})
+
     def _before_request(self):
         """Hook to make any modifications to the request before making it."""
         pass
@@ -177,7 +181,7 @@ class RestRequest(object):
         return qs.merge([self.base_headers, self.headers])
 
     def __repr__(self):
-        return '<{} to {} at {}>'.format(
+        return '<{} {} at {}>'.format(
             self.__class__.__name__,
             self.description,
             self.uri)

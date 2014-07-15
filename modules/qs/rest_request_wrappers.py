@@ -29,10 +29,6 @@ class QSRequest(qs.RestRequest):
         self.paging_info = None
         super(QSRequest, self).__init__(description, uri)
 
-    def set_api_key(self, api_key):
-        self._api_key = api_key
-        self.base_params = qs.merge([{'apiKey': api_key}, self.base_params])
-
     def _get_data(self):
         if not self.successful: return []
 
