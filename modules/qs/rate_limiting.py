@@ -49,7 +49,8 @@ def get_server(url):
     elif 'httpbin' in url:
         return _servers['httpbin']
     else:
-        logger.warning('Making request/response at unrecognized URL, so no '
+        logger.warning(
+            'Making request/response at unrecognized URL, so no '
             'rate limiting or request tracking is in place for', url)
 
 # =============
@@ -104,7 +105,6 @@ class _ServerWithLimit(_Server):
     def __init__(self, identifier):
         self._limit_has_been_reached = False
         super(_ServerWithLimit, self).__init__(identifier)
-
 
     def _limit_reached(self):
         self._limit_has_been_reached = True

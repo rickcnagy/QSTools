@@ -36,6 +36,7 @@ def test_adding_api_key():
     assert_equals(q.schoolcode, fake_schoolcode)
     assert_equals(qs.api_keys.get(['qs', 'live', fake_schoolcode]),
         config.API_KEY)
+    qs.api_keys.remove(['qs', 'live', 'fakeschool'])
 
 
 def test_live():
