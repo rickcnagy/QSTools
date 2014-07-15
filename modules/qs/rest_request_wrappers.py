@@ -48,7 +48,7 @@ class QSRequest(qs.RestRequest):
         elif type(parsed) is list:
             self.return_type = 'Flat List'
             return parsed
-        api_logging.critical("Unrecognized response data type", parsed)
+        qs.logger.critical("Unrecognized response data type", parsed)
 
     def _after_response(self):
         """For now, until QSPaginatedRequest is implemented, exit if more than

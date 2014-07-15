@@ -84,7 +84,7 @@ def critical(description, data, is_request=False, is_response=False):
     syslog.syslog(syslog.LOG_CRIT, log_message)
     logging.critical(log_message)
     traceback.print_stack()
-    sys.exit(log_message)
+    raise CriticalError(log_message)
 
 
 def error_or_critical(description, data, is_critical, is_request=False, is_response=False):
@@ -152,6 +152,19 @@ def filename(path, filename):
 
     fileid = filename
     if not filename:
-        fileid = os.path.splitext(os.path.basename(path))[0] if not os.path.isdir(path) else 'API'
+        if os.path.isdir(path):
+            fileid = 'API'
+        else:
+            fileid = os.path.splitext(os.path.basename(path))[0]
 
     return  '{}/{} {}.log'.format(log_path, fileid, random.randint(1, 999))
+
+
+class CriticalError(StandardError):
+    """Custom exception for when logger.critical is called"""
+
+    def __init__(self, message):
+        self.message = message
+
+    def __repr__(self):
+        return self.message
