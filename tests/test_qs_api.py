@@ -14,6 +14,12 @@ def test_make_request():
     assert_true(request.critical)
 
 
+def test_empty_access_key_arg():
+    q = qs.API()
+    assert_equals(q.schoolcode, 'qstools')
+    assert_equals(q.api_key, config.API_KEY)
+
+
 def test_api_key_as_access_key():
     q = qs.API(config.API_KEY)
     assert q.schoolcode == 'qstools'
@@ -29,11 +35,9 @@ def test_adding_api_key():
     assert qs.api_keys.get(['qs', 'live', fake_schoolcode]) == fake_api_key
 
 
-def test_api_key_lookup():
-    q = qs.API('qstools')
-    assert q.schoolcode == 'qstools'
-    assert q.api_key == config.API_KEY
-
-
 def test_live():
-    assert qs.API('qstools').live is True
+    assert_true(qs.API().live)
+
+
+def test_key_path():
+    assert_equals(qs.API()._api_key_store_key_path(), ['qs', 'live', 'qstools'])
