@@ -3,6 +3,7 @@
 import qs
 import config
 from nose.tools import *
+from qs import QSRequest
 
 # just for testing correct param val...
 _MAGIC_VAL = '1546'
@@ -12,7 +13,7 @@ def setup(module):
     global paged_list, single_object, flat_list
     qs.logger.silence()
 
-    paged_list = qs.QSRequest('Paged List Request', '/students')
+    paged_list = QSRequest('Paged List Request', '/students')
     paged_list.params = {'itemsPerPage': 1}
     paged_list.set_api_key(config.API_KEY)
     paged_list.make_request()
@@ -21,13 +22,13 @@ def setup(module):
     assert_in('id', paged_list.data[0])
     student_id = paged_list.data[0]['id']
 
-    single_object = qs.QSRequest(
+    single_object = QSRequest(
         'Single Object',
         '/students/{}'.format(student_id))
     single_object.set_api_key(config.API_KEY)
     single_object.make_request()
 
-    flat_list = qs.QSRequest(
+    flat_list = QSRequest(
         'Flat List',
         '/semesters')
     flat_list.params = {'some_param': _MAGIC_VAL}
@@ -53,18 +54,24 @@ def test_flat_list():
     assert_equals(flat_list.return_type, 'Flat List')
 
 
-def test_qs_live_request_url():
+def test_live_url():
     semesters_url = 'https://api.quickschools.com/sms/v1/semesters'
     assert_equals(flat_list._full_url(), semesters_url)
 
 
-def test_qs_params():
+def test_backup_url():
+    sem_backup_url = 'https://api.smartschoolcentral.com/sms/v1/semesters'
+    backup_request = QSRequest('Testing', '/semesters', live=False)
+    assert_equals(backup_request._full_url(), sem_backup_url)
+
+
+def test_params():
     full_params = flat_list._full_params()
     assert_in('some_param', full_params)
     assert_equals(full_params['some_param'], _MAGIC_VAL)
 
 
-def test_qs_headers():
+def test_headers():
     full_headers = flat_list._full_headers()
     assert_in('some_header', full_headers)
     assert_equals(full_headers['some_header'], _MAGIC_VAL)
