@@ -15,7 +15,7 @@ class RestCache(object):
     """
 
     def __init__(self):
-        self._data = self._default_data()
+        self._data = None
 
     def get(self):
         """Retrieve the entire cache."""
@@ -27,11 +27,7 @@ class RestCache(object):
 
     def invalidate(self):
         """Invalidate the cache."""
-        self._data = self._default_data()
-
-    def _default_data(self):
-        """The default value for _data after invalidation or __init__"""
-        return None
+        self._data = None
 
 
 class ListWithIDCache(RestCache):
@@ -52,7 +48,7 @@ class ListWithIDCache(RestCache):
     def get(self, identifier=None, by_id=False):
         """Return a flattened list of the data or a single entry by id if id is
         specified."""
-        if not self._data: return self._data
+        if not self._data: return self._default_data()
         elif by_id: return self._data
         elif identifier: return self._data.get(qs.clean_id(identifier))
         else:
@@ -72,6 +68,8 @@ class ListWithIDCache(RestCache):
         elif type(new_data) is dict:
             new_data = [new_data]
 
+        if not self._data and new_data:
+            self._data = self._default_data()
         self._data.update({qs.clean_id(i[self._id_key]): i for i in new_data})
 
     def _default_data(self):

@@ -7,6 +7,7 @@ from nose.tools import *
 def setup(module):
     global q, mock_student
     q = qs.API()
+    q.get_students()
     mock_student = qs.mock_data.STUDENT
 
 
@@ -23,6 +24,7 @@ def test_get_students():
 def test_get_student():
     student = q.get_student(mock_student['id'])
     assert_equals(student['fullName'], mock_student['fullName'])
+    assert_greater(len(q.get_students(by_id=True)), 0)
     assert_equals(student, q.get_students(by_id=True)[mock_student['id']])
 
 

@@ -36,7 +36,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self.schoolcode = None
         self.api_key = None
-        self.cache = QSCache()
+        self.cache = QSAPICache()
 
         self._parse_access_key()
 
@@ -56,11 +56,11 @@ class QSAPIWrapper(qs.APIWrapper):
                 also be added to the cache along with all the students
                 avaialable from /students.
         """
-        if self.cache.students is None or use_cache is False:
+        if not self.cache.students.get() or use_cache is False:
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, kwargs)
-            self.cache.add_students(students)
-        return self.cache.students_by_id() if by_id else self.cache.students
+            self.cache.students.add(students)
+        return self.cache.students.get(by_id=by_id)
 
     def get_student(self, student_id, **kwargs):
         """GET a specific student by id. Returns None if the student isn't
@@ -117,48 +117,8 @@ class QSAPIWrapper(qs.APIWrapper):
         return ['qs', live, self.schoolcode]
 
 
-class QSCache(object):
-    """Class for caching responses in a QSAPIWrapper object"""
+class QSAPICache(object):
+    """Essentially a wrapper around a bunch of RestCache objects."""
 
     def __init__(self):
-        self._students = {}
-
-    # ============
-    # = Students =
-    # ============
-
-    @property
-    def students(self):
-        """The cache for the /students URI. Returns an alphabetized list.
-
-        Stored as a dictionary to avoid duplicating entries.
-        """
-        if self._students:
-            return sorted(
-                [v for k, v in self._students.iteritems()],
-                key=lambda x: x['fullName'])
-
-    def add_students(self, new_students):
-        """Add students to the students cache.
-
-        Each student gets a _cached key that is True
-
-        Args:
-            new_students: The new students to add. Must be a list.
-        Raises:
-            TypeError: new_students must be a list.
-        """
-        if type(new_students) is not list:
-            raise TypeError('new_students must be a list, is {}'.format(
-                type(new_students)))
-        if not all(type(i) is dict for i in new_students):
-            raise TypeError('new_students must contain only dicts')
-        self._students.update({i['id']: i for i in new_students})
-
-    def student(self, student_id):
-        """Get a specific student by id"""
-        return self._students.get(student_id)
-
-    def students_by_id(self):
-        """Get all the students in a dict like {studentID: student}"""
-        return self._students
+        self.students = qs.ListWithIDCache(sort_key='fullName')
