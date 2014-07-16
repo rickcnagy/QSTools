@@ -71,9 +71,24 @@ class QSAPIWrapper(qs.APIWrapper):
 
         return self.cache.students_by_id() if by_id else self.cache.students
 
-    def get_student(self, student_id):
-        """GET a specific student by id."""
-        return self.get_students(by_id=True).get(student_id)
+    def get_student(self, student_id, **kwargs):
+        """GET a specific student by id. Returns None if the student isn't
+        found.
+        """
+        if not student_id or type(student_id) not in [str, int, unicode]:
+            raise TypeError(
+                'student_id({}) must be a str or int, is {}'.format(
+                    student_id,
+                    type(student_id)))
+        student = self.get_students(by_id=True).get(str(student_id))
+        if student:
+            return student
+        else:
+            request = QSRequest(
+                'GET student by ID',
+                '/students/{}'.format(student_id))
+            student = self.make_request(request, kwargs)
+            return student if student else None
 
     # =================
     # = Other Methods =
