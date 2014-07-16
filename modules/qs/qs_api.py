@@ -44,15 +44,21 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, desc='GET all students', class_id=None, **kwargs):
-        """Get a list of all enrolled students from /students."""
-        if self.cache.students is None or class_id:
+    def get_students(self, desc='GET all students', by_id=False,
+        use_cache=True, **kwargs):
+        """GET a list of all enrolled students from /students.
+
+        If the student list is empty, [] will be returned.
+        """
+        if self.cache.students is None or use_cache is False:
             request = QSRequest(desc, '/students')
-            if class_id:
-                request.params.update({'classId': class_id})
             students = self.make_request(request, kwargs)
             self.cache.add_students(students)
-        return self.cache.students
+        return self.cache.students_by_id() if by_id else self.cache.students
+
+    def get_student(self, student_id):
+        """GET a specific student by id."""
+        return self.get_students(by_id=True).get(student_id)
 
     # =================
     # = Other Methods =
@@ -75,6 +81,7 @@ class QSAPIWrapper(qs.APIWrapper):
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
+
 
     def _parse_access_key(self):
         """Parses self._access key, which could be a schoolcode or API key, and
@@ -118,6 +125,8 @@ class QSCache(object):
     def add_students(self, new_students):
         """Add students to the students cache.
 
+        Each student gets a _cached key that is True
+
         Args:
             new_students: The new students to add. Must be a list.
         Raises:
@@ -130,6 +139,10 @@ class QSCache(object):
             raise TypeError('new_students must contain only dicts')
         self._students.update({i['id']: i for i in new_students})
 
-    def get_student(self, student_id):
+    def student(self, student_id):
         """Get a specific student by id"""
         return self._students.get(student_id)
+
+    def students_by_id(self):
+        """Get all the students in a dict like {studentID: student}"""
+        return self._students
