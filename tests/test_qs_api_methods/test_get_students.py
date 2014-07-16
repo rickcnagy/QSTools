@@ -2,7 +2,7 @@
 
 import qs
 from nose.tools import *
-from util import *
+
 
 def setup(module):
     global q, mock_student
