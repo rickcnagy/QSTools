@@ -45,3 +45,6 @@ def test_clean_id():
     good_inputs = [1234, u'1234', '1234', '1g5H6', 0]
     for good_input in good_inputs:
         assert_equals(str(good_input), qs.clean_id(good_input))
+
+def test_can_sense_nosetests():
+    assert_true(qs.running_from_test())

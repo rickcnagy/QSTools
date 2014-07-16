@@ -122,7 +122,7 @@ def unsilence():
 
 
 def maybe_print(log_message, cc_print):
-    if (cc_print and out_is_file()) or (not out_is_file()):
+    if cc_print and out_is_file() and not qs.running_from_test():
         print '\n' + log_message
 
 

@@ -30,6 +30,11 @@ def merge(dict_list):
     return dict(all_items)
 
 
+def running_from_test():
+    """Tell whether the current script is being run from a test"""
+    return 'nosetests' in sys.argv[0]
+
+
 def clean_id(some_id):
     if not some_id and some_id != 0:
         raise ValueError('The id must not be none')
