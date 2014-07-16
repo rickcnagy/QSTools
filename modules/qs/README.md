@@ -27,7 +27,9 @@ Limit request rates on REST servers by request base URL.
 
 ####[`rest_cache.py`](./rest_cache.py)
 
-Custom cache for the QS package, centered around caching REST responses.
+Custom caching for the QS package, centered around caching REST responses
+in memory.
+
 
 ####[`rest_foundation.py`](./rest_foundation.py)
 
