@@ -44,8 +44,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, by_id=False, use_cache=True, class_id=None,
-        **kwargs):
+    def get_students(self, by_id=False, use_cache=True, **kwargs):
         """GET a list of all enrolled students from /students.
 
         If the student list is empty, [] will be returned.
@@ -61,14 +60,6 @@ class QSAPIWrapper(qs.APIWrapper):
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, kwargs)
             self.cache.add_students(students)
-
-        if class_id:
-            request = QSRequest('GET students from a class', '/students')
-            requst.params.update({'classId': class_id})
-            class_students = self.make_request(request, kwargs)
-            self.cache.add_students(class_students)
-            return class_students
-
         return self.cache.students_by_id() if by_id else self.cache.students
 
     def get_student(self, student_id, **kwargs):
