@@ -47,10 +47,15 @@ class ListWithIDCache(RestCache):
 
     def get(self, identifier=None, by_id=False):
         """Return a flattened list of the data or a single entry by id if id is
-        specified."""
-        if not self._data: return self._default_data()
-        elif by_id: return self._data
-        elif identifier: return self._data.get(qs.clean_id(identifier))
+        specified. Note that identifier is cleaned here, so don't clean in
+        calling function.
+        """
+        if not self._data:
+            return None
+        elif by_id:
+            return self._data or None
+        elif identifier:
+            return (self._data.get(qs.clean_id(identifier)))
         else:
             return_data = [v for k, v in self._data.iteritems()]
             if self._sort_key:
@@ -69,8 +74,5 @@ class ListWithIDCache(RestCache):
             new_data = [new_data]
 
         if not self._data and new_data:
-            self._data = self._default_data()
+            self._data = {}
         self._data.update({qs.clean_id(i[self._id_key]): i for i in new_data})
-
-    def _default_data(self):
-        return {}

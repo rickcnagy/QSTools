@@ -30,7 +30,7 @@ class QSRequest(qs.RestRequest):
         super(QSRequest, self).__init__(description, uri)
 
     def _get_data(self):
-        if not self.successful: return []
+        if not self.successful: return None
 
         parsed = self.response.json()
         if 'list' in parsed:

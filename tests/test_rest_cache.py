@@ -23,7 +23,13 @@ def test_list_with_id_cache_basics():
     assert_equals(cache.get(by_id=True), {'12345': {'id': 12345}})
 
     cache.invalidate()
-    assert_equals(cache.get(), {})
+    assert_is_none(cache.get(), None)
+
+
+def test_get_by_id_with_bad_id():
+    cache = qs.ListWithIDCache()
+    cache.add({'id': 1})
+    assert_is_none(cache.get(2))
 
 
 def test_list_with_id_cache_sorting():

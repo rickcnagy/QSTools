@@ -55,6 +55,7 @@ class QSAPIWrapper(qs.APIWrapper):
             class_id: Pull students from a specific class. This students will
                 also be added to the cache along with all the students
                 avaialable from /students.
+            fields: A list of the extra fields to retrieve
         """
         if not self.cache.students.get() or use_cache is False:
             request = QSRequest('GET all students', '/students')
@@ -62,20 +63,17 @@ class QSAPIWrapper(qs.APIWrapper):
             self.cache.students.add(students)
         return self.cache.students.get(by_id=by_id)
 
-    def get_student(self, student_id, **kwargs):
-        """GET a specific student by id. Returns None if the student isn't
-        found.
+    def get_student(self, student_id, use_cache=True, **kwargs):
+        """GET a specific student by id. Returns None if no student is found.
         """
-        student_id = qs.clean_id(student_id)
-        student = self.get_students(by_id=True).get(student_id)
-        if student:
-            return student
+        cached = self.get_students(by_id=True).get(student_id)
+        if cached:
+            return cached
         else:
             request = QSRequest(
-                'GET student by ID',
-                '/students/{}'.format(student_id))
-            student = self.make_request(request, kwargs)
-            return student if student else None
+            'GET student by ID',
+            '/students/{}'.format(student_id))
+            return self.make_request(request, kwargs)
 
     # =================
     # = Other Methods =
