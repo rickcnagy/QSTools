@@ -1,6 +1,10 @@
 GUI Scripts
 ===
 
+####[`cleanStudentNames.js`](./cleanStudentNames.js)
+
+ Open up all student records and clean the student name, then trigger the .keyup() method on the student name input to get the display name to recalculate. Originally used for SacPrep (7/16/14) - (no ticket yet) 
+
 ####[`clickRCComments.js`](./clickRCComments.js)
 
  Click on all comments on all RC's, then save. This is useful for "recalculating" the comments, such as when rich text issues need to be reset. 
