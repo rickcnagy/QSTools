@@ -1,7 +1,6 @@
 """Test any request wrappers from rest_request_wrappers"""
 
 import qs
-import config
 from nose.tools import *
 from qs import QSRequest
 from mock import MagicMock
@@ -16,7 +15,7 @@ def setup(module):
 
     paged_list = QSRequest('Paged List Request', '/students')
     paged_list.params = {'itemsPerPage': 1}
-    paged_list.set_api_key(config.API_KEY)
+    paged_list.set_api_key(qs.mock_data.KEY)
     paged_list.make_request()
 
     assert_equals(len(paged_list.data), 1)
@@ -26,7 +25,7 @@ def setup(module):
     single_object = QSRequest(
         'Single Object',
         '/students/{}'.format(student_id))
-    single_object.set_api_key(config.API_KEY)
+    single_object.set_api_key(qs.mock_data.KEY)
     single_object.make_request()
 
     flat_list = QSRequest(
@@ -34,7 +33,7 @@ def setup(module):
         '/semesters')
     flat_list.params = {'some_param': _MAGIC_VAL}
     flat_list.headers = {'some_header': _MAGIC_VAL}
-    flat_list.set_api_key(config.API_KEY)
+    flat_list.set_api_key(qs.mock_data.KEY)
     flat_list.make_request()
 
 

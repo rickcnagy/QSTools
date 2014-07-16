@@ -1,7 +1,6 @@
 """Test the foundation for rest requests."""
 
 import qs
-import config
 from nose.tools import *
 from mock import MagicMock
 
@@ -79,7 +78,7 @@ def test_rate_limit_tracking_matches_request():
 def test_api_wrapper_init():
     wrapper = qs.APIWrapper(['qs', 'live', 'qstools'])
     assert_equals(wrapper.identifier, ['qs', 'live', 'qstools'])
-    assert_equals(wrapper.api_key, config.API_KEY)
+    assert_equals(wrapper.api_key, qs.mock_data.KEY)
 
 
 def test_request_repr():
