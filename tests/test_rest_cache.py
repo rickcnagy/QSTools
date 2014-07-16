@@ -3,6 +3,22 @@
 import qs
 from nose.tools import *
 
+unsorted = [{
+    'id': 12345,
+    'sort': 02,
+}, {
+    'id': 146,
+    'sort': 01
+}]
+sorted_version = [{
+    'id': 146,
+    'sort': 01
+},{
+    'id': 12345,
+    'sort': 02,
+}]
+
+
 def test_rest_cache_class():
     cache = qs.RestCache()
     some_string = qs.rand_str()
@@ -34,21 +50,6 @@ def test_get_by_id_with_bad_id():
 
 def test_list_with_id_cache_sorting():
     cache = qs.ListWithIDCache(sort_key='sort')
-    unsorted = [{
-        'id': 12345,
-        'sort': 02,
-    }, {
-        'id': 146,
-        'sort': 01
-    }]
-    sorted_version = [{
-        'id': 146,
-        'sort': 01
-    },{
-        'id': 12345,
-        'sort': 02,
-    }]
-
     cache.add(unsorted)
     assert_equals(cache.get(), sorted_version)
 
@@ -58,3 +59,12 @@ def test_list_with_id_cache_validation():
         cache.add("this will error, since it's a string")
     with assert_raises(TypeError):
         cache.add(["this too, since it's a string, not a dict, in a list"])
+
+
+def test_has_fields():
+    cache = qs.ListWithIDCache()
+    with assert_raises(TypeError):
+        cache.has_fields(123)
+    cache.add(unsorted)
+    assert_true(cache.has_fields(['sort', 'id']))
+    assert_true(cache.has_fields('sort'))

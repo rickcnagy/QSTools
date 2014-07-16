@@ -76,3 +76,17 @@ class ListWithIDCache(RestCache):
         if not self._data and new_data:
             self._data = {}
         self._data.update({qs.clean_id(i[self._id_key]): i for i in new_data})
+
+    def has_fields(self, fields):
+        """Determine whether or not the cached data has all the fields
+        specified.
+        """
+        if str(fields) == fields:
+            fields = [fields]
+        elif type(fields) is not list:
+            raise TypeError('Fields must be a list or string')
+
+        for field in fields:
+            if not all(field in d for k, d in self._data.iteritems()):
+                return False
+        return True

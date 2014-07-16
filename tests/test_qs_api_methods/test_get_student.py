@@ -25,3 +25,12 @@ def test_get_student_for_deleted_student():
     assert_greater(len(student), 0)
     assert_in('id', student)
     assert_equals(student['id'], qs.mock_data.DELETED_STUDENT_ID)
+
+
+# not passing yet
+# def test_get_students_with_fields():
+#     field = 'deleted'
+#     data = q.get_students(fields=field)
+#     assert_true(all(field in i for i in data))
+#     assert_false(data[0][field])
+#     assert_true(all(field not in i for i in q.get_students()))
