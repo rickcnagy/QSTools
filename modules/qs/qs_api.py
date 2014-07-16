@@ -59,27 +59,27 @@ class QSAPIWrapper(qs.APIWrapper):
         """
         if not self.cache.students.get() or use_cache is False:
             request = QSRequest('GET all students', '/students')
-            students = self.make_request(request, kwargs)
+            students = self.make_request(request, **kwargs)
             self.cache.students.add(students)
         return self.cache.students.get(by_id=by_id)
 
     def get_student(self, student_id, use_cache=True, **kwargs):
         """GET a specific student by id. Returns None if no student is found.
         """
-        cached = self.get_students(by_id=True).get(student_id)
+        cached = self.get_students(by_id=True, **kwargs).get(student_id)
         if cached:
             return cached
         else:
             request = QSRequest(
             'GET student by ID',
             '/students/{}'.format(student_id))
-            return self.make_request(request, kwargs)
+            return self.make_request(request, **kwargs)
 
     # =================
     # = Other Methods =
     # =================
 
-    def make_request(self, request, original_kwargs):
+    def make_request(self, request, **kwargs):
         """Process any QSRequest in this class and make it.
 
         Args:
