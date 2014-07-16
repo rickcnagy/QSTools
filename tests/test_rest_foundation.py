@@ -56,6 +56,17 @@ def test_get_server_at_bad_url():
         'rate limiting or request tracking is in place for', bad_url)
 
 
+def test_limit_reached_on_header_based_server():
+    github_url = 'https://api.github.com'
+    server = qs.rate_limiting.get_server(github_url)
+    server._should_terminate = True
+    qs.logger.critical = MagicMock()
+    server.register_request(github_url)
+    qs.logger.critical.assert_called_once_with(
+        'Tried to make request, but limit reached for server',
+        'github')
+
+
 def test_request_success():
     assert_true(basic_get.successful)
 
