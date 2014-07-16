@@ -84,7 +84,7 @@ class _Server(object):
         self.request_count = 0
         self.response_count = 0
 
-    def register_request(self, request):
+    def register_request(self, request_url):
         self.request_count += 1
 
     def register_response(self, response):
@@ -122,8 +122,8 @@ class _ServerWithKnownLimit(_ServerWithLimit):
         self._limit = limit
         super(_ServerWithKnownLimit, self).__init__(identifier)
 
-    def register_request(self, request):
-        super(_ServerWithKnownLimit, self).register_request(request)
+    def register_request(self, request_url):
+        super(_ServerWithKnownLimit, self).register_request(request_url)
         if self.request_count >= self._limit:
             self.request_count = 0
             self._limit_reached()
@@ -153,8 +153,8 @@ class _HeaderBasedServer(_ServerWithLimit):
         self.remaining = None
         super(_HeaderBasedServer, self).__init__(identifier)
 
-    def register_request(self, request):
-        super(_HeaderBasedServer, self).register_response(request)
+    def register_request(self, request_url):
+        super(_HeaderBasedServer, self).register_request(request_url)
         if self._should_terminate:
             self._limit_reached()
 
