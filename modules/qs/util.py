@@ -12,7 +12,7 @@ def dumps(arbitry_obj):
     return json.dumps(arbitry_obj, indent=4)
 
 
-def pprint(arbitry_obj):
+def pprint(arbitry_obj):    # pragma: no cover
     print dumps(arbitry_obj)
 
 
