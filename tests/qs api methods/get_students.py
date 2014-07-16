@@ -1,4 +1,4 @@
-"""Test the GET /students method"""
+"""Test the get_students() method"""
 
 import qs
 from nose.tools import *
