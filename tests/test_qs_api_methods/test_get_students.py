@@ -33,3 +33,9 @@ def test_get_student():
     student = q.get_student(mock_student['id'])
     assert_equals(student['fullName'], mock_student['fullName'])
     assert_equals(student, q.get_students(by_id=True)[mock_student['id']])
+
+def test_get_deleted_students():
+    students = q.get_students(show_deleted=True, by_id=True)
+    assert_is_instance(students, dict)
+    assert_in(qs.mock_data.DELETED_STUDENT_ID, students)
+    assert_not_in(qs.mock_data.DELETED_STUDENT_ID, q.get_students(by_id=True))

@@ -44,7 +44,8 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, by_id=False, use_cache=True, **kwargs):
+    def get_students(self, by_id=False, use_cache=True, show_deleted=False,
+        show_has_left=False, fields=[], **kwargs):
         """GET a list of all enrolled students from /students.
 
         If the student list is empty, [] will be returned.
@@ -58,6 +59,18 @@ class QSAPIWrapper(qs.APIWrapper):
             fields: A list of the extra fields to retrieve
         """
         if not self.cache.students.get() or use_cache is False:
+        if show_deleted or show_has_left:
+            request = QSRequest(
+                'GET all students, including deleted/has left',
+                '/students')
+            request.params.update({
+                'showDeleted': show_deleted,
+                'showHasLeft': show_has_left,
+            })
+            students = self.make_request(request, **kwargs)
+            if by_id:
+                students = {i['id']: i for i in students}
+            return students
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, **kwargs)
             self.cache.students.add(students)

@@ -24,4 +24,4 @@ def test_get_student_for_deleted_student():
     assert_is_instance(student, dict)
     assert_greater(len(student), 0)
     assert_in('id', student)
-    assert_equals(student['id'], str(qs.mock_data.DELETED_STUDENT_ID))
+    assert_equals(student['id'], qs.mock_data.DELETED_STUDENT_ID)
