@@ -58,7 +58,6 @@ class QSAPIWrapper(qs.APIWrapper):
                 avaialable from /students.
             fields: A list of the extra fields to retrieve
         """
-        if not self.cache.students.get() or use_cache is False:
         if show_deleted or show_has_left:
             request = QSRequest(
                 'GET all students, including deleted/has left',
@@ -71,6 +70,9 @@ class QSAPIWrapper(qs.APIWrapper):
             if by_id:
                 students = {i['id']: i for i in students}
             return students
+        if (not self.cache.students.get()
+                or use_cache is False
+                or (fields and not self.cache.students.has_fields(fields))):
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, **kwargs)
             self.cache.students.add(students)
@@ -103,8 +105,11 @@ class QSAPIWrapper(qs.APIWrapper):
             the data from the completed
         """
         request.set_api_key(self.api_key)
-        if 'critical' in original_kwargs:
-            request.critical = original_kwargs['critical']
+        if 'critical' in kwargs:
+            request.critical = kwargs['critical']
+        if 'fields' in kwargs:
+            fields = ','.join(kwargs['fields'])
+            request.params.update({'fields': fields})
         request.make_request()
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
