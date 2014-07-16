@@ -3,7 +3,6 @@
 import qs
 from nose.tools import *
 from mock import MagicMock
-from qs.qs_api import _clean_id
 
 
 def test_make_request():
@@ -46,20 +45,6 @@ def test_live():
 
 
 def test_key_path():
-    assert_equals(qs.API()._api_key_store_key_path(), ['qs', 'live', 'qstools'])
-
-
-def test_clean_id():
-    value_errors = [None, {}, '']
-    for error in value_errors:
-        with assert_raises(ValueError):
-            _clean_id(error)
-
-    type_errors = [45.6, ['SomeID']]
-    for error in type_errors:
-        with assert_raises(TypeError):
-            _clean_id(error)
-
-    good_inputs = [1234, u'1234', '1234', '1g5H6', 0]
-    for good_input in good_inputs:
-        assert_equals(str(good_input), _clean_id(good_input))
+    assert_equals(
+        qs.API()._api_key_store_key_path(),
+        ['qs', 'live', 'qstools'])

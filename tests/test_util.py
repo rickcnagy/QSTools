@@ -29,3 +29,19 @@ def test_rand_str_randomness():
 
 def test_merge():
     assert_equals(qs.merge([{1: 1}, {2: 2}, {3: 3}]), {1: 1, 2: 2, 3: 3})
+
+
+def test_clean_id():
+    value_errors = [None, {}, '']
+    for error in value_errors:
+        with assert_raises(ValueError):
+            qs.clean_id(error)
+
+    type_errors = [45.6, ['SomeID']]
+    for error in type_errors:
+        with assert_raises(TypeError):
+            qs.clean_id(error)
+
+    good_inputs = [1234, u'1234', '1234', '1g5H6', 0]
+    for good_input in good_inputs:
+        assert_equals(str(good_input), qs.clean_id(good_input))

@@ -30,6 +30,15 @@ def merge(dict_list):
     return dict(all_items)
 
 
+def clean_id(some_id):
+    if not some_id and some_id != 0:
+        raise ValueError('The id must not be none')
+    elif type(some_id) is int or str(some_id) == some_id:
+        return str(some_id)
+    else:
+        raise TypeError('The id ({}) must be a string or int'.format(some_id))
+
+
 def bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
         mininterval=0.5, miniters=1):  # pragma: no cover
     """Status bar for iterables, using tqdm: github.com/noamraph/tqdm

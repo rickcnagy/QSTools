@@ -66,7 +66,7 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET a specific student by id. Returns None if the student isn't
         found.
         """
-        student_id = _clean_id(student_id)
+        student_id = qs.clean_id(student_id)
         student = self.get_students(by_id=True).get(student_id)
         if student:
             return student
@@ -115,16 +115,6 @@ class QSAPIWrapper(qs.APIWrapper):
     def _api_key_store_key_path(self):
         live = 'live' if self.live else 'backup'
         return ['qs', live, self.schoolcode]
-
-
-def _clean_id(some_id):
-    if not some_id and some_id != 0:
-        raise ValueError('The id must not be none')
-    elif type(some_id) is int or str(some_id) == some_id:
-        return str(some_id)
-    else:
-        raise TypeError('The id ({}) must be a string or int'.format(some_id))
-
 
 
 class QSCache(object):

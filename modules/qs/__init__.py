@@ -15,5 +15,5 @@ from rest_request_wrappers import *
 from qs_api import *
 from rest_cache import *
 
-# import specific variabls
+# import specific variables
 from qs_api import QSAPIWrapper as API
