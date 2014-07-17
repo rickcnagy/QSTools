@@ -25,6 +25,13 @@ class QSAPIWrapper(qs.APIWrapper):
             set a different school.
         live: Whether or not to use the live server.
 
+    Methods that involve an API call have a set of kwargs that can be applied:
+        critical: If True, then logger.critical will be called upon failure.
+        fields: A list or string of fields to add to the 'fields' param.
+        refresh_cache: (request-specific) If False, the cache will be ignored
+            and reset for that resource.
+
+
     Note: in all instance methods, pass critical=True as a keyword argument to
     make any requests generated in that method critical, so that the script
     will exit (via logger.critical) if they fail.
@@ -44,8 +51,8 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, by_id=False, use_cache=True, show_deleted=False,
-        show_has_left=False, fields=[], **kwargs):
+    def get_students(self, by_id=False, show_deleted=False,
+        show_has_left=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
         If the student list is empty, [] will be returned.
@@ -70,9 +77,7 @@ class QSAPIWrapper(qs.APIWrapper):
             if by_id:
                 students = {i['id']: i for i in students}
             return students
-        if (not self.cache.students.get()
-                or use_cache is False
-                or (fields and not self.cache.students.has_fields(fields))):
+        elif _should_make_request(self.cache.students, **kwargs):
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, **kwargs)
             self.cache.students.add(students)
@@ -140,3 +145,13 @@ class QSAPICache(object):
 
     def __init__(self):
         self.students = qs.ListWithIDCache(sort_key='fullName')
+
+
+def _should_make_request(cache, **kwargs):
+    if cache.get() is None:
+        return True
+    elif 'use_cache' in kwargs and kwargs['use_cache'] is False:
+        return True
+    elif 'fields' in kwargs and not cache.has_fields(kwargs['fields']):
+        return True
+    return False
