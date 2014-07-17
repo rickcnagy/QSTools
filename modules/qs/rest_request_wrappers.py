@@ -17,6 +17,13 @@ class HTTPBinRequest(qs.RestRequest):
 
 
 class QSRequest(qs.RestRequest):
+    """QS-Specific Requests
+
+    Attributes:
+        return_type: The return type, such as Flat List, Single Object, etc.
+        fields: A list to add to the request in the 'fields' param.
+        paging_info: Info extracted for paginated lists on total items, etc.
+    """
     base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'
 
@@ -27,7 +34,12 @@ class QSRequest(qs.RestRequest):
                 'smartschoolcentral')
         self.return_type = None
         self.paging_info = None
+        self.fields = []
         super(QSRequest, self).__init__(description, uri)
+
+    def _before_request(self):
+        if self.fields:
+            self.params.update({'fields': ','.join(self.fields)})
 
     def _get_data(self):
         if not self.successful: return None

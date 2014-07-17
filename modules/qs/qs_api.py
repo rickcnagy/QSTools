@@ -108,8 +108,10 @@ class QSAPIWrapper(qs.APIWrapper):
         if 'critical' in kwargs:
             request.critical = kwargs['critical']
         if 'fields' in kwargs:
-            fields = ','.join(kwargs['fields'])
-            request.params.update({'fields': fields})
+            fields = kwargs['fields']
+            if str(fields) == fields:
+                fields = [fields]
+            request.fields += fields
         request.make_request()
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
