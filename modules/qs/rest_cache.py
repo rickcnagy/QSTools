@@ -49,8 +49,11 @@ class ListWithIDCache(RestCache):
         """Return a flattened list of the data or a single entry by id if id is
         specified. Note that identifier is cleaned here, so don't clean in
         calling function.
+
+        Any result other than None means that object was specifically added to
+        the cache.
         """
-        if not self._data:
+        if self._data is None:
             return None
         elif by_id:
             return self._data or None
