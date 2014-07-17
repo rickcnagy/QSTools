@@ -12,7 +12,8 @@ def dumps(arbitry_obj):
     return json.dumps(arbitry_obj, indent=4)
 
 
-def pprint(arbitry_obj):    # pragma: no cover
+def pr(arbitry_obj):    # pragma: no cover
+    """Like pprint.pprint"""
     print dumps(arbitry_obj)
 
 
