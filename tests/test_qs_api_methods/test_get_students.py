@@ -9,7 +9,12 @@ def setup(module):
     global q, mock_student, test_student
     q = qs.API()
     q.get_students()
-    mock_student = qs.mock_data.STUDENT
+    mock_student = STUDENT
+    test_student = q.get_students()[0]
+
+# ===================
+# = .get_students() =
+# ===================
 
 
 def test_get_students():
@@ -36,3 +41,24 @@ def test_get_deleted_students():
     assert_is_instance(students, dict)
     assert_in(DELETED_STUDENT_ID, students)
     assert_not_in(DELETED_STUDENT_ID, q.get_students(by_id=True))
+
+# ==================
+# = .get_student() =
+# ==================
+
+
+def test_get_student_for_valid_id():
+    assert_equals(test_student, q.get_student(test_student['id']))
+
+
+def test_get_student_for_invalid_id():
+    assert_is_none(q.get_student(1))
+
+
+def test_get_student_for_deleted_student():
+    """Won't be in the cache"""
+    student = q.get_student(DELETED_STUDENT_ID)
+    assert_is_instance(student, dict)
+    assert_greater(len(student), 0)
+    assert_in('id', student)
+    assert_equals(student['id'], DELETED_STUDENT_ID)
