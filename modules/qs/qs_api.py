@@ -49,6 +49,43 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self._parse_access_key()
 
+    # =====================
+    # = Semesters & Years =
+    # =====================
+
+    def get_semesters(self, **kwargs):
+        """GET all semesters from /semesters"""
+        if _should_make_request(self.cache.semesters, **kwargs):
+            request = QSRequest('GET all semesters', '/semesters')
+            semesters = self._make_request(request, **kwargs)
+            self.cache.semesters.add(semesters)
+        return self.cache.semesters.get()
+
+    def get_semester(self, semester_id, **kwargs):
+        """GET a specific semester by id"""
+        return self._make_single_request(
+            semester_id,
+            '/semesters',
+            self.get_semesters,
+            'GET semester by ID',
+            **kwargs)
+
+    def get_active_semester(self):
+        """GET the active semester dict"""
+        return [i for i in self.get_semesters() if i['isActive']][0]['id']
+
+    def get_active_year_id(self):
+        """GET the active year id"""
+        return self.get_active_semester()['yearId']
+
+    def get_semesters_from_year(self, year_id=None):
+        """GET all semesters from a specific year. If year_id isn't specified,
+        defaults to the current year.
+        """
+        year_id = year_id or self.get_active_year_id()
+        return [i for i in self.get_semesters() if i['yearId'] == year_id]
+
+
     # ============
     # = Students =
     # ============
