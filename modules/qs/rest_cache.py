@@ -45,7 +45,7 @@ class ListWithIDCache(RestCache):
         self._sort_key = sort_key
         self._id_key = id_key
 
-    def get(self, identifier=None, by_id=False):
+    def get(self, identifier=None, **kwargs):
         """Return a flattened list of the data or a single entry by id if id is
         specified. Note that identifier is cleaned here, so don't clean in
         calling function.
@@ -55,7 +55,7 @@ class ListWithIDCache(RestCache):
         """
         if self._data is None:
             return None
-        elif by_id:
+        elif 'by_id' in kwargs and kwargs['by_id'] is True:
             return self._data or None
         elif identifier:
             return (self._data.get(qs.clean_id(identifier)))

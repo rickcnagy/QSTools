@@ -28,8 +28,10 @@ class QSAPIWrapper(qs.APIWrapper):
     Methods that involve an API call have a set of kwargs that can be applied:
         critical: If True, then logger.critical will be called upon failure.
         fields: A list or string of fields to add to the 'fields' param.
-        refresh_cache: (request-specific) If False, the cache will be ignored
-            and reset for that resource.
+        no_cache: (request-specific) If True, the cache will be ignored and
+            reset for that resource.
+        by_id: (request with list result specific) If True, return the data in
+            a dict with {id: obj} values.
 
 
     Note: in all instance methods, pass critical=True as a keyword argument to
@@ -51,8 +53,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, by_id=False, show_deleted=False,
-        show_has_left=False, **kwargs):
+    def get_students(self, show_deleted=False, show_has_left=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
         If the student list is empty, [] will be returned.
@@ -81,7 +82,7 @@ class QSAPIWrapper(qs.APIWrapper):
             request = QSRequest('GET all students', '/students')
             students = self.make_request(request, **kwargs)
             self.cache.students.add(students)
-        return self.cache.students.get(by_id=by_id)
+        return self.cache.students.get(**kwargs)
 
     def get_student(self, student_id, use_cache=True, **kwargs):
         """GET a specific student by id. Returns None if no student is found.
@@ -112,12 +113,15 @@ class QSAPIWrapper(qs.APIWrapper):
         request.set_api_key(self.api_key)
         if 'critical' in kwargs:
             request.critical = kwargs['critical']
+
         if 'fields' in kwargs:
             fields = kwargs['fields']
             if str(fields) == fields:
                 fields = [fields]
             request.fields += fields
+
         request.make_request()
+
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
@@ -150,7 +154,7 @@ class QSAPICache(object):
 def _should_make_request(cache, **kwargs):
     if cache.get() is None:
         return True
-    elif 'use_cache' in kwargs and kwargs['use_cache'] is False:
+    elif 'no_cache' in kwargs and kwargs['no_cache'] is True:
         return True
     elif 'fields' in kwargs and not cache.has_fields(kwargs['fields']):
         return True
