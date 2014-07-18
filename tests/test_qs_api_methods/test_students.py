@@ -2,7 +2,7 @@
 
 import qs
 from nose.tools import *
-from qs.mock_data import *
+from qs.test_data import *
 
 
 def setup(module):
