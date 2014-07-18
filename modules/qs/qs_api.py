@@ -45,7 +45,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self.schoolcode = None
         self.api_key = None
-        self.cache = self._ResponseCache()
+        self.cache = _ResponseCache()
 
         self._parse_access_key()
 
