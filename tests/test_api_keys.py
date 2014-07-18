@@ -3,6 +3,7 @@
 from qs import api_keys
 import qs
 from nose.tools import *
+from qs.mock_data import *
 import json
 
 TEMP_STORE_PATH = "~/.apikeys_testing.json"
@@ -31,7 +32,7 @@ def test_remove_nonexistent_key():
 
 
 def test_get_api_key():
-    assert_equals(api_keys.get(['qs', 'live', 'qstools']), qs.mock_data.KEY)
+    assert_equals(api_keys.get(['qs', 'live', 'qstools']), API_KEY)
 
 
 def test_remove_api_key():

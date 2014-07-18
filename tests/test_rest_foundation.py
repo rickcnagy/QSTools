@@ -3,6 +3,7 @@
 import qs
 from nose.tools import *
 from mock import MagicMock
+from qs.mock_data import *
 
 # Random keys just for testing
 KEY = '0zX4EX'
@@ -89,7 +90,7 @@ def test_rate_limit_tracking_matches_request():
 def test_api_wrapper_init():
     wrapper = qs.APIWrapper(['qs', 'live', 'qstools'])
     assert_equals(wrapper.identifier, ['qs', 'live', 'qstools'])
-    assert_equals(wrapper.api_key, qs.mock_data.KEY)
+    assert_equals(wrapper.api_key, API_KEY)
 
 
 def test_request_repr():
