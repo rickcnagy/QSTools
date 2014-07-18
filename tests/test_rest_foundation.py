@@ -106,3 +106,20 @@ def test_limit_reached_on_server():
     qs.logger.critical.assert_called_once_with(
         'Tried to make request, but limit reached for server',
         'test_server')
+
+
+def test_bad_non_critical_response():
+    qs.logger = MagicMock()
+    request = qs.HTTPBinRequest('Bad request', '/bad_url')
+    request.make_request()
+    assert_false(qs.logger.critical.called)
+    assert_true(qs.logger.error.called)
+
+
+def test_bad_critical_response():
+    qs.logger = MagicMock()
+    request = qs.HTTPBinRequest('Bad request', '/bad_url')
+    request.critical = True
+    request.make_request()
+    assert_true(qs.logger.critical.called)
+    assert_false(qs.logger.error.called)

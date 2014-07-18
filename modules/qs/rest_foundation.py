@@ -141,16 +141,15 @@ class RestRequest(object):
 
     def _log_after(self):
         if not self.logged: return
+        args = [self, self._log_dict()]
+        kwargs = {'is_response': True}
         if self.successful:
-            qs.logger.info(
-                self,
-                self._log_dict(),
-                is_response=True)
+            qs.logger.info(*args, **kwargs)
         else:
-            qs.logger.error_or_critical(
-                self,
-                self._log_dict(),
-                self.critical)
+            if self.critical:
+                qs.logger.critical(*args, **kwargs)
+            else:
+                qs.logger.error(*args, **kwargs)
 
     def _log_dict(self):
         """The dict-based description of this request, mainly for logging"""
