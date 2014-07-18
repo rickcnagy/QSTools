@@ -31,7 +31,7 @@ class QSAPIWrapper(qs.APIWrapper):
         no_cache: (request-specific) If True, the cache will be ignored and
             reset for that resource.
         by_id: (request with list result specific) If True, return the data in
-            a dict with {id: obj} values.
+            a dict with {id: dict} values.
 
 
     Note: in all instance methods, pass critical=True as a keyword argument to
@@ -45,7 +45,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self.schoolcode = None
         self.api_key = None
-        self.cache = QSAPICache()
+        self.cache = _ResponseCache()
 
         self._parse_access_key()
 
@@ -164,12 +164,12 @@ class QSAPIWrapper(qs.APIWrapper):
         live = 'live' if self.live else 'backup'
         return ['qs', live, self.schoolcode]
 
+    class _ResponseCache(object):
+        """Holder for caches of all responses from the API."""
 
-class QSAPICache(object):
-    """Essentially a wrapper around a bunch of RestCache objects."""
-
-    def __init__(self):
-        self.students = qs.ListWithIDCache(sort_key='fullName')
+        def __init__(self):
+            self.students = qs.ListWithIDCache(sort_key='fullName')
+            self.semesters = qs.ListWithIDCache()
 
 
 def _should_make_request(cache, **kwargs):
