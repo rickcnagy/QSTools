@@ -56,15 +56,9 @@ class QSAPIWrapper(qs.APIWrapper):
     def get_students(self, show_deleted=False, show_has_left=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
-        If the student list is empty, [] will be returned.
-
         Args:
-            by_id: Return a dict where the student ids are the keys.
-            use_cache: Use the cache if it's available.
-            class_id: Pull students from a specific class. This students will
-                also be added to the cache along with all the students
-                avaialable from /students.
-            fields: A list of the extra fields to retrieve
+            show_deleted: Show deleted students
+            show_has_left: Show students that have left
         """
         if show_deleted or show_has_left:
             request = QSRequest(
@@ -74,41 +68,38 @@ class QSAPIWrapper(qs.APIWrapper):
                 'showDeleted': show_deleted,
                 'showHasLeft': show_has_left,
             })
-            students = self.make_request(request, **kwargs)
+            students = self._make_request(request, **kwargs)
             if 'by_id' in kwargs and kwargs['by_id'] is True:
                 students = {i['id']: i for i in students}
             return students
         elif _should_make_request(self.cache.students, **kwargs):
             request = QSRequest('GET all students', '/students')
-            students = self.make_request(request, **kwargs)
+            students = self._make_request(request, **kwargs)
             self.cache.students.add(students)
         return self.cache.students.get(**kwargs)
 
-    def get_student(self, student_id, use_cache=True, **kwargs):
-        """GET a specific student by id. Returns None if no student is found.
-        """
-        cached = self.get_students(by_id=True, **kwargs).get(student_id)
-        if cached:
-            return cached
-        else:
-            request = QSRequest(
-            'GET student by ID',
-            '/students/{}'.format(student_id))
-            return self.make_request(request, **kwargs)
+    def get_student(self, student_id, **kwargs):
+        """GET a specific student by id."""
+        return self._make_single_request(
+            student_id,
+            '/students',
+            self.get_students,
+            'GET student by id',
+            **kwargs)
 
     # =================
     # = Other Methods =
     # =================
 
-    def make_request(self, request, **kwargs):
+    def _make_request(self, request, **kwargs):
         """Process any QSRequest in this class and make it.
 
         Args:
             request: the prepared (but not yet made) QSRequest
-            original_kwargs: the **kwargs passed to the function that
+            kwargs: the **kwargs passed to the function that
                 instantiated this request, such as self.get_students().
         Returns:
-            the data from the completed
+            The data from the completed request
         """
         request.set_api_key(self.api_key)
         if 'critical' in kwargs:
@@ -125,6 +116,36 @@ class QSAPIWrapper(qs.APIWrapper):
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
+
+
+    def _make_single_request(self, identifier, base_uri, request_all_method,
+        request_description, **kwargs):
+        """Make a single request to a resource that has both a method to
+        request all and a method to request a single resource.
+
+        Resources are such as /students/{studentID}, the single version of
+        /students.
+
+        Args:
+            identifier: The id to be passed to the API in the URL, such as
+                the student id.
+            base_uri: The base URI of the the resource, such as '/students'.
+            request_all_method: The method used to request all of the resource,
+                such as self.students.
+            request_description: The description to include in the request,
+                such as 'GET student by id'.
+            kwargs: The kwargs from the source method.
+        """
+        resource_id = qs.clean_id(identifier)
+        cached = request_all_method(by_id=True, **kwargs).get(identifier)
+
+        if cached:
+            return cached
+        else:
+            request = QSRequest(
+                request_description,
+                '{}/{}'.format(base_uri, identifier))
+            return self._make_request(request, **kwargs)
 
     def _parse_access_key(self):
         """Parses self._access key, which could be a schoolcode or API key, and

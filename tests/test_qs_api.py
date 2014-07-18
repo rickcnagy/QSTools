@@ -13,7 +13,7 @@ def setup():
 def test_make_request():
     request = qs.QSRequest('Testing', '/students')
     q = qs.API()
-    data = q.make_request(request, critical=True)
+    data = q._make_request(request, critical=True)
     assert_is_instance(data, list)
     assert_equals(request.api_key, q.api_key)
     assert_in('apiKey', request.params)

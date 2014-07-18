@@ -19,7 +19,7 @@ def test_get_student_for_invalid_id():
 
 
 def test_get_student_for_deleted_student():
-    """Isn't in the cache"""
+    """Won't be in the cache"""
     student = q.get_student(qs.mock_data.DELETED_STUDENT_ID)
     assert_is_instance(student, dict)
     assert_greater(len(student), 0)
