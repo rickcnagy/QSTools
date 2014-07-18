@@ -27,12 +27,8 @@ def test_get_students_by_id():
     assert_is_instance(by_id, dict)
     assert_greater(len(by_id), 0)
     assert_is_instance(by_id[by_id.keys()[0]], dict)
+    assert_in('id', by_id[by_id.keys()[0]])
 
-
-def test_get_student():
-    student = q.get_student(mock_student['id'])
-    assert_equals(student['fullName'], mock_student['fullName'])
-    assert_equals(student, q.get_students(by_id=True)[mock_student['id']])
 
 def test_get_deleted_students():
     students = q.get_students(show_deleted=True, by_id=True)

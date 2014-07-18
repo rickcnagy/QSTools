@@ -5,10 +5,15 @@ from nose.tools import *
 from mock import MagicMock
 
 
+def setup():
+    global q
+    q = qs.API()
+
+
 def test_make_request():
     request = qs.QSRequest('Testing', '/students')
     q = qs.API()
-    data = q.make_request(request, **{'critical': True})
+    data = q.make_request(request, critical=True)
     assert_is_instance(data, list)
     assert_equals(request.api_key, q.api_key)
     assert_in('apiKey', request.params)
@@ -49,3 +54,17 @@ def test_key_path():
     assert_equals(
         qs.API()._api_key_store_key_path(),
         ['qs', 'live', 'qstools'])
+
+
+def test_make_request_with_fields():
+    field = 'deleted'
+    data = q.get_students(fields=field)
+    assert_true(all(field in i for i in data))
+    assert_false(data[0][field])
+    assert_true(all(field in i for i in q.get_students()))
+
+
+def test_make_request_no_cache():
+    students = q.get_students(fields='deleted')
+    assert_true(all('deleted' in i for i in students))
+    assert_false(any('deleted' in i for i in q.get_students(no_cache=True)))
