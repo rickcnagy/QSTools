@@ -57,7 +57,11 @@ def test_key_path():
 
 
 def test_make_request_with_fields():
-    field = 'deleted'
+    request_with_field('deleted')
+    request_with_field('hasLeft')
+
+
+def request_with_field(field):
     data = q.get_students(fields=field)
     assert_true(all(field in i for i in data))
     assert_false(data[0][field])

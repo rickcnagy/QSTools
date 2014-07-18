@@ -68,3 +68,4 @@ def test_has_fields():
     cache.add(unsorted)
     assert_true(cache.has_fields(['sort', 'id']))
     assert_true(cache.has_fields('sort'))
+    assert_false(cache.has_fields(['sort', 'some random field']))

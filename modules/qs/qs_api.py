@@ -156,6 +156,6 @@ def _should_make_request(cache, **kwargs):
         return True
     elif 'no_cache' in kwargs and kwargs['no_cache'] is True:
         return True
-    elif 'fields' in kwargs and not cache.has_fields(kwargs['fields']):
+    elif 'fields' in kwargs and cache.has_fields(kwargs['fields']) is False:
         return True
     return False
