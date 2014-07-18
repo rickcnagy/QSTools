@@ -124,6 +124,29 @@ class QSAPIWrapper(qs.APIWrapper):
             'GET student by id',
             **kwargs)
 
+    # ============
+    # = Sections =
+    # ============
+
+    def get_sections(self, semester_id=None, **kwargs):
+        cache = self.cache.sections
+
+        if semester_id:
+            semester_id = qs.clean_id(semester_id)
+            filter_dict = {'semesterId': semester_id}
+            cache_kwargs = {'filter_dict': filter_dict}
+            if _should_make_request(cache, cache_kwargs=cache_kwargs):
+                request = QSRequest('GET sections from semester', '/sections')
+                request.params.update({'semesterId': semester_id})
+                cache.add(self._make_request(request, **kwargs))
+            kwargs.update(cache_kwargs)
+            return cache.get(**kwargs)
+        else:
+            if _should_make_request(cache, **kwargs):
+                request = QSRequest('GET sections', '/sections')
+                cache.add(self._make_request(request, **kwargs))
+            return self.cache.sections.get(**kwargs)
+
     # =================
     # = Other Methods =
     # =================
@@ -202,13 +225,16 @@ class QSAPIWrapper(qs.APIWrapper):
         return ['qs', live, self.schoolcode]
 
 
-def _should_make_request(cache, **kwargs):
+def _should_make_request(cache, cache_kwargs={}, **kwargs):
     """Whether or not a new QS API request should be made, based on cache
     status and kwargs.
+
+    Keyword Args:
+        cache_kwargs: dict of keyword args to supply to cache.get().
     """
-    if cache.get() is None:
+    if cache.get(**cache_kwargs) is None:
         return True
-    elif 'no_cache' in kwargs and kwargs['no_cache'] is True:
+    elif kwargs.get('no_cache') is True:
         return True
     elif 'fields' in kwargs and cache.has_fields(kwargs['fields']) is False:
         return True
@@ -221,3 +247,4 @@ class _ResponseCache(object):
     def __init__(self):
         self.students = qs.ListWithIDCache(sort_key='fullName')
         self.semesters = qs.ListWithIDCache()
+        self.sections = qs.ListWithIDCache(sort_key='sectionName')

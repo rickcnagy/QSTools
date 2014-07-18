@@ -59,9 +59,9 @@ class ListWithIDCache(RestCache):
         Keyword Args:
             by_id: A boolean of whether to return the results in a dict by
                 id_key
-            filter_dict: A dict to filter the return value on. If this
-                is specified, only dicts that contain the items in filter_dict
-                will be returned.
+            filter_dict: A dict to filter the return value on. If this is
+                provided, only dicts that contain the items in filter_dict will
+                be returned. Example: `{'classId': '12345'}`
         """
         if self._data is None:
             return None
@@ -88,9 +88,10 @@ class ListWithIDCache(RestCache):
         elif type(new_data) is dict:
             new_data = [new_data]
 
-        if not self._data and new_data:
+        if not self._data:
             self._data = {}
-        self._data.update({qs.clean_id(i[self._id_key]): i for i in new_data})
+        cleaned_input = {qs.clean_id(i[self._id_key]): i for i in new_data}
+        self._data.update(cleaned_input)
 
     def has_fields(self, fields):
         """Determine whether or not all of the cached data has all the fields
