@@ -75,7 +75,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 'showHasLeft': show_has_left,
             })
             students = self.make_request(request, **kwargs)
-            if by_id:
+            if 'by_id' in kwargs and kwargs['by_id'] is True:
                 students = {i['id']: i for i in students}
             return students
         elif _should_make_request(self.cache.students, **kwargs):
