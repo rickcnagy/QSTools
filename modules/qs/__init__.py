@@ -4,7 +4,7 @@
 import data_migration
 import logger
 import api_keys
-import mock_data
+import test_data
 
 # import __all__ from modules
 from rest_foundation import *

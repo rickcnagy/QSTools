@@ -3,7 +3,7 @@
 import qs
 from nose.tools import *
 from mock import MagicMock
-from qs.mock_data import *
+from qs.test_data import *
 
 
 def setup():

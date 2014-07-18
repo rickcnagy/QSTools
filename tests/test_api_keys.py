@@ -3,7 +3,7 @@
 from qs import api_keys
 import qs
 from nose.tools import *
-from qs.mock_data import *
+from qs.test_data import *
 import json
 
 TEMP_STORE_PATH = "~/.apikeys_testing.json"

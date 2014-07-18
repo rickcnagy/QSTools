@@ -17,10 +17,6 @@ Wrapper on top of the Logger for logging QuickSchools API requests.
 \#TEST EXEMPT
 
 
-####[`mock_data.py`](./mock_data.py)
-
-Config dummy data for tests
-
 ####[`rate_limiting.py`](./rate_limiting.py)
 
 Limit request rates on REST servers by request base URL.
@@ -44,6 +40,10 @@ A set of wrappers around different specific REST API's. If the wrapper (or a
 part of that wrapper) can be used for another REST API, it should be moved to
 rest_base.py
 
+
+####[`test_data.py`](./test_data.py)
+
+Config dummy data for tests
 
 ####[`util.py`](./util.py)
 

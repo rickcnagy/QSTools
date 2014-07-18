@@ -3,7 +3,7 @@
 import qs
 from nose.tools import *
 from mock import MagicMock
-from qs.mock_data import *
+from qs.test_data import *
 
 # Random keys just for testing
 KEY = '0zX4EX'

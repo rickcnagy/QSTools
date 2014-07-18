@@ -4,7 +4,7 @@ import qs
 from nose.tools import *
 from qs import QSRequest
 from mock import MagicMock
-from qs.mock_data import *
+from qs.test_data import *
 
 # just for testing correct param val...
 _MAGIC_VAL = '1546'
