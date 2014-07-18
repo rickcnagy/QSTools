@@ -201,15 +201,11 @@ class QSAPIWrapper(qs.APIWrapper):
         live = 'live' if self.live else 'backup'
         return ['qs', live, self.schoolcode]
 
-    class _ResponseCache(object):
-        """Holder for caches of all responses from the API."""
-
-        def __init__(self):
-            self.students = qs.ListWithIDCache(sort_key='fullName')
-            self.semesters = qs.ListWithIDCache()
-
 
 def _should_make_request(cache, **kwargs):
+    """Whether or not a new QS API request should be made, based on cache
+    status and kwargs.
+    """
     if cache.get() is None:
         return True
     elif 'no_cache' in kwargs and kwargs['no_cache'] is True:
@@ -217,3 +213,11 @@ def _should_make_request(cache, **kwargs):
     elif 'fields' in kwargs and cache.has_fields(kwargs['fields']) is False:
         return True
     return False
+
+
+class _ResponseCache(object):
+    """Holder for caches of all responses from the API."""
+
+    def __init__(self):
+        self.students = qs.ListWithIDCache(sort_key='fullName')
+        self.semesters = qs.ListWithIDCache()
