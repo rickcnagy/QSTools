@@ -3,6 +3,7 @@
 import qs
 from nose.tools import *
 from mock import MagicMock
+from qs.mock_data import *
 
 
 def setup():
@@ -24,25 +25,25 @@ def test_make_request():
 def test_empty_access_key_arg():
     q = qs.API()
     assert_equals(q.schoolcode, 'qstools')
-    assert_equals(q.api_key, qs.mock_data.KEY)
+    assert_equals(q.api_key, API_KEY)
 
 
 def test_api_key_as_access_key():
-    q = qs.API(qs.mock_data.KEY)
+    q = qs.API(API_KEY)
     assert_equals(q.schoolcode, 'qstools')
-    assert_equals(q.api_key, qs.mock_data.KEY)
+    assert_equals(q.api_key, API_KEY)
 
 
 def test_adding_api_key():
     fake_schoolcode = 'fakeschool'
     fake_api_key = '{}.fakeapikey'.format(fake_schoolcode)
     q = qs.API(fake_api_key)
-    q.api_key = qs.mock_data.KEY
+    q.api_key = API_KEY
     q.get_students()
     if q.get_students():
         assert_equals(q.schoolcode, fake_schoolcode)
         assert_equals(qs.api_keys.get(['qs', 'live', fake_schoolcode]),
-            qs.mock_data.KEY)
+            API_KEY)
         qs.api_keys.remove(['qs', 'live', 'fakeschool'])
 
 
