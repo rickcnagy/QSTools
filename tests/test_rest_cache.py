@@ -5,17 +5,17 @@ from nose.tools import *
 
 unsorted = [{
     'id': 12345,
-    'sort': 02,
+    'sort': 2,
 }, {
     'id': 146,
-    'sort': 01
+    'sort': 1
 }]
 sorted_version = [{
     'id': 146,
-    'sort': 01
-},{
+    'sort': 1
+}, {
     'id': 12345,
-    'sort': 02,
+    'sort': 2,
 }]
 
 
@@ -53,6 +53,7 @@ def test_list_with_id_cache_sorting():
     cache.add(unsorted)
     assert_equals(cache.get(), sorted_version)
 
+
 def test_list_with_id_cache_validation():
     cache = qs.ListWithIDCache()
     with assert_raises(TypeError):
@@ -69,3 +70,24 @@ def test_has_fields():
     assert_true(cache.has_fields(['sort', 'id']))
     assert_true(cache.has_fields('sort'))
     assert_false(cache.has_fields(['sort', 'some random field']))
+
+
+def test_filtered_get():
+    cache = qs.ListWithIDCache()
+    cache.add(unsorted)
+    assert_true(cache.get(filter_dict=unsorted[0]), unsorted[0])
+
+
+def test_filter_get_by_id():
+    cache = qs.ListWithIDCache()
+    cache.add(unsorted)
+    unsorted_by_id = {unsorted[0]['id']: unsorted[0]}
+    assert_true(cache.get(filter_dict=unsorted[0], by_id=True), unsorted_by_id)
+
+
+def test_entry_has_items():
+    cache = qs.ListWithIDCache()
+    cache.add(unsorted)
+    assert_true(cache.has_entry_with_items({'sort': 1}))
+    assert_false(cache.has_entry_with_items({'sort': '1000'}))
+    assert_false(cache.has_entry_with_items({'somekey': 5}))

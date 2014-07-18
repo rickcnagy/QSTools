@@ -45,25 +45,37 @@ class ListWithIDCache(RestCache):
         self._sort_key = sort_key
         self._id_key = id_key
 
-    def get(self, identifier=None, **kwargs):
+    def get(self, identifier=None, by_id=False, filter_dict=None, **kwargs):
         """Return a flattened list of the data or a single entry by id if id is
         specified. Note that identifier is cleaned here, so don't clean in
         calling function.
 
         Any result other than None means that object was specifically added to
         the cache.
+
+        Args:
+            identifier: Specify an id to match to id_key. Returns a single
+                dict.
+        Keyword Args:
+            by_id: A boolean of whether to return the results in a dict by
+                id_key
+            filter_dict: A dict to filter the return value on. If this
+                is specified, only dicts that contain the items in filter_dict
+                will be returned.
         """
         if self._data is None:
             return None
-        elif 'by_id' in kwargs and kwargs['by_id'] is True:
-            return self._data or None
+        elif by_id is True:
+            return _filter_dict(self._data, filter_dict) or None
         elif identifier:
-            return (self._data.get(qs.clean_id(identifier)))
+            return self._data.get(qs.clean_id(identifier))
         else:
-            return_data = [v for k, v in self._data.iteritems()]
+            return_list = [v for k, v in self._data.iteritems()]
             if self._sort_key:
-                return sorted(return_data, key=lambda x: x[self._sort_key])
-            return return_data
+                return_list = sorted(
+                    return_list,
+                    key=lambda x: x[self._sort_key])
+            return _filter_list(return_list, filter_dict)
 
     def add(self, new_data):
         """Add to the cache with a list or single dict. Like list.append."""
@@ -81,7 +93,7 @@ class ListWithIDCache(RestCache):
         self._data.update({qs.clean_id(i[self._id_key]): i for i in new_data})
 
     def has_fields(self, fields):
-        """Determine whether or not the cached data has all the fields
+        """Determine whether or not all of the cached data has all the fields
         specified.
         """
         if str(fields) == fields:
@@ -93,3 +105,43 @@ class ListWithIDCache(RestCache):
             if not all(field in d for k, d in self._data.iteritems()):
                 return False
         return True
+
+    def has_entry_with_items(self, items):
+        """Determine whether or not one of the entries in the cache has the
+        items from items. Items should be in a dict, such as {id: 12345}.
+        """
+        for _, datum in self._data.iteritems():
+            if _dict_has_items(datum, items):
+                return True
+        return False
+
+
+def _filter_dict(dict_to_filter, items):
+    """Filter dict_to_filter for items where the values contain the items in
+    items.
+    """
+    if dict_to_filter is None or not items:
+        return dict_to_filter
+
+    return {
+        k: d for k, d in dict_to_filter.iteritems()
+        if _dict_has_items(d, items)
+    }
+
+
+def _filter_list(list_to_filter, items):
+    """Filter list_to_filter for dicts that contain the items in items"""
+    if list_to_filter is None or not items:
+        return list_to_filter
+
+    return [
+        i for i in list_to_filter
+        if _dict_has_items(i, items)
+    ]
+
+
+def _dict_has_items(dict_to_check, items):
+    """Boolean whether the dict contains the items in items.
+
+    If items is empty, True will be returned"""
+    return all(item in dict_to_check.items() for item in items.items())
