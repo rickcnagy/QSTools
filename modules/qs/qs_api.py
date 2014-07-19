@@ -233,7 +233,7 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs: The kwargs from the source method.
         """
         resource_id = qs.clean_id(identifier)
-        cached = request_all_method(by_id=True, **kwargs).get(identifier)
+        cached = request_all_method(by_id=True, **kwargs).get(resource_id)
 
         if cached:
             return cached
