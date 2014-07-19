@@ -63,6 +63,6 @@ def test_get_active_year_id():
 def test_get_semesters_from_year():
     semester_ids = [
         i['id'] for i
-        in q.get_semesters_from_year(NON_ACTIVE_YEAR_ID)
+        in q.get_semesters_from_year(NA_YEAR_ID)
     ]
-    assert_equals(set(semester_ids), set(NON_ACTIVE_YEAR_SEMESTER_IDS))
+    assert_equals(set(semester_ids), set(NA_YEAR_SEMESTER_IDS))
