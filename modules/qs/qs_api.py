@@ -89,6 +89,25 @@ class QSAPIWrapper(qs.APIWrapper):
         year_id = year_id or self.get_active_year_id()
         return [i for i in self.get_semesters() if i['yearId'] == year_id]
 
+    # ============
+    # = Teachers =
+    # ============
+
+    def get_teachers(self, **kwargs):
+        """GET teachers via the /teachers endpoint."""
+        if _should_make_request(self.cache.teachers, **kwargs):
+            request = QSRequest('GET teachers', '/teachers')
+            self.cache.teachers.add(self._make_request(request, **kwargs))
+        return self.cache.teachers.get(**kwargs)
+
+    def get_teacher(self, teacher_id, **kwargs):
+        """GET a specific teacher by id."""
+        return self._make_single_request(
+            teacher_id,
+            '/teachers',
+            self.get_teachers,
+            'GET teacher by ID',
+            **kwargs)
 
     # ============
     # = Students =
@@ -284,3 +303,4 @@ class _ResponseCache(object):
         self.students = qs.ListWithIDCache(sort_key='fullName')
         self.semesters = qs.ListWithIDCache()
         self.sections = qs.ListWithIDCache(sort_key='sectionName')
+        self.teachers = qs.ListWithIDCache(sort_key='fullName')
