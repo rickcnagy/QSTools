@@ -74,6 +74,10 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET the active semester dict"""
         return [i for i in self.get_semesters() if i['isActive']][0]
 
+    def get_active_semester_id(self):
+        """GET the id of the active semester"""
+        return self.get_active_semester()['id']
+
     def get_active_year_id(self):
         """GET the active year id"""
         return self.get_active_semester()['yearId']
@@ -128,24 +132,55 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Sections =
     # ============
 
-    def get_sections(self, semester_id=None, **kwargs):
+    def get_sections(self, semester_id=None, all_semesters=False,
+        active_only=True, **kwargs):
+        """GET sections from the /sections endpoint.
+
+        Args:
+            semester_id: GET sections from a specific semester by id.
+            all_semesters: GET sections from all semesters for this school.
+                semester_id get priority over this.
+            active_only: Only return sections from the current semester. If
+                this is False, sections from all semesters already in the cache
+                are returned, otherwise it's the active semester only.
+                all_semesters and semester_id get priority.
+
+        """
         cache = self.cache.sections
+
+        def mark_sections(sections, semester_id_to_mark):
+            for section in sections:
+                section.update({'semesterId': semester_id_to_mark})
 
         if semester_id:
             semester_id = qs.clean_id(semester_id)
-            filter_dict = {'semesterId': semester_id}
-            cache_kwargs = {'filter_dict': filter_dict}
-            if _should_make_request(cache, cache_kwargs=cache_kwargs):
+            kwargs.update({'filter_dict': {'semesterId': semester_id}})
+
+            if _should_make_request(cache, **kwargs):
                 request = QSRequest('GET sections from semester', '/sections')
                 request.params.update({'semesterId': semester_id})
-                cache.add(self._make_request(request, **kwargs))
-            kwargs.update(cache_kwargs)
-            return cache.get(**kwargs)
-        else:
-            if _should_make_request(cache, **kwargs):
-                request = QSRequest('GET sections', '/sections')
-                cache.add(self._make_request(request, **kwargs))
-            return self.cache.sections.get(**kwargs)
+                sections = self._make_request(request, **kwargs)
+                mark_sections(sections, semester_id)
+                cache.add(sections)
+
+        elif _should_make_request(cache, **kwargs):
+            request = QSRequest('GET sections', '/sections')
+            sections = self._make_request(request, **kwargs)
+            mark_sections(sections, self.get_active_semester_id())
+            cache.add(sections)
+
+        if all_semesters is True:
+            active_only = False
+            all_sections = []
+            for semester in self.get_semesters():
+                sections = self.get_sections(semester_id=semester['id'])
+                all_sections.append(sections)
+
+        if semester_id is None and active_only is True:
+            semester_id_dict =  {'semesterId': self.get_active_semester_id()}
+            kwargs.update({'filter_dict': semester_id_dict})
+
+        return cache.get(**kwargs)
 
     # =================
     # = Other Methods =
@@ -225,18 +260,18 @@ class QSAPIWrapper(qs.APIWrapper):
         return ['qs', live, self.schoolcode]
 
 
-def _should_make_request(cache, cache_kwargs={}, **kwargs):
+def _should_make_request(cache, **kwargs):
     """Whether or not a new QS API request should be made, based on cache
     status and kwargs.
 
     Keyword Args:
         cache_kwargs: dict of keyword args to supply to cache.get().
     """
-    if cache.get(**cache_kwargs) is None:
-        return True
-    elif kwargs.get('no_cache') is True:
+    if kwargs.get('no_cache') is True:
         return True
     elif 'fields' in kwargs and cache.has_fields(kwargs['fields']) is False:
+        return True
+    elif cache.get(**kwargs) is None:
         return True
     return False
 
