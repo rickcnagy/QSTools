@@ -54,7 +54,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # =====================
 
     def get_semesters(self, **kwargs):
-        """GET all semesters from /semesters"""
+        """GET all semesters from /semesters."""
         if _should_make_request(self.cache.semesters, **kwargs):
             request = QSRequest('GET all semesters', '/semesters')
             semesters = self._make_request(request, **kwargs)
@@ -62,7 +62,7 @@ class QSAPIWrapper(qs.APIWrapper):
         return self.cache.semesters.get(**kwargs)
 
     def get_semester(self, semester_id, **kwargs):
-        """GET a specific semester by id"""
+        """GET a specific semester by id."""
         return self._make_single_request(
             semester_id,
             '/semesters',
@@ -71,15 +71,15 @@ class QSAPIWrapper(qs.APIWrapper):
             **kwargs)
 
     def get_active_semester(self):
-        """GET the active semester dict"""
+        """GET the active semester dict."""
         return [i for i in self.get_semesters() if i['isActive']][0]
 
     def get_active_semester_id(self):
-        """GET the id of the active semester"""
+        """GET the id of the active semester."""
         return self.get_active_semester()['id']
 
     def get_active_year_id(self):
-        """GET the active year id"""
+        """GET the active year id."""
         return self.get_active_semester()['yearId']
 
     def get_semesters_from_year(self, year_id=None):
@@ -98,8 +98,8 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET a list of all enrolled students from /students.
 
         Args:
-            show_deleted: Show deleted students
-            show_has_left: Show students that have left
+            show_deleted: Show deleted students.
+            show_has_left: Show students that have left.
         """
         if show_deleted or show_has_left:
             request = QSRequest(
@@ -216,7 +216,8 @@ class QSAPIWrapper(qs.APIWrapper):
     def _make_single_request(self, identifier, base_uri, request_all_method,
         request_description, **kwargs):
         """Make a single request to a resource that has both a method to
-        request all and a method to request a single resource.
+        request all and a method to request a single resource. Handles both
+        the request part and caching part.
 
         Resources are such as /students/{studentID}, the single version of
         /students.
