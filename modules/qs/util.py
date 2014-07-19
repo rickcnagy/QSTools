@@ -14,7 +14,7 @@ def dumps(arbitry_obj):
 
 def pr(arbitry_obj):    # pragma: no cover
     """Like pprint.pprint"""
-    print dumps(arbitry_obj)
+    print dumps(arbitry_obj) if arbitry_obj else str(arbitry_obj)
 
 
 def rand_str(size=6, chars=string.letters + string.digits):
