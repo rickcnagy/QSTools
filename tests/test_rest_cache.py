@@ -83,11 +83,21 @@ def test_filter_get_by_id():
     cache.add(unsorted)
     unsorted_by_id = {unsorted[0]['id']: unsorted[0]}
     assert_true(cache.get(filter_dict=unsorted[0], by_id=True), unsorted_by_id)
+    assert_is_none(cache.get(filter_dict={'some key': 1234}))
+
+
+def test_filter_with_unicode():
+    cache = qs.ListWithIDCache()
+    unicoded = {u'id': u'someval'}
+    no_unicode = {'id': 'someval'}
+    cache.add(unicoded)
+    assert_equals(cache.get(), [unicoded])
+    assert_equals(cache.get(filter_dict=no_unicode), [unicoded])
 
 
 def test_entry_has_items():
     cache = qs.ListWithIDCache()
     cache.add(unsorted)
-    assert_true(cache.has_entry_with_items({'sort': 1}))
-    assert_false(cache.has_entry_with_items({'sort': '1000'}))
-    assert_false(cache.has_entry_with_items({'somekey': 5}))
+    assert_true(cache.has_entry_with_subset({'sort': 1}))
+    assert_false(cache.has_entry_with_subset({'sort': '1000'}))
+    assert_false(cache.has_entry_with_subset({'somekey': 5}))

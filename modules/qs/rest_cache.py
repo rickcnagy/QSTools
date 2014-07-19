@@ -75,7 +75,7 @@ class ListWithIDCache(RestCache):
                 return_list = sorted(
                     return_list,
                     key=lambda x: x[self._sort_key])
-            return _filter_list(return_list, filter_dict)
+            return _filter_list(return_list, filter_dict) or None
 
     def add(self, new_data):
         """Add to the cache with a list or single dict. Like list.append."""
@@ -96,53 +96,67 @@ class ListWithIDCache(RestCache):
     def has_fields(self, fields):
         """Determine whether or not all of the cached data has all the fields
         specified.
+
+        Returns False if self._data is none.
         """
         if str(fields) == fields:
             fields = [fields]
         elif type(fields) is not list:
             raise TypeError('Fields must be a list or string')
+        if not self._data:
+            return False
 
         for field in fields:
             if not all(field in d for k, d in self._data.iteritems()):
                 return False
         return True
 
-    def has_entry_with_items(self, items):
+    def has_entry_with_subset(self, items):
         """Determine whether or not one of the entries in the cache has the
         items from items. Items should be in a dict, such as {id: 12345}.
         """
         for _, datum in self._data.iteritems():
-            if _dict_has_items(datum, items):
+            if _dict_has_subset(datum, items):
                 return True
         return False
 
 
-def _filter_dict(dict_to_filter, items):
+def _filter_dict(dict_to_filter, subset):
     """Filter dict_to_filter for items where the values contain the items in
     items.
     """
-    if dict_to_filter is None or not items:
+    if dict_to_filter is None or not subset:
         return dict_to_filter
 
     return {
         k: d for k, d in dict_to_filter.iteritems()
-        if _dict_has_items(d, items)
+        if _dict_has_subset(d, subset)
     }
 
 
-def _filter_list(list_to_filter, items):
+def _filter_list(list_to_filter, subset):
     """Filter list_to_filter for dicts that contain the items in items"""
-    if list_to_filter is None or not items:
+    if list_to_filter is None or not subset:
         return list_to_filter
 
     return [
         i for i in list_to_filter
-        if _dict_has_items(i, items)
+        if _dict_has_subset(i, subset)
     ]
 
 
-def _dict_has_items(dict_to_check, items):
-    """Boolean whether the dict contains the items in items.
+def _dict_has_subset(dict_to_check, subset):
+    """Boolean whether the dict contains the items in subset.
 
-    If items is empty, True will be returned"""
-    return all(item in dict_to_check.items() for item in items.items())
+    It doesn't matter whether an item in subset is unicode or ascii string -
+    they are compared as equal (both key and value).
+    If subset is empty, True is returned.
+    """
+    if not subset: return True
+
+    for k, v in subset.iteritems():
+        if dict_to_check.get(k) is None:
+            return False
+        elif (dict_to_check[k] != v and str(dict_to_check[k]) != str(v)):
+            return False
+    return True
