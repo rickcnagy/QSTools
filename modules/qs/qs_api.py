@@ -43,9 +43,14 @@ class QSAPIWrapper(qs.APIWrapper):
         self._access_key = access_key
         self.live = live
 
+        self.teacher_cache = qs.ListWithIDCache(sort_key='fullName')
+        self.semester_cache = qs.ListWithIDCache()
+        self.student_cache = qs.ListWithIDCache(sort_key='fullName')
+        self.section_cache = qs.ListWithIDCache(sort_key='sectionName')
+        self.section_enrollment_cache = qs.ListWithIDCache()
+
         self.schoolcode = None
         self.api_key = None
-        self.cache = _ResponseCache()
 
         self._parse_access_key()
 
@@ -55,11 +60,12 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_semesters(self, **kwargs):
         """GET all semesters from /semesters."""
-        if _should_make_request(self.cache.semesters, **kwargs):
+        cache = self.semester_cache
+        if _should_make_request(cache, **kwargs):
             request = QSRequest('GET all semesters', '/semesters')
             semesters = self._make_request(request, **kwargs)
-            self.cache.semesters.add(semesters)
-        return self.cache.semesters.get(**kwargs)
+            cache.add(semesters)
+        return cache.get(**kwargs)
 
     def get_semester(self, semester_id, **kwargs):
         """GET a specific semester by id."""
@@ -95,10 +101,11 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_teachers(self, **kwargs):
         """GET teachers via the /teachers endpoint."""
-        if _should_make_request(self.cache.teachers, **kwargs):
+        cache = self.teacher_cache
+        if _should_make_request(cache, **kwargs):
             request = QSRequest('GET teachers', '/teachers')
-            self.cache.teachers.add(self._make_request(request, **kwargs))
-        return self.cache.teachers.get(**kwargs)
+            cache.add(self._make_request(request, **kwargs))
+        return cache.get(**kwargs)
 
     def get_teacher(self, teacher_id, **kwargs):
         """GET a specific teacher by id."""
@@ -120,6 +127,7 @@ class QSAPIWrapper(qs.APIWrapper):
             show_deleted: Show deleted students.
             show_has_left: Show students that have left.
         """
+        cache = self.student_cache
         if show_deleted or show_has_left:
             request = QSRequest(
                 'GET all students, including deleted/has left',
@@ -132,11 +140,11 @@ class QSAPIWrapper(qs.APIWrapper):
             if 'by_id' in kwargs and kwargs['by_id'] is True:
                 students = {i['id']: i for i in students}
             return students
-        elif _should_make_request(self.cache.students, **kwargs):
+        elif _should_make_request(cache, **kwargs):
             request = QSRequest('GET all students', '/students')
             students = self._make_request(request, **kwargs)
-            self.cache.students.add(students)
-        return self.cache.students.get(**kwargs)
+            cache.add(students)
+        return cache.get(**kwargs)
 
     def get_student(self, student_id, **kwargs):
         """GET a specific student by id."""
@@ -165,7 +173,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 all_semesters and semester_id get priority.
 
         """
-        cache = self.cache.sections
+        cache = self.section_cache
 
         def mark_sections(sections, semester_id_to_mark):
             for section in sections:
@@ -200,6 +208,73 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs.update({'filter_dict': semester_id_dict})
 
         return cache.get(**kwargs)
+
+    # =======================
+    # = Section Enrollments =
+    # =======================
+
+    def get_section_enrollments(self, **kwargs):
+        """GET section enrollments for the active semester.
+        For speed, uses an extra field in the /students endpoint. Data is still
+        stored in the cache by semester id. To get section enrollment for a
+        different semester, use `.get_section_enrollment`.
+
+        #TODO: Handle active_only to only show section enrollments from this
+        semester.
+        """
+        cache = self.section_enrollment_cache
+        if _should_make_request(cache, **kwargs):
+            students = self.get_students(fields='smsClassSubjectSetIdList')
+            section_enrollments = {}
+            for student in students:
+                for section_id in student['smsClassSubjectSetIdList']:
+                    if section_id not in section_enrollments:
+                        section_enrollments[section_id] = []
+                    section_enrollments[section_id].append(
+                        self._enrollment_dict(student)
+                    )
+            enrollment_list = [
+                {'id': k, 'students': v}
+                for k, v in section_enrollments.iteritems()
+            ]
+            cache.add(enrollment_list)
+        return cache.get(**kwargs)
+
+    def get_section_enrollment(self, section_id, **kwargs):
+        """GET section enrollment for a specific section ID. Note that if the
+        section is from a non-active semester, this is the only way to access
+        that section's enrollment.
+        """
+        section_id = qs.clean_id(section_id)
+        cache = self.section_enrollment_cache
+        section_enrollments = self.get_section_enrollments(by_id=True, **kwargs)
+        cached = section_enrollments.get(section_id)
+        if cached:
+            return cached
+        else:
+            request = QSRequest(
+                'GET section enrollment for non-active section',
+                '/sectionenrollment/{}'.format(section_id))
+            students = self._make_request(request, **kwargs)
+            section_enrollments = {'id': section_id, 'students': []}
+            section_enrollments['students'] = [
+                self._enrollment_dict(i) for i in students
+            ]
+            cache.add(section_enrollments)
+        return cache.get(section_id)
+
+    def _enrollment_dict(self, student):
+        return {
+            'id': student['id'],
+            'smsStudentStubId': student['id'],
+            'fullName': student['fullName'],
+        }
+
+    def get_student_enrollments(self, **kwargs):
+        pass
+
+    def get_student_enrollment(self, student_id, **kwargs):
+        pass
 
     # =================
     # = Other Methods =
@@ -294,13 +369,3 @@ def _should_make_request(cache, **kwargs):
     elif cache.get(**kwargs) is None:
         return True
     return False
-
-
-class _ResponseCache(object):
-    """Holder for caches of all responses from the API."""
-
-    def __init__(self):
-        self.students = qs.ListWithIDCache(sort_key='fullName')
-        self.semesters = qs.ListWithIDCache()
-        self.sections = qs.ListWithIDCache(sort_key='sectionName')
-        self.teachers = qs.ListWithIDCache(sort_key='fullName')
