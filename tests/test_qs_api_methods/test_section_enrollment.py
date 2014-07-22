@@ -27,6 +27,12 @@ def test_get_section_enrollment():
     assert_valid_enrollment(q.get_section_enrollment(NAS1_SECTION_ID))
 
 
+def test_section_enrollments_using_get_section_kwargs():
+    sections = q.get_section_enrollments(
+        semester_id=NAS2_SEMESTER_ID,
+        by_id=True)
+    assert_in(NAS2_SECTION_ID, sections)
+
 
 def assert_valid_enrollment(enrollment):
     ids = []
