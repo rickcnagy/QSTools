@@ -254,44 +254,17 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(section_enrollments)
         return cache.get(section_id, **kwargs)
 
-    def _enrollment_dict(self, student):
-        student_id = student.get('id') or student.get('smsStudentStubId')
-        return {
-            'id': student_id,
-            'smsStudentStubId': student_id,
-            'fullName': student['fullName'],
-        }
 
-    def _update_section_enrollment_cache(self, **kwargs):
-        """Update the section enrollments cache based on the /students
-        endpoint. This only updates the cache for the current semester.
         """
-        cache = self.section_enrollment_cache
-        if _should_make_request(cache, **kwargs):
-            students = self.get_students(fields='smsClassSubjectSetIdList')
-            section_enrollments = {}
-            for student in students:
-                for section_id in student['smsClassSubjectSetIdList']:
-                    if section_id not in section_enrollments:
-                        section_enrollments[section_id] = []
-                    section_enrollments[section_id].append(
-                        self._enrollment_dict(student)
-                    )
-            enrollment_list = [
-                {'id': k, 'students': v}
-                for k, v in section_enrollments.iteritems()
-            ]
-            cache.add(enrollment_list)
-
     def get_student_enrollments(self, **kwargs):
         pass
 
     def get_student_enrollment(self, student_id, **kwargs):
         pass
 
-    # =================
-    # = Other Methods =
-    # =================
+    # =============
+    # = Protected =
+    # =============
 
     def _make_request(self, request, **kwargs):
         """Process any QSRequest in this class and make it.
@@ -365,6 +338,35 @@ class QSAPIWrapper(qs.APIWrapper):
     def _api_key_store_key_path(self):
         live = 'live' if self.live else 'backup'
         return ['qs', live, self.schoolcode]
+
+    def _enrollment_dict(self, student):
+        student_id = student.get('id') or student.get('smsStudentStubId')
+        return {
+            'id': student_id,
+            'smsStudentStubId': student_id,
+            'fullName': student['fullName'],
+        }
+
+    def _update_section_enrollment_cache(self, **kwargs):
+        """Update the section enrollments cache based on the /students
+        endpoint. This only updates the cache for the current semester.
+        """
+        cache = self.section_enrollment_cache
+        if _should_make_request(cache, **kwargs):
+            students = self.get_students(fields='smsClassSubjectSetIdList')
+            section_enrollments = {}
+            for student in students:
+                for section_id in student['smsClassSubjectSetIdList']:
+                    if section_id not in section_enrollments:
+                        section_enrollments[section_id] = []
+                    section_enrollments[section_id].append(
+                        self._enrollment_dict(student)
+                    )
+            enrollment_list = [
+                {'id': k, 'students': v}
+                for k, v in section_enrollments.iteritems()
+            ]
+            cache.add(enrollment_list)
 
 
 def _should_make_request(cache, **kwargs):
