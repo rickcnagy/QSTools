@@ -149,7 +149,7 @@ class RestRequest(object):
             if self.critical:
                 qs.logger.critical(*args, **kwargs)
             else:
-                qs.logger.error(*args, **kwargs)
+                qs.logger.error(*args, cc_print=True, **kwargs)
 
     def _log_dict(self):
         """The dict-based description of this request, mainly for logging"""
