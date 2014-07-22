@@ -177,13 +177,13 @@ class RestRequest(object):
         return self.base_url + self.uri
 
     def _full_params(self):
-        return qs.merge([self.base_params, self.params])
+        return qs.merge(self.base_params, self.params)
 
     def _full_data(self):
-        return qs.merge([self.base_request_data, self.request_data])
+        return qs.merge(self.base_request_data, self.request_data)
 
     def _full_headers(self):
-        return qs.merge([self.base_headers, self.headers])
+        return qs.merge(self.base_headers, self.headers)
 
     def __repr__(self):
         return '<{} {} at {}>'.format(

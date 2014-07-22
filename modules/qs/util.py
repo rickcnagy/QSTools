@@ -6,6 +6,7 @@ import sys
 import time
 import string
 import random
+import os
 
 
 def dumps(arbitry_obj):
@@ -17,18 +18,34 @@ def pp(arbitry_obj):  # pragma: no cover
     print dumps(arbitry_obj) if arbitry_obj else str(arbitry_obj)
 
 
+def print_break():  # pragma: no cover
+    """Print a break that's the width of the terminal for grouping output info.
+    """
+    # From http://stackoverflow.com/a/943921/1628796
+    columns = int(os.popen('stty size', 'r').read().split()[1])
+    print
+    print '*' * columns
+    print
+
+
 def rand_str(size=6, chars=string.letters + string.digits):
     """http://stackoverflow.com/a/2257449/1628796"""
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def merge(dict_list):
-    """Returned merged version of indefinite number of dicts in dict_list"""
-    all_items = []
-    for unmerged in dict_list:
+def merge(*args):
+    """Returned merged version of indefinite number of dicts. Just like the
+    builtin dict() method, args to right get precedent over args to the left.
+
+    Example usage: qs.merge({1: 2}, {3: 4}).
+    """
+    merged = []
+    for unmerged in args:
         for item in unmerged.items():
-            all_items.append(item)
-    return dict(all_items)
+            merged.append(item)
+    return dict(merged)
+
+merge({1: 2}, {3: 4})
 
 
 def running_from_test():

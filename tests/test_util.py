@@ -28,7 +28,7 @@ def test_rand_str_randomness():
     assert_not_equal(qs.rand_str(), qs.rand_str())
 
 def test_merge():
-    assert_equals(qs.merge([{1: 1}, {2: 2}, {3: 3}]), {1: 1, 2: 2, 3: 3})
+    assert_equals(qs.merge({1: 1}, {2: 2}, {3: 3}), {1: 1, 2: 2, 3: 3})
 
 
 def test_clean_id():
