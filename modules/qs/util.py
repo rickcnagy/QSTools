@@ -6,7 +6,7 @@ import sys
 import time
 import string
 import random
-import os
+import subprocess
 
 
 def dumps(arbitry_obj):
@@ -21,8 +21,7 @@ def pp(arbitry_obj):  # pragma: no cover
 def print_break():  # pragma: no cover
     """Print a break that's the width of the terminal for grouping output info.
     """
-    # From http://stackoverflow.com/a/943921/1628796
-    columns = int(os.popen('stty size', 'r').read().split()[1])
+    columns = int(subprocess.check_output(['stty', 'size']).split()[1])
     print
     print '*' * columns
     print
