@@ -32,11 +32,6 @@ class QSAPIWrapper(qs.APIWrapper):
             reset for that resource.
         by_id: (request with list result specific) If True, return the data in
             a dict with {id: dict} values.
-
-
-    Note: in all instance methods, pass critical=True as a keyword argument to
-    make any requests generated in that method critical, so that the script
-    will exit (via logger.critical) if they fail.
     """
 
     def __init__(self, access_key='qstools', live=True):
@@ -216,39 +211,35 @@ class QSAPIWrapper(qs.APIWrapper):
     def get_section_enrollments(self, **kwargs):
         """GET section enrollments for the active semester.
         For speed, uses an extra field in the /students endpoint. Data is still
-        stored in the cache by semester id. To get section enrollment for a
-        different semester, use `.get_section_enrollment`.
+        stored in the cache by section id.
 
-        #TODO: Handle active_only to only show section enrollments from this
-        semester.
+        Takes the sames kwargs as `.get_sections()` for deciding which
+        sections to show.
         """
-        cache = self.section_enrollment_cache
-        if _should_make_request(cache, **kwargs):
-            students = self.get_students(fields='smsClassSubjectSetIdList')
-            section_enrollments = {}
-            for student in students:
-                for section_id in student['smsClassSubjectSetIdList']:
-                    if section_id not in section_enrollments:
-                        section_enrollments[section_id] = []
-                    section_enrollments[section_id].append(
-                        self._enrollment_dict(student)
-                    )
-            enrollment_list = [
-                {'id': k, 'students': v}
-                for k, v in section_enrollments.iteritems()
-            ]
-            cache.add(enrollment_list)
-        return cache.get(**kwargs)
+        self._update_section_enrollment_cache()
+        by_id = kwargs.get('by_id')
+
+        section_enrollment_kwargs = qs.merge(kwargs, {'by_id': False})
+        section_kwargs = qs.merge(kwargs, {'by_id': True})
+        all_enrollment = [
+            self.get_section_enrollment(i)
+            for i in self.get_sections(**section_kwargs)
+        ]
+        if by_id:
+            return qs.rest_cache.dict_list_to_dict(all_enrollment)
+        else:
+            return all_enrollment
 
     def get_section_enrollment(self, section_id, **kwargs):
         """GET section enrollment for a specific section ID. Note that if the
         section is from a non-active semester, this is the only way to access
         that section's enrollment.
         """
-        section_id = qs.clean_id(section_id)
         cache = self.section_enrollment_cache
-        section_enrollments = self.get_section_enrollments(by_id=True, **kwargs)
-        cached = section_enrollments.get(section_id)
+        section_id = qs.clean_id(section_id)
+
+        self._update_section_enrollment_cache()
+        cached = cache.get(section_id, **kwargs)
         if cached:
             return cached
         else:
@@ -270,6 +261,27 @@ class QSAPIWrapper(qs.APIWrapper):
             'smsStudentStubId': student_id,
             'fullName': student['fullName'],
         }
+
+    def _update_section_enrollment_cache(self, **kwargs):
+        """Update the section enrollments cache based on the /students
+        endpoint. This only updates the cache for the current semester.
+        """
+        cache = self.section_enrollment_cache
+        if _should_make_request(cache, **kwargs):
+            students = self.get_students(fields='smsClassSubjectSetIdList')
+            section_enrollments = {}
+            for student in students:
+                for section_id in student['smsClassSubjectSetIdList']:
+                    if section_id not in section_enrollments:
+                        section_enrollments[section_id] = []
+                    section_enrollments[section_id].append(
+                        self._enrollment_dict(student)
+                    )
+            enrollment_list = [
+                {'id': k, 'students': v}
+                for k, v in section_enrollments.iteritems()
+            ]
+            cache.add(enrollment_list)
 
     def get_student_enrollments(self, **kwargs):
         pass
