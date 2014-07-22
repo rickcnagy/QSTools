@@ -226,7 +226,7 @@ class QSAPIWrapper(qs.APIWrapper):
             for i in self.get_sections(**section_kwargs)
         ]
         if by_id:
-            return qs.rest_cache.dict_list_to_dict(all_enrollment)
+            return qs.dict_list_to_dict(all_enrollment)
         else:
             return all_enrollment
 
