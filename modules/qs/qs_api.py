@@ -261,7 +261,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 self._enrollment_dict(i) for i in students
             ]
             cache.add(section_enrollments)
-        return cache.get(section_id)
+        return cache.get(section_id, **kwargs)
 
     def _enrollment_dict(self, student):
         student_id = student.get('id') or student.get('smsStudentStubId')
@@ -306,7 +306,6 @@ class QSAPIWrapper(qs.APIWrapper):
         if request.successful:
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
-
 
     def _make_single_request(self, identifier, base_uri, request_all_method,
         request_description, **kwargs):
@@ -359,13 +358,13 @@ class QSAPIWrapper(qs.APIWrapper):
 def _should_make_request(cache, **kwargs):
     """Whether or not a new QS API request should be made, based on cache
     status and kwargs.
-
-    Keyword Args:
-        cache_kwargs: dict of keyword args to supply to cache.get().
     """
-    if kwargs.get('no_cache') is True:
+    no_cache = kwargs.get('no_cache')
+    fields = kwargs.get('fields')
+
+    if no_cache is True:
         return True
-    elif 'fields' in kwargs and cache.has_fields(kwargs['fields']) is False:
+    elif fields and cache.has_fields(fields) is False:
         return True
     elif cache.get(**kwargs) is None:
         return True
