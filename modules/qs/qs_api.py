@@ -43,6 +43,7 @@ class QSAPIWrapper(qs.APIWrapper):
         self.student_cache = qs.ListWithIDCache(sort_key='fullName')
         self.section_cache = qs.ListWithIDCache(sort_key='sectionName')
         self.section_enrollment_cache = qs.ListWithIDCache()
+        self.assignment_cache = qs.ListWithIDCache(sort_key='name')
 
         self.schoolcode = None
         self.api_key = None
@@ -274,12 +275,45 @@ class QSAPIWrapper(qs.APIWrapper):
                 all_students[student_id].append(section_id)
         return all_students
 
+
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
         Accepts the same kwargs as `.get_sections()` for determining which
         sections to show.
         """
+        #TODO: add decorator to clean identifiers like student_id
         return self.get_student_enrollments(**kwargs).get(student_id)
+
+    # ===============
+    # = Assignments =
+    # ===============
+
+    def get_assignments(self, section_id, include_final_grades=False, **kwargs):
+        """GET a list of assignments for the specified section_id.
+
+        Note that the assignments cache will always have all the assignments
+        for a section_id if it has any, but is organized by assignmentId.
+        """
+        cache = self.assignment_cache
+        kwargs.update({'filter_dict': {'sectionId': section_id}})
+        if include_final_grades is True:
+            kwargs['filter_dict'].update({
+                'isFinalGrade': True
+            })
+
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest(
+                'GET assignments for section',
+                '/sections/{}/assignments'.format(section_id))
+            request.params.update({
+                'includeFinalGrades': include_final_grades
+            })
+            assignments = self._make_request(request, **kwargs)
+            if assignments:
+                for assignment in assignments:
+                    assignment['sectionId'] = section_id
+                cache.add(assignments)
+        return cache.get(**kwargs)
 
     # =============
     # = Protected =
@@ -296,11 +330,13 @@ class QSAPIWrapper(qs.APIWrapper):
             The data from the completed request
         """
         request.set_api_key(self.api_key)
-        if 'critical' in kwargs:
+        critical = kwargs.get('critical')
+        fields = kwargs.get('fields')
+
+        if critical:
             request.critical = kwargs['critical']
 
-        if 'fields' in kwargs:
-            fields = kwargs['fields']
+        if fields:
             if str(fields) == fields:
                 fields = [fields]
             request.fields += fields
@@ -394,6 +430,7 @@ def _should_make_request(cache, **kwargs):
     """
     no_cache = kwargs.get('no_cache')
     fields = kwargs.get('fields')
+    filter_dict = kwargs.get('filter_dict')
 
     if no_cache is True:
         return True
