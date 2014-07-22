@@ -27,6 +27,18 @@ def print_break():  # pragma: no cover
     print
 
 
+def dict_list_to_dict(dict_list, id_key='id'):
+    """Takes a list of dicts and flattens them to a single dict using the
+    id_key for the keys in the flattened dict.
+    """
+    return {i[id_key]: i for i in dict_list}
+
+
+def dict_to_dict_list(large_dict):
+    """Takes a single dict and expands it out to a list of dicts."""
+    return [v for k, v in large_dict.iteritems()]
+
+
 def rand_str(size=6, chars=string.letters + string.digits):
     """http://stackoverflow.com/a/2257449/1628796"""
     return ''.join(random.choice(chars) for _ in range(size))
