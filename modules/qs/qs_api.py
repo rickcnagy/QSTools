@@ -254,8 +254,8 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             request = QSRequest(
                 'GET section enrollment for non-active section',
-                '/sectionenrollment/{}'.format(section_id))
-            students = self._make_request(request, **kwargs)
+                '/sectionenrollments/{}'.format(section_id))
+            students = self._make_request(request, **kwargs)['students']
             section_enrollments = {'id': section_id, 'students': []}
             section_enrollments['students'] = [
                 self._enrollment_dict(i) for i in students
@@ -264,9 +264,10 @@ class QSAPIWrapper(qs.APIWrapper):
         return cache.get(section_id)
 
     def _enrollment_dict(self, student):
+        student_id = student.get('id') or student.get('smsStudentStubId')
         return {
-            'id': student['id'],
-            'smsStudentStubId': student['id'],
+            'id': student_id,
+            'smsStudentStubId': student_id,
             'fullName': student['fullName'],
         }
 
