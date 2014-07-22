@@ -166,8 +166,11 @@ class RestRequest(object):
             desc['successful'] = self.successful
             desc['response data'] = self.data
         if self.successful is False:
-            desc['full response'] = self.response.json()
             desc['response body'] = self.response.text
+            try:
+                desc['response JSON'] = self.response.json()
+            except ValueError:
+                desc['response JSON'] = "Invalid JSON"
         return desc
 
     def _full_url(self):
