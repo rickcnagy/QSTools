@@ -31,6 +31,10 @@ def test_section_enrollments_using_get_section_kwargs():
     assert_in(NAS2_SECTION_ID, sections)
 
 
+def test_get_student_enrollment():
+    assert_in(SECTION_ID, q.get_student_enrollment(SECTION_ENROLLMENT[0]))
+
+
 def assert_valid_enrollment(enrollment):
     ids = []
     for student in enrollment['students']:
