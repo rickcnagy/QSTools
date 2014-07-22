@@ -10,6 +10,7 @@ import random
 import os
 import traceback
 import syslog
+import qs
 
 QS_INFO = 35
 LOG_SENDER = 'QS API'
@@ -25,7 +26,7 @@ def config(sender, print_only=False, log_filename=None):
     """
     global has_been_configured, file_out
 
-    file_out = silent
+    file_out = not print_only
     # for logging INFO events while ignoring usual INFO level logs
     logging.addLevelName(QS_INFO, 'QS INFO')
 
