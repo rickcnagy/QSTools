@@ -165,6 +165,9 @@ class RestRequest(object):
             desc['HTTP status code'] = self.response.status_code
             desc['successful'] = self.successful
             desc['response data'] = self.data
+        if self.successful is False:
+            desc['full response'] = self.response.json()
+            desc['response body'] = self.response.text
         return desc
 
     def _full_url(self):
