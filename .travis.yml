@@ -6,9 +6,8 @@ install:
     - pip install coveralls
     - pip install pep8
     - python setup.py install
-before_script:
-    - pep8 modules/qs
 script:
     - nosetests --with-coverage
 after_success:
+    - pep8 modules/qs
     - coveralls

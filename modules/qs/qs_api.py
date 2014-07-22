@@ -275,7 +275,6 @@ class QSAPIWrapper(qs.APIWrapper):
                 all_students[student_id].append(section_id)
         return all_students
 
-
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
         Accepts the same kwargs as `.get_sections()` for determining which
@@ -288,7 +287,8 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Assignments =
     # ===============
 
-    def get_assignments(self, section_id, include_final_grades=False, **kwargs):
+    def get_assignments(self, section_id, include_final_grades=False,
+        **kwargs):
         """GET a list of assignments for the specified section_id.
 
         Note that the assignments cache will always have all the assignments
