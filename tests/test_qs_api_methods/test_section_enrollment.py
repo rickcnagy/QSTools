@@ -20,10 +20,7 @@ def test_get_section_enrollments():
 
 
 def test_get_section_enrollment():
-    # active semester
     assert_valid_enrollment(q.get_section_enrollment(SECTION_ID))
-
-    # non active semester
     assert_valid_enrollment(q.get_section_enrollment(NAS1_SECTION_ID))
 
 
