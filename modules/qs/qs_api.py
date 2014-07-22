@@ -259,7 +259,8 @@ class QSAPIWrapper(qs.APIWrapper):
         Accepts the same kwargs as `.get_sections()` for determining which
         sections to show.
 
-        Returns: A dict, by student id, of all sections that student takes.
+        Returns: A dict, by student id, of all sections that student takes:
+        `{studentID1: [sectionID1, sectionID2], 'studentID1': [...]}`
         """
         by_section = self.get_section_enrollments(**kwargs)
         if type(by_section) is list:
