@@ -70,7 +70,7 @@ class ListWithIDCache(RestCache):
         elif identifier:
             return self._data.get(qs.clean_id(identifier))
         else:
-            return_list = dict_to_dict_list(self._data)
+            return_list = qs.dict_to_dict_list(self._data)
             if self._sort_key:
                 return_list = sorted(
                     return_list,
@@ -119,18 +119,6 @@ class ListWithIDCache(RestCache):
             if _dict_has_subset(datum, items):
                 return True
         return False
-
-
-def dict_list_to_dict(dict_list, id_key='id'):
-    """Takes a list of dicts and flattens them to a single dict using the
-    id_key for the keys in the flattened dict.
-    """
-    return {i[id_key]: i for i in dict_list}
-
-
-def dict_to_dict_list(large_dict):
-    """Takes a single dict and expands it out to a list of dicts."""
-    return [v for k, v in large_dict.iteritems()]
 
 
 def _filter_dict(dict_to_filter, subset):
