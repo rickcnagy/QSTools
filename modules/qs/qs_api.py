@@ -280,7 +280,7 @@ class QSAPIWrapper(qs.APIWrapper):
         Accepts the same kwargs as `.get_sections()` for determining which
         sections to show.
         """
-        #TODO: add decorator to clean identifiers like student_id
+        # TODO: add decorator to clean identifiers like student_id
         return self.get_student_enrollments(**kwargs).get(student_id)
 
     # ===============
