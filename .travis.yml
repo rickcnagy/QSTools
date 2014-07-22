@@ -1,13 +1,13 @@
 language: python
 python:
     - "2.7"
-# command to install dependencies
 install:
     - pip install requests
     - pip install coveralls
+    - pip install pep8
     - python setup.py install
-# command to run tests
 script:
     - nosetests --with-coverage
 after_success:
+    - pep8 modules/qs
     - coveralls

@@ -204,7 +204,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 all_sections.append(sections)
 
         if semester_id is None and active_only is True:
-            semester_id_dict =  {'semesterId': self.get_active_semester_id()}
+            semester_id_dict = {'semesterId': self.get_active_semester_id()}
             kwargs.update({'filter_dict': semester_id_dict})
 
         return cache.get(**kwargs)
