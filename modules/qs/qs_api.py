@@ -254,13 +254,31 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(section_enrollments)
         return cache.get(section_id, **kwargs)
 
-
-        """
     def get_student_enrollments(self, **kwargs):
-        pass
+        """GET the section enrollment by student, for all students/sections.
+        Accepts the same kwargs as `.get_sections()` for determining which
+        sections to show.
+
+        Returns: A dict, by student id, of all sections that student takes.
+        """
+        by_section = self.get_section_enrollments(**kwargs)
+        if type(by_section) is list:
+            by_section = qs.dict_list_to_dict(by_section)
+
+        all_students = {}
+        for section_id, student_list in by_section.iteritems():
+            for student_id in [i['id'] for i in student_list['students']]:
+                if student_id not in all_students:
+                    all_students[student_id] = []
+                all_students[student_id].append(section_id)
+        return all_students
 
     def get_student_enrollment(self, student_id, **kwargs):
-        pass
+        """GET the sections a specific student is enrolled in, by ID.
+        Accepts the same kwargs as `.get_sections()` for determining which
+        sections to show.
+        """
+        return self.get_student_enrollments(**kwargs).get(student_id)
 
     # =============
     # = Protected =
