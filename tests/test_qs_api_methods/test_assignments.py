@@ -27,6 +27,6 @@ def test_get_assignment():
     assignment = q.get_assignment(ASSIGNMENT_ID)
     assert_equals(assignment['name'], ASSIGNMENT_NAME)
 
-    q = qs.API() # Clear out cache
-    assignment = q.get_assignment(ASSIGNMENT_ID)
+    other_cache = qs.API()
+    assignment = other_cache.get_assignment(ASSIGNMENT_ID)
     assert_equals(assignment['name'], ASSIGNMENT_NAME)
