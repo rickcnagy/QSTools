@@ -26,3 +26,7 @@ def test_get_final_grade():
 def test_get_assignment():
     assignment = q.get_assignment(ASSIGNMENT_ID)
     assert_equals(assignment['name'], ASSIGNMENT_NAME)
+
+    q = qs.API() # Clear out cache
+    assignment = q.get_assignment(ASSIGNMENT_ID)
+    assert_equals(assignment['name'], ASSIGNMENT_NAME)
