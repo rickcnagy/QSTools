@@ -33,6 +33,7 @@ def dict_list_to_dict(dict_list, id_key='id'):
     """
     return {i[id_key]: i for i in dict_list}
 
+
 def dict_to_dict_list(large_dict):
     """Takes a single dict and expands it out to a list of dicts."""
     return [v for k, v in large_dict.iteritems()]
