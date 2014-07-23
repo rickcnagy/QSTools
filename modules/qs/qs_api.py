@@ -206,6 +206,15 @@ class QSAPIWrapper(qs.APIWrapper):
 
         return cache.get(**kwargs)
 
+    def get_section(self, section_id, **kwargs):
+        """GET a section by id."""
+        return self._make_single_request(
+            section_id,
+            '/sections',
+            self.get_sections,
+            'GET section by id',
+            **kwargs)
+
     # =======================
     # = Section Enrollments =
     # =======================
