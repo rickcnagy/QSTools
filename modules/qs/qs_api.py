@@ -261,8 +261,28 @@ class QSAPIWrapper(qs.APIWrapper):
         sections to show.
 
         Returns: A dict, by student id, of all sections that student takes:
-        `{studentID1: [sectionID1, sectionID2], 'studentID1': [...]}`
+        {
+            "300794": [
+                "694520",
+                "694521"
+            ],
+            ...
+        }
+
+        If by_id in the kwargs is True, a list is returned:
+        [
+            {
+                "id": "300794"
+                "sections": [
+                    "694520",
+                    "694521"
+                ]
+            },
+            ...
+        ]
         """
+        by_id = kwargs.get('by_id')
+
         by_section = self.get_section_enrollments(**kwargs)
         if type(by_section) is list:
             by_section = qs.dict_list_to_dict(by_section)
@@ -273,7 +293,17 @@ class QSAPIWrapper(qs.APIWrapper):
                 if student_id not in all_students:
                     all_students[student_id] = []
                 all_students[student_id].append(section_id)
-        return all_students
+
+        if by_id is True:
+            return all_students
+        else:
+            student_list = []
+            for student_id, sections in all_students.iteritems():
+                student_list.append({
+                    'id': student_id,
+                    'sections': sections,
+                })
+            return student_list
 
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
@@ -281,7 +311,7 @@ class QSAPIWrapper(qs.APIWrapper):
         sections to show.
         """
         # TODO: add decorator to clean identifiers like student_id
-        return self.get_student_enrollments(**kwargs).get(student_id)
+        return self.get_student_enrollments(by_id=True, **kwargs).get(student_id)
 
     # ===============
     # = Assignments =

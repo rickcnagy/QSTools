@@ -31,6 +31,14 @@ def test_section_enrollments_using_get_section_kwargs():
     assert_in(NAS2_SECTION_ID, sections)
 
 
+def test_get_student_enrollments():
+    enrollment_list = q.get_student_enrollments()
+    first_id = enrollment_list[0]['id']
+    by_id = q.get_student_enrollments(by_id=True)
+    assert_in(first_id, by_id)
+    assert_equals(enrollment_list[0]['sections'], by_id[first_id])
+
+
 def test_get_student_enrollment():
     assert_in(SECTION_ID, q.get_student_enrollment(SECTION_ENROLLMENT[0]))
 
