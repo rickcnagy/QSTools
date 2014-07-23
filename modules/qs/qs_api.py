@@ -168,7 +168,6 @@ class QSAPIWrapper(qs.APIWrapper):
                 this is False, sections from all semesters already in the cache
                 are returned, otherwise it's the active semester only.
                 all_semesters and semester_id get priority.
-
         """
         cache = self.section_cache
 
@@ -206,14 +205,23 @@ class QSAPIWrapper(qs.APIWrapper):
 
         return cache.get(**kwargs)
 
+    @qs.clean_arg
     def get_section(self, section_id, **kwargs):
         """GET a section by id."""
-        return self._make_single_request(
-            section_id,
-            '/sections',
-            self.get_sections,
-            'GET section by id',
-            **kwargs)
+        cache = self.section_cache
+
+        should_make_req_kwargs = qs.merge(kwargs, {'identifier': section_id})
+        if _should_make_request(cache, **should_make_req_kwargs):
+            request = QSRequest(
+                'GET section by id',
+                '/sections/{}'.format(section_id))
+            request.fields += ['smsAcademicSemesterId']
+            section = self._make_request(request, **kwargs)
+            cache.add(section)
+            self.get_sections(
+                semester_id = section['smsAcademicSemesterId'],
+                **kwargs)
+        return cache.get(section_id, **kwargs)
 
     # =======================
     # = Section Enrollments =
@@ -425,7 +433,6 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs: The kwargs from the source method.
         """
         cached = request_all_method(by_id=True, **kwargs).get(identifier)
-
         if cached:
             return cached
         else:

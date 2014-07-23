@@ -51,5 +51,6 @@ def test_get_all():
     assert_in(SECTION_ID, all_sections)
 
 def test_get_section():
-    q = qs.API()
-    assert_equals(q.get_section(SECTION_ID)['sectionName'], SECTION_NAME)
+    new = qs.API()
+    assert_equals(new.get_section(SECTION_ID)['sectionName'], SECTION_NAME)
+    assert_greater(len(new.section_cache.get()), 1)
