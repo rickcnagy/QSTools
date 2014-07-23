@@ -46,6 +46,16 @@ def test_clean_id():
     for good_input in good_inputs:
         assert_equals(str(good_input), qs.clean_id(good_input))
 
+
+def test_clean_arg():
+
+    @qs.clean_arg
+    def to_be_cleaned(some_id):
+        return some_id
+
+    assert_is_instance(to_be_cleaned(1234), str)
+
+
 def test_can_sense_nosetests():
     assert_true(qs.running_from_test())
 

@@ -43,6 +43,13 @@ part of that wrapper) can be used for another REST API, it should be moved to
 rest_base.py
 
 
+####[`status_bar.py`](./status_bar.py)
+
+A status bar for use in loops, based off of tqdm:
+https://github.com/noamraph/tqdm
+\#TEST EXEMPT
+
+
 ####[`test_data.py`](./test_data.py)
 
 Config dummy data for tests
