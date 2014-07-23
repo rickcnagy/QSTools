@@ -15,15 +15,20 @@ def dumps(arbitry_obj):
 
 def pp(arbitry_obj):  # pragma: no cover
     """Like pprint.pprint"""
+    print_break('-')
     print dumps(arbitry_obj) if arbitry_obj else str(arbitry_obj)
+    print_break('-')
 
 
-def print_break():  # pragma: no cover
+def print_break(break_str='*'):  # pragma: no cover
     """Print a break that's the width of the terminal for grouping output info.
+
+    Args:
+        break_str: the string to use in the break on repeat.
     """
-    columns = int(subprocess.check_output(['stty', 'size']).split()[1])
+    columns = float(subprocess.check_output(['stty', 'size']).split()[1])
     print
-    print '*' * columns
+    print break_str * int(columns / len(break_str))
     print
 
 
