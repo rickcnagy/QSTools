@@ -22,3 +22,7 @@ def test_get_final_grade():
         include_final_grades=True)
     assert_in(FINAL_GRADE_ID, assignments)
     assert_equals(assignments[FINAL_GRADE_ID]['name'], 'Final Grade')
+
+def test_get_assignment():
+    assignment = q.get_assignment(ASSIGNMENT_ID)
+    assert_equals(assignment['name'], ASSIGNMENT_NAME)

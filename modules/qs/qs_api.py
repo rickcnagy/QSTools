@@ -333,7 +333,10 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET a list of assignments for the specified section_id.
 
         Note that the assignments cache will always have all the assignments
-        for a section_id if it has any, but is organized by assignmentId.
+        for a section_id if it has any, but is organized by assignmentId. If
+        an assignment is retrieved via get_assignment, it won't have a
+        sectionId and thus will be re-retrieved in get_assignments for that
+        section.
         """
         cache = self.assignment_cache
         kwargs.update({'filter_dict': {'sectionId': section_id}})
@@ -355,6 +358,19 @@ class QSAPIWrapper(qs.APIWrapper):
                     assignment['sectionId'] = section_id
                 cache.add(assignments)
         return cache.get(**kwargs)
+
+    @qs.clean_arg
+    def get_assignment(self, assignment_id, **kwargs):
+        """GET a specific assignment by ID."""
+        cache = self.assignment_cache
+        kwargs.update({'identifier': assignment_id})
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest(
+                'GET assignment',
+                '/assignments/{}'.format(assignment_id))
+            assignment = self._make_request(request, **kwargs)
+            cache.add(assignment)
+        return cache.get(assignment_id)
 
     # =============
     # = Protected =
