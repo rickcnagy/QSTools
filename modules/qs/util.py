@@ -5,6 +5,8 @@ import json
 import string
 import random
 import subprocess
+import inspect
+import sys
 
 
 def dumps(arbitry_obj):
@@ -31,7 +33,6 @@ def dict_list_to_dict(dict_list, id_key='id'):
     """
     return {i[id_key]: i for i in dict_list}
 
-
 def dict_to_dict_list(large_dict):
     """Takes a single dict and expands it out to a list of dicts."""
     return [v for k, v in large_dict.iteritems()]
@@ -54,18 +55,48 @@ def merge(*args):
             merged.append(item)
     return dict(merged)
 
-merge({1: 2}, {3: 4})
-
 
 def running_from_test():
     """Tell whether the current script is being run from a test"""
     return 'nosetests' in sys.argv[0]
 
 
-def clean_id(some_id):
+def clean_id(some_id, func_name=None):
+    """Clean some_id to be used as a QS-generated id somewhere. Either returns
+    a cleaned string (not int or unicode, etc), or throws an error.
+
+    Args:
+        func_name: the name of the function this is being called from/for,
+            to be used in exception messages. Mainly there for clean_arg()
+    """
+    id_part = 'id {}'.format(some_id)
+    if func_name:
+        id_part += " for function '{}'".format(func_name)
     if not some_id and some_id != 0:
-        raise ValueError('The id must not be none')
+        raise ValueError('The {} must not be none'.format(id_part))
     elif type(some_id) is int or str(some_id) == some_id:
         return str(some_id)
     else:
+        raise TypeError('The {} must be a string or int'.format(id_part))
 
+
+def is_builtin(obj):
+    """Determine if obj is a builtin, like a string or int"""
+    builtins = [int, str, dict, list, set, float]
+    return type(obj) in builtins
+
+
+# ==============
+# = Decorators =
+# ==============
+
+def clean_arg(func):
+    """Clean the first argument of the decorated function. Useful if an ID is
+    passed as the first arg.
+    """
+    def wrapper(*args, **kwargs):
+        args = list(args)
+        arg_index = 0 if is_builtin(args[0]) else 1
+        args[arg_index] = clean_id(args[arg_index], func.__name__)
+        return func(*args, **kwargs)
+    return wrapper

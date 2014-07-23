@@ -63,6 +63,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(semesters)
         return cache.get(**kwargs)
 
+    @qs.clean_arg
     def get_semester(self, semester_id, **kwargs):
         """GET a specific semester by id."""
         return self._make_single_request(
@@ -231,13 +232,13 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return all_enrollment
 
+    @qs.clean_arg
     def get_section_enrollment(self, section_id, **kwargs):
         """GET section enrollment for a specific section ID. Note that if the
         section is from a non-active semester, this is the only way to access
         that section's enrollment.
         """
         cache = self.section_enrollment_cache
-        section_id = qs.clean_id(section_id)
 
         self._update_section_enrollment_cache()
         cached = cache.get(section_id, **kwargs)
@@ -305,13 +306,14 @@ class QSAPIWrapper(qs.APIWrapper):
                 })
             return student_list
 
+    @qs.clean_arg
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
         Accepts the same kwargs as `.get_sections()` for determining which
         sections to show.
         """
-        # TODO: add decorator to clean identifiers like student_id
-        return self.get_student_enrollments(by_id=True, **kwargs).get(student_id)
+        enrollments = self.get_student_enrollments(by_id=True, **kwargs)
+        return enrollments.get(student_id)
 
     # ===============
     # = Assignments =
@@ -377,6 +379,7 @@ class QSAPIWrapper(qs.APIWrapper):
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
 
+    @qs.clean_arg
     def _make_single_request(self, identifier, base_uri, request_all_method,
         request_description, **kwargs):
         """Make a single request to a resource that has both a method to
@@ -396,8 +399,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 such as 'GET student by id'.
             kwargs: The kwargs from the source method.
         """
-        resource_id = qs.clean_id(identifier)
-        cached = request_all_method(by_id=True, **kwargs).get(resource_id)
+        cached = request_all_method(by_id=True, **kwargs).get(identifier)
 
         if cached:
             return cached
