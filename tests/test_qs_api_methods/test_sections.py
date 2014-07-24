@@ -53,4 +53,4 @@ def test_get_all():
 def test_get_section():
     new = qs.API()
     assert_equals(new.get_section(SECTION_ID)['sectionName'], SECTION_NAME)
-    assert_greater(len(new.section_cache.get()), 1)
+    assert_greater(len(new._section_cache.get()), 1)

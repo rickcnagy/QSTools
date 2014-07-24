@@ -38,12 +38,12 @@ class QSAPIWrapper(qs.APIWrapper):
         self._access_key = access_key
         self.live = live
 
-        self.teacher_cache = qs.ListWithIDCache(sort_key='fullName')
-        self.semester_cache = qs.ListWithIDCache()
-        self.student_cache = qs.ListWithIDCache(sort_key='fullName')
-        self.section_cache = qs.ListWithIDCache(sort_key='sectionName')
-        self.section_enrollment_cache = qs.ListWithIDCache()
-        self.assignment_cache = qs.ListWithIDCache(sort_key='name')
+        self._teacher_cache = qs.ListWithIDCache(sort_key='fullName')
+        self._semester_cache = qs.ListWithIDCache()
+        self._student_cache = qs.ListWithIDCache(sort_key='fullName')
+        self._section_cache = qs.ListWithIDCache(sort_key='sectionName')
+        self._section_enrollment_cache = qs.ListWithIDCache()
+        self._assignment_cache = qs.ListWithIDCache(sort_key='name')
 
         self.schoolcode = None
         self.api_key = None
@@ -56,7 +56,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_semesters(self, **kwargs):
         """GET all semesters from /semesters."""
-        cache = self.semester_cache
+        cache = self._semester_cache
         if _should_make_request(cache, **kwargs):
             request = QSRequest('GET all semesters', '/semesters')
             semesters = self._make_request(request, **kwargs)
@@ -98,7 +98,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_teachers(self, **kwargs):
         """GET teachers via the /teachers endpoint."""
-        cache = self.teacher_cache
+        cache = self._teacher_cache
         if _should_make_request(cache, **kwargs):
             request = QSRequest('GET teachers', '/teachers')
             cache.add(self._make_request(request, **kwargs))
@@ -124,7 +124,7 @@ class QSAPIWrapper(qs.APIWrapper):
             show_deleted: Show deleted students.
             show_has_left: Show students that have left.
         """
-        cache = self.student_cache
+        cache = self._student_cache
         if show_deleted or show_has_left:
             request = QSRequest(
                 'GET all students, including deleted/has left',
@@ -169,7 +169,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 are returned, otherwise it's the active semester only.
                 all_semesters and semester_id get priority.
         """
-        cache = self.section_cache
+        cache = self._section_cache
 
         def mark_sections(sections, semester_id_to_mark):
             for section in sections:
@@ -208,7 +208,7 @@ class QSAPIWrapper(qs.APIWrapper):
     @qs.clean_args()
     def get_section(self, section_id, **kwargs):
         """GET a section by id."""
-        cache = self.section_cache
+        cache = self._section_cache
 
         should_make_req_kwargs = qs.merge(kwargs, {'identifier': section_id})
         if _should_make_request(cache, **should_make_req_kwargs):
@@ -255,7 +255,7 @@ class QSAPIWrapper(qs.APIWrapper):
         section is from a non-active semester, this is the only way to access
         that section's enrollment.
         """
-        cache = self.section_enrollment_cache
+        cache = self._section_enrollment_cache
 
         self._update_section_enrollment_cache()
         cached = cache.get(section_id, **kwargs)
@@ -346,7 +346,7 @@ class QSAPIWrapper(qs.APIWrapper):
         sectionId and thus will be re-retrieved in get_assignments for that
         section.
         """
-        cache = self.assignment_cache
+        cache = self._assignment_cache
         kwargs.update({'filter_dict': {'sectionId': section_id}})
         if include_final_grades is True:
             kwargs['filter_dict'].update({
@@ -370,7 +370,7 @@ class QSAPIWrapper(qs.APIWrapper):
     @qs.clean_args()
     def get_assignment(self, assignment_id, **kwargs):
         """GET a specific assignment by ID."""
-        cache = self.assignment_cache
+        cache = self._assignment_cache
         kwargs.update({'identifier': assignment_id})
         if _should_make_request(cache, **kwargs):
             request = QSRequest(
@@ -383,6 +383,17 @@ class QSAPIWrapper(qs.APIWrapper):
     # ==========
     # = Grades =
     # ==========
+
+    @qs.clean_args(2)
+    def get_grades(section_id, assignment_id, **kwargs):
+        # cache =
+        kwargs.update({
+            'filter_dict': {
+                'sectionId': section_id,
+                'assignmentId': assignment_id
+            }
+        })
+        # if _should_make_request()
 
 
 
@@ -476,7 +487,7 @@ class QSAPIWrapper(qs.APIWrapper):
         """Update the section enrollments cache based on the /students
         endpoint. This only updates the cache for the current semester.
         """
-        cache = self.section_enrollment_cache
+        cache = self._section_enrollment_cache
         if _should_make_request(cache, **kwargs):
             students = self.get_students(fields='smsClassSubjectSetIdList')
             section_enrollments = {}
