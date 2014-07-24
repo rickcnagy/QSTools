@@ -38,19 +38,22 @@ class ListWithIDCache(RestCache):
         id_key: The unique key that all entries in the dict will have - as in
             the id in 'list with id'.
         sort_key: An optional key to sort entries by when getting them.
+        ignore_key: any key in a contained dictionary that begins with
+            ignore_key will be removed from any values returned.
     """
 
-    def __init__(self, id_key='id', sort_key=None):
+    def __init__(self, id_key='id', sort_key=None, ignore_key='_'):
         super(ListWithIDCache, self).__init__()
         self._sort_key = sort_key
         self._id_key = id_key
+        self.ignore_key = '_'
 
     def get(self, identifier=None, by_id=False, filter_dict=None, **kwargs):
         """Return a flattened list of the data or a single entry by id if id is
         specified. Note that identifier is cleaned here, so don't clean in
         calling function.
 
-        Any result other than None means that object was specifically added to
+        Any result other than None means that value was specifically added to
         the cache.
 
         Args:
@@ -65,12 +68,14 @@ class ListWithIDCache(RestCache):
         """
         if self._data is None:
             return None
-        elif by_id is True:
-            return _filter_dict(self._data, filter_dict) or None
+
+        filtered_data = self._filter_for_output()
+        if by_id is True:
+            return _filter_dict(filtered_data, filter_dict) or None
         elif identifier:
-            return self._data.get(qs.clean_id(identifier))
+            return filtered_data.get(qs.clean_id(identifier))
         else:
-            return_list = qs.dict_to_dict_list(self._data)
+            return_list = qs.dict_to_dict_list(filtered_data)
             if self._sort_key:
                 return_list = sorted(
                     return_list,
@@ -119,6 +124,15 @@ class ListWithIDCache(RestCache):
             if _dict_has_subset(datum, items):
                 return True
         return False
+
+    def _filter_for_output(self):
+        filtered_data = {}
+        for outer_key, outer_val in self._data.iteritems():
+            filtered_data[outer_key] = {}
+            for inner_key, inner_val in outer_val.iteritems():
+                if type(inner_key) != str or inner_key[:1] != '_':
+                    filtered_data[outer_key][inner_key] = inner_val
+        return filtered_data
 
 
 def _filter_dict(dict_to_filter, subset):

@@ -101,3 +101,11 @@ def test_entry_has_items():
     assert_true(cache.has_entry_with_subset({'sort': 1}))
     assert_false(cache.has_entry_with_subset({'sort': '1000'}))
     assert_false(cache.has_entry_with_subset({'somekey': 5}))
+
+
+def test_ignore_key():
+    cache = qs.ListWithIDCache()
+    cache.add(sorted_version)
+    cache.add({'_ignore_me': 1234, 'id': 123})
+    assert_not_in('_ignore_me', cache.get())
+    assert_items_equal(cache.get(), sorted_version + [{'id': 123}])
