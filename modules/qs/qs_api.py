@@ -44,6 +44,7 @@ class QSAPIWrapper(qs.APIWrapper):
         self._section_cache = qs.ListWithIDCache(sort_key='sectionName')
         self._section_enrollment_cache = qs.ListWithIDCache()
         self._assignment_cache = qs.ListWithIDCache(sort_key='name')
+        self._grade_cache = qs.ListWithIDCache(id_key='_qstools_id')
 
         self.schoolcode = None
         self.api_key = None
@@ -384,18 +385,32 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Grades =
     # ==========
 
-    @qs.clean_args(2)
-    def get_grades(section_id, assignment_id, **kwargs):
-        # cache =
-        kwargs.update({
-            'filter_dict': {
-                'sectionId': section_id,
-                'assignmentId': assignment_id
-            }
-        })
-        # if _should_make_request()
+    @qs.clean_args()
+    def get_grades(self, section_id, **kwargs):
+        """GET all grades for a section.
 
+        Note that since grades do not have API
+        assigned id's but the cache relies on an id, a unique id is generated
+        by this method. As a result, by_id=True will give a dictionary with
+        meangingless keys (though meaningful values).
+        """
+        cache = self._grade_cache
 
+        kwargs['filter_dict'] = {'sectionId': section_id}
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest('GET all grades for a section', '/grades')
+            request.params['sectionId'] = section_id
+            grades = self._make_request(request, **kwargs)
+            for grade in grades:
+                grade['sectionId'] = section_id
+                grade['_qstools_id'] = '{}:{}:{}'.format(
+                    grade['studentId'],
+                    grade['assignmentId'],
+                    grade['sectionId']
+                )
+
+            cache.add(grades)
+        return cache.get(**kwargs)
 
     # =============
     # = Protected =
