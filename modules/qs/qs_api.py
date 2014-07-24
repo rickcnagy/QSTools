@@ -63,7 +63,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(semesters)
         return cache.get(**kwargs)
 
-    @qs.clean_args
+    @qs.clean_args()
     def get_semester(self, semester_id, **kwargs):
         """GET a specific semester by id."""
         return self._make_single_request(
