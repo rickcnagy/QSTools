@@ -63,7 +63,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(semesters)
         return cache.get(**kwargs)
 
-    @qs.clean_arg
+    @qs.clean_args
     def get_semester(self, semester_id, **kwargs):
         """GET a specific semester by id."""
         return self._make_single_request(
@@ -205,7 +205,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         return cache.get(**kwargs)
 
-    @qs.clean_arg
+    @qs.clean_args()
     def get_section(self, section_id, **kwargs):
         """GET a section by id."""
         cache = self.section_cache
@@ -219,7 +219,7 @@ class QSAPIWrapper(qs.APIWrapper):
             section = self._make_request(request, **kwargs)
             cache.add(section)
             self.get_sections(
-                semester_id = section['smsAcademicSemesterId'],
+                semester_id=section['smsAcademicSemesterId'],
                 **kwargs)
         return cache.get(section_id, **kwargs)
 
@@ -249,7 +249,7 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return all_enrollment
 
-    @qs.clean_arg
+    @qs.clean_args()
     def get_section_enrollment(self, section_id, **kwargs):
         """GET section enrollment for a specific section ID. Note that if the
         section is from a non-active semester, this is the only way to access
@@ -323,7 +323,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 })
             return student_list
 
-    @qs.clean_arg
+    @qs.clean_args()
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
         Accepts the same kwargs as `.get_sections()` for determining which
@@ -367,7 +367,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 cache.add(assignments)
         return cache.get(**kwargs)
 
-    @qs.clean_arg
+    @qs.clean_args()
     def get_assignment(self, assignment_id, **kwargs):
         """GET a specific assignment by ID."""
         cache = self.assignment_cache
@@ -379,6 +379,12 @@ class QSAPIWrapper(qs.APIWrapper):
             assignment = self._make_request(request, **kwargs)
             cache.add(assignment)
         return cache.get(assignment_id)
+
+    # ==========
+    # = Grades =
+    # ==========
+
+
 
     # =============
     # = Protected =
@@ -412,7 +418,7 @@ class QSAPIWrapper(qs.APIWrapper):
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
 
-    @qs.clean_arg
+    @qs.clean_args()
     def _make_single_request(self, identifier, base_uri, request_all_method,
         request_description, **kwargs):
         """Make a single request to a resource that has both a method to

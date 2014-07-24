@@ -47,9 +47,9 @@ def test_clean_id():
         assert_equals(str(good_input), qs.clean_id(good_input))
 
 
-def test_clean_arg():
+def test_clean_args():
 
-    @qs.clean_arg
+    @qs.clean_args()
     def to_be_cleaned(some_id):
         return some_id
 

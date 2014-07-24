@@ -73,7 +73,7 @@ def clean_id(some_id, func_name=None):
 
     Args:
         func_name: the name of the function this is being called from/for,
-            to be used in exception messages. Mainly there for clean_arg()
+            to be used in exception messages. Mainly there for clean_args()
     """
     id_part = 'id {}'.format(some_id)
     if func_name:
@@ -96,13 +96,17 @@ def is_builtin(obj):
 # = Decorators =
 # ==============
 
-def clean_arg(func):
+def clean_args(arg_count=1):
     """Clean the first argument of the decorated function. Useful if an ID is
     passed as the first arg.
     """
-    def wrapper(*args, **kwargs):
-        args = list(args)
-        arg_index = 0 if is_builtin(args[0]) else 1
-        args[arg_index] = clean_id(args[arg_index], func.__name__)
-        return func(*args, **kwargs)
-    return wrapper
+    def clean_args_outer(func):
+        def clean_args_inner(*args, **kwargs):
+            args = list(args)
+            start_arg = 0 if is_builtin(args[0]) else 1
+
+            for arg_index in range(start_arg, start_arg + arg_count):
+                args[arg_index] = clean_id(args[arg_index], func.__name__)
+            return func(*args, **kwargs)
+        return clean_args_inner
+    return clean_args_outer
