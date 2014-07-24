@@ -10,7 +10,7 @@ import sys
 
 
 def dumps(arbitry_obj):
-    return json.dumps(arbitry_obj, indent=4)
+    return json.dumps(arbitry_obj, indent=4, sort_keys=True)
 
 
 def pp(arbitry_obj):  # pragma: no cover
