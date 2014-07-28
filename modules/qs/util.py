@@ -75,15 +75,21 @@ def clean_id(some_id, func_name=None):
         func_name: the name of the function this is being called from/for,
             to be used in exception messages. Mainly there for clean_args()
     """
+    if is_valid_id(some_id, func_name) is True:
+        return str(some_id)
+
+
+def is_valid_id(some_id, func_name=None):
     id_part = 'id {}'.format(some_id)
     if func_name:
         id_part += " for function '{}'".format(func_name)
     if not some_id and some_id != 0:
         raise ValueError('The {} must not be none'.format(id_part))
     elif type(some_id) is int or str(some_id) == some_id:
-        return str(some_id)
+        return True
     else:
         raise TypeError('The {} must be a string or int'.format(id_part))
+    return False
 
 
 def is_builtin(obj):
