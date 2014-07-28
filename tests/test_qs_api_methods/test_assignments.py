@@ -52,4 +52,4 @@ def test_with_grades():
 
 def test_get_assignment_including_grades():
     with assert_raises(TypeError):
-        q.get_assignment(SECTION_WITH_GB, include_grades=True)
+        q.get_assignment(ASSIGNMENT_ID, include_grades=True)

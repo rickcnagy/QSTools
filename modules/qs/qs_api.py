@@ -412,9 +412,9 @@ class QSAPIWrapper(qs.APIWrapper):
         if include_grades is True:
             # kwargs['filter_dict'] = {'assignmentId': assignment_id}
             # return self._assignments_with_grades(**kwargs)
-            raise TypeError(
-                'include_grades cannot be true for get_assignment. Assembla '
-                '#2219, #2218')
+
+            # Assembla #2219, #2218
+            raise TypeError('include_grades cannot be true for get_assignment')
         else:
             return cache.get(**kwargs)
 
