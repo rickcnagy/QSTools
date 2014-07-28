@@ -48,6 +48,7 @@ class QSAPIWrapper(qs.APIWrapper):
         self._grade_cache = qs.ListWithIDCache(id_key='_qstools_id')
         self._report_cycle_cache = qs.ListWithIDCache()
         self._report_card_cache = qs.ListWithIDCache(id_key='_qstools_id')
+        self._transcript_cache = qs.ListWithIDCache(id_key='studentId')
 
         self.schoolcode = None
         self.api_key = None
@@ -526,6 +527,24 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET the active report cycle"""
         rc_cycles = self.get_report_cycles()
         return [i for i in rc_cycles if i['isActive'] is True][0]
+
+    # ===============
+    # = Transcripts =
+    # ===============
+
+    @qs.clean_arg
+    def get_transcript(self, student_id, **kwargs):
+        """GET transcript for a student id"""
+        cache = self._transcript_cache
+        kwargs['identifier'] = student_id
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest(
+                'GET transcript for a student id',
+                '/transcripts/{}'.format(student_id))
+            transcript = self._make_request(request, **kwargs)
+            transcript['studentId'] = student_id
+            cache.add(transcript)
+        return cache.get(**kwargs)
 
     # =============
     # = Protected =
