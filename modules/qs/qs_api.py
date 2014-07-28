@@ -64,7 +64,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(semesters)
         return cache.get(**kwargs)
 
-    @qs.clean_args()
+    @qs.clean_arg
     def get_semester(self, semester_id, **kwargs):
         """GET a specific semester by id."""
         return self._make_single_request(
@@ -206,7 +206,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         return cache.get(**kwargs)
 
-    @qs.clean_args()
+    @qs.clean_arg
     def get_section(self, section_id, **kwargs):
         """GET a section by id."""
         cache = self._section_cache
@@ -250,7 +250,7 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return all_enrollment
 
-    @qs.clean_args()
+    @qs.clean_arg
     def get_section_enrollment(self, section_id, **kwargs):
         """GET section enrollment for a specific section ID. Note that if the
         section is from a non-active semester, this is the only way to access
@@ -324,7 +324,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 })
             return student_list
 
-    @qs.clean_args()
+    @qs.clean_arg
     def get_student_enrollment(self, student_id, **kwargs):
         """GET the sections a specific student is enrolled in, by ID.
         Accepts the same kwargs as `.get_sections()` for determining which
@@ -368,8 +368,8 @@ class QSAPIWrapper(qs.APIWrapper):
                 cache.add(assignments)
         return cache.get(**kwargs)
 
-    @qs.clean_args()
     def get_assignment(self, assignment_id, **kwargs):
+    @qs.clean_arg
         """GET a specific assignment by ID."""
         cache = self._assignment_cache
         kwargs.update({'identifier': assignment_id})
@@ -385,8 +385,8 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Grades =
     # ==========
 
-    @qs.clean_args()
     def get_grades(self, section_id, **kwargs):
+    @qs.clean_arg
         """GET all grades for a section.
 
         Note that since grades do not have API
@@ -444,7 +444,7 @@ class QSAPIWrapper(qs.APIWrapper):
             qs.api_keys.set(self._api_key_store_key_path(), self.api_key)
         return request.data
 
-    @qs.clean_args()
+    @qs.clean_arg
     def _make_single_request(self, identifier, base_uri, request_all_method,
         request_description, **kwargs):
         """Make a single request to a resource that has both a method to

@@ -49,7 +49,7 @@ def test_clean_id():
 
 def test_clean_args():
 
-    @qs.clean_args()
+    @qs.clean_arg
     def to_be_cleaned(some_id):
         return some_id
 
