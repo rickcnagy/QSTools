@@ -524,8 +524,8 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_active_report_cycle(self):
         """GET the active report cycle"""
-        return [i for i in self.get_report_cycles() if i['isActive'] is True][0]
-
+        rc_cycles = self.get_report_cycles()
+        return [i for i in rc_cycles if i['isActive'] is True][0]
 
     # =============
     # = Protected =

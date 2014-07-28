@@ -63,8 +63,8 @@ class ListWithIDCache(RestCache):
             by_id: A boolean of whether to return the results in a dict by
                 id_key
             cache_filter: A dict to filter the return value on. If this is
-                provided, only dicts that contain the items in cache_filter will
-                be returned. Example: `{'classId': '12345'}`
+                provided, only dicts that contain the items in cache_filter
+                will be returned. Example: `{'classId': '12345'}`
         """
         if self._data is None:
             return None
