@@ -43,7 +43,7 @@ def test_with_grades():
     grades = assignment['grades']
     found_student = False
     for grade in grades:
-        if grade['studentId'] == STUDENT_IN_GB_SECTION:
+        if grade['studentId'] == STUDENT_ID:
             assert_equals(grade['marks'], MARKS)
             found_student = True
         assert_equals(grade['assignmentId'], ASSIGNMENT_ID)
