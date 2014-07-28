@@ -59,6 +59,7 @@ def test_clean_args():
 def test_can_sense_nosetests():
     assert_true(qs.running_from_test())
 
+
 def test_dict_to_from_dict_list():
     dict_to_test = {1: {2: 3, 'id': 1}, 2: {3: 4, 'id': 2}}
     matching_list = [{2: 3, 'id': 1}, {3: 4, 'id': 2}]
@@ -68,3 +69,10 @@ def test_dict_to_from_dict_list():
     assert_equals(
         dict_to_test,
         qs.dict_list_to_dict(qs.dict_to_dict_list(dict_to_test)))
+
+
+def test_make_id():
+    assert_equals(qs.make_id('123'), '123')
+    assert_equals(qs.make_id(123, '456', u'789'), '123:456:789')
+    with assert_raises(TypeError):
+        qs.make_id([1234])

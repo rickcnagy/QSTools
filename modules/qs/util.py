@@ -92,6 +92,18 @@ def is_builtin(obj):
     return type(obj) in builtins
 
 
+def make_id(*args):
+    """Make an id based on arbitrary number of args. This id is in the format
+    of: 'arg1:arg2:...:argn'. This is useful for when multiple values must
+    be used to make a key unique.
+    """
+    if not all(str(i) == i or type(i) is int for i in args):
+        raise TypeError(
+            'All args in make_id must be string or ints. Actual values: '
+            '{}'.format(args))
+    return ':'.join(str(i) for i in args)
+
+
 # ==============
 # = Decorators =
 # ==============

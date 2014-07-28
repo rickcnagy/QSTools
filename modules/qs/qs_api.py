@@ -450,11 +450,10 @@ class QSAPIWrapper(qs.APIWrapper):
             grades = self._make_request(request, **kwargs)
             for grade in grades:
                 grade['sectionId'] = section_id
-                grade['_qstools_id'] = '{}:{}:{}'.format(
+                grade['_qstools_id'] = qs.make_id(
                     grade['studentId'],
                     grade['assignmentId'],
-                    grade['sectionId']
-                )
+                    grade['sectionId'])
             cache.add(grades)
 
         if assignment_id:
