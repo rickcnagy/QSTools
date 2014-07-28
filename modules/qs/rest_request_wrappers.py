@@ -57,9 +57,13 @@ class QSRequest(qs.RestRequest):
         elif 'id' in parsed:
             self.return_type = 'Single Object'
             return parsed
+        elif 'reportCardLevel' in parsed or 'transcriptLevel' in parsed:
+            self.return_type = 'Single Object'
+            return parsed
         elif type(parsed) is list:
             self.return_type = 'Flat List'
             return parsed
+
         qs.logger.critical("Unrecognized response data type", parsed)
 
     def _after_response(self):

@@ -157,7 +157,7 @@ class RestRequest(object):
             'URI': self.uri,
             'full URI': self._full_url(),
             'params': self._full_params(),
-            'request data': self._full_data(),
+            'request body': self._full_data(),
             'headers': self._full_headers(),
             'verb': self.verb
         }
