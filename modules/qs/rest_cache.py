@@ -48,7 +48,7 @@ class ListWithIDCache(RestCache):
         self._id_key = id_key
         self.ignore_key = '_'
 
-    def get(self, identifier=None, by_id=False, filter_dict=None, **kwargs):
+    def get(self, identifier=None, by_id=False, cache_filter=None, **kwargs):
         """Return a flattened list of the data or a single entry by id if id is
         specified. Note that identifier is cleaned here, so don't clean in
         calling function.
@@ -62,8 +62,8 @@ class ListWithIDCache(RestCache):
         Keyword Args:
             by_id: A boolean of whether to return the results in a dict by
                 id_key
-            filter_dict: A dict to filter the return value on. If this is
-                provided, only dicts that contain the items in filter_dict will
+            cache_filter: A dict to filter the return value on. If this is
+                provided, only dicts that contain the items in cache_filter will
                 be returned. Example: `{'classId': '12345'}`
         """
         if self._data is None:
@@ -71,7 +71,7 @@ class ListWithIDCache(RestCache):
 
         filtered_data = self._filter_for_output()
         if by_id is True:
-            return _filter_dict(filtered_data, filter_dict) or None
+            return _filter_dict(filtered_data, cache_filter) or None
         elif identifier:
             return filtered_data.get(qs.clean_id(identifier))
         else:
@@ -80,7 +80,7 @@ class ListWithIDCache(RestCache):
                 return_list = sorted(
                     return_list,
                     key=lambda x: x[self._sort_key])
-            return _filter_list(return_list, filter_dict) or None
+            return _filter_list(return_list, cache_filter) or None
 
     def add(self, new_data):
         """Add to the cache with a list or single dict. Like list.append."""

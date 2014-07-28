@@ -179,7 +179,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         if semester_id:
             semester_id = qs.clean_id(semester_id)
-            kwargs.update({'filter_dict': {'semesterId': semester_id}})
+            kwargs.update({'cache_filter': {'semesterId': semester_id}})
 
             if _should_make_request(cache, **kwargs):
                 request = QSRequest('GET sections from semester', '/sections')
@@ -203,7 +203,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         if semester_id is None and active_only is True:
             semester_id_dict = {'semesterId': self.get_active_semester_id()}
-            kwargs.update({'filter_dict': semester_id_dict})
+            kwargs.update({'cache_filter': semester_id_dict})
 
         return cache.get(**kwargs)
 
@@ -372,9 +372,9 @@ class QSAPIWrapper(qs.APIWrapper):
         """
         cache = self._assignment_cache
         by_id = kwargs.get('by_id')
-        kwargs['filter_dict'] = {'sectionId': section_id}
+        kwargs['cache_filter'] = {'sectionId': section_id}
         if include_final_grades is True:
-            kwargs['filter_dict'].update({
+            kwargs['cache_filter'].update({
                 'isFinalGrade': True
             })
 
@@ -392,7 +392,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 cache.add(assignments)
 
         if include_grades is True:
-            kwargs['filter_dict'] = {'sectionId': section_id}
+            kwargs['cache_filter'] = {'sectionId': section_id}
             return self._assignments_with_grades(**kwargs)
         else:
             return cache.get(**kwargs)
@@ -410,7 +410,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(assignment)
 
         if include_grades is True:
-            # kwargs['filter_dict'] = {'assignmentId': assignment_id}
+            # kwargs['cache_filter'] = {'assignmentId': assignment_id}
             # return self._assignments_with_grades(**kwargs)
 
             # Assembla #2219, #2218
@@ -443,7 +443,7 @@ class QSAPIWrapper(qs.APIWrapper):
         assignment_id = qs.clean_id(assignment_id) if assignment_id else None
         student_id = qs.clean_id(student_id) if student_id else None
 
-        kwargs['filter_dict'] = {'sectionId': section_id}
+        kwargs['cache_filter'] = {'sectionId': section_id}
         if _should_make_request(cache, **kwargs):
             request = QSRequest('GET all grades for a section', '/grades')
             request.params['sectionId'] = section_id
@@ -458,9 +458,9 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(grades)
 
         if assignment_id:
-            kwargs['filter_dict'].update({'assignmentId': assignment_id})
+            kwargs['cache_filter'].update({'assignmentId': assignment_id})
         if student_id:
-            kwargs['filter_dict'].update({'studentId': student_id})
+            kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
     # =============
@@ -593,7 +593,7 @@ def _should_make_request(cache, **kwargs):
     """
     no_cache = kwargs.get('no_cache')
     fields = kwargs.get('fields')
-    filter_dict = kwargs.get('filter_dict')
+    cache_filter = kwargs.get('cache_filter')
 
     if no_cache is True:
         return True

@@ -75,15 +75,15 @@ def test_has_fields():
 def test_filtered_get():
     cache = qs.ListWithIDCache()
     cache.add(unsorted)
-    assert_true(cache.get(filter_dict=unsorted[0]), unsorted[0])
+    assert_true(cache.get(cache_filter=unsorted[0]), unsorted[0])
 
 
 def test_filter_get_by_id():
     cache = qs.ListWithIDCache()
     cache.add(unsorted)
     unsorted_by_id = {unsorted[0]['id']: unsorted[0]}
-    assert_true(cache.get(filter_dict=unsorted[0], by_id=True), unsorted_by_id)
-    assert_is_none(cache.get(filter_dict={'some key': 1234}))
+    assert_true(cache.get(cache_filter=unsorted[0], by_id=True), unsorted_by_id)
+    assert_is_none(cache.get(cache_filter={'some key': 1234}))
 
 
 def test_filter_with_unicode():
@@ -92,7 +92,7 @@ def test_filter_with_unicode():
     no_unicode = {'id': 'someval'}
     cache.add(unicoded)
     assert_equals(cache.get(), [unicoded])
-    assert_equals(cache.get(filter_dict=no_unicode), [unicoded])
+    assert_equals(cache.get(cache_filter=no_unicode), [unicoded])
 
 
 def test_entry_has_items():
