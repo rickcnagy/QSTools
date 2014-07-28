@@ -130,7 +130,7 @@ class ListWithIDCache(RestCache):
         for outer_key, outer_val in self._data.iteritems():
             filtered_data[outer_key] = {}
             for inner_key, inner_val in outer_val.iteritems():
-                if type(inner_key) != str or inner_key[:1] != '_':
+                if type(inner_key) != str or not inner_key.startswith('_'):
                     filtered_data[outer_key][inner_key] = inner_val
         return filtered_data
 
