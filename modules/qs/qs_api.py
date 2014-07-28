@@ -385,9 +385,16 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Grades =
     # ==========
 
-    def get_grades(self, section_id, **kwargs):
     @qs.clean_arg
+    def get_grades(self, section_id, assignment_id=None, student_id=None,
+        **kwargs):
         """GET all grades for a section.
+
+        Args:
+            section_id: The section_id to GET grades for. This is mandatory.
+            assignment_id: The assignment to GET grades.
+            student_id: Filter the grades for an existing section or assignment
+                down to a specific student id.
 
         Note that since grades do not have API
         assigned id's but the cache relies on an id, a unique id is generated
@@ -395,6 +402,9 @@ class QSAPIWrapper(qs.APIWrapper):
         meangingless keys (though meaningful values).
         """
         cache = self._grade_cache
+        section_id = qs.clean_id(section_id) if section_id else None
+        assignment_id = qs.clean_id(assignment_id) if assignment_id else None
+        student_id = qs.clean_id(student_id) if student_id else None
 
         kwargs['filter_dict'] = {'sectionId': section_id}
         if _should_make_request(cache, **kwargs):
@@ -408,8 +418,12 @@ class QSAPIWrapper(qs.APIWrapper):
                     grade['assignmentId'],
                     grade['sectionId']
                 )
-
             cache.add(grades)
+
+        if assignment_id:
+            kwargs['filter_dict'].update({'assignmentId': assignment_id})
+        if student_id:
+            kwargs['filter_dict'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
     # =============
