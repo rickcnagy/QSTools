@@ -1,7 +1,8 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 
-import qs
 import re
+import copy
+import qs
 from qs import QSRequest
 
 
@@ -338,8 +339,30 @@ class QSAPIWrapper(qs.APIWrapper):
     # ===============
 
     def get_assignments(self, section_id, include_final_grades=False,
-        **kwargs):
+        include_grades=False, **kwargs):
         """GET a list of assignments for the specified section_id.
+
+        Args:
+            include_final_grades: Boolean whether to include final grade
+                assignments or not.
+            include_grades: Boolean whether to include the grades as well. If
+                True, will return something like this:
+                `[
+                    {
+                        "categoryId": "44767",
+                        "categoryName": "Assignment",
+                        ...
+                        "grades": [
+                            {
+                                "studentId": "11345",
+                                "marks": "100",
+                                ...
+                            },
+                            ...
+                        ]
+                    },
+                    ...
+                ]`
 
         Note that the assignments cache will always have all the assignments
         for a section_id if it has any, but is organized by assignmentId. If
@@ -348,7 +371,8 @@ class QSAPIWrapper(qs.APIWrapper):
         section.
         """
         cache = self._assignment_cache
-        kwargs.update({'filter_dict': {'sectionId': section_id}})
+        by_id = kwargs.get('by_id')
+        kwargs['filter_dict'] = {'sectionId': section_id}
         if include_final_grades is True:
             kwargs['filter_dict'].update({
                 'isFinalGrade': True
@@ -366,10 +390,15 @@ class QSAPIWrapper(qs.APIWrapper):
                 for assignment in assignments:
                     assignment['sectionId'] = section_id
                 cache.add(assignments)
-        return cache.get(**kwargs)
 
-    def get_assignment(self, assignment_id, **kwargs):
+        if include_grades is True:
+            kwargs['filter_dict'] = {'sectionId': section_id}
+            return self._assignments_with_grades(**kwargs)
+        else:
+            return cache.get(**kwargs)
+
     @qs.clean_arg
+    def get_assignment(self, assignment_id, include_grades=False, **kwargs):
         """GET a specific assignment by ID."""
         cache = self._assignment_cache
         kwargs.update({'identifier': assignment_id})
@@ -379,7 +408,15 @@ class QSAPIWrapper(qs.APIWrapper):
                 '/assignments/{}'.format(assignment_id))
             assignment = self._make_request(request, **kwargs)
             cache.add(assignment)
-        return cache.get(assignment_id)
+
+        if include_grades is True:
+            # kwargs['filter_dict'] = {'assignmentId': assignment_id}
+            # return self._assignments_with_grades(**kwargs)
+            raise TypeError(
+                'include_grades cannot be true for get_assignment. Assembla '
+                '#2219, #2218')
+        else:
+            return cache.get(**kwargs)
 
     # ==========
     # = Grades =
@@ -532,6 +569,22 @@ class QSAPIWrapper(qs.APIWrapper):
                 for k, v in section_enrollments.iteritems()
             ]
             cache.add(enrollment_list)
+
+    def _assignments_with_grades(self, **kwargs):
+        """Add the the 'grades' key to each assignment in assignments.
+        Returns a copy of assignments with the 'grades' key inserted."""
+        by_id = kwargs.get('by_id')
+        assignments = copy.deepcopy(self._assignment_cache.get(**kwargs))
+
+        if by_id is True:
+            assignments = qs.dict_to_dict_list(assignments)
+        for assignment in assignments:
+            assignment['grades'] = self.get_grades(
+                assignment['sectionId'],
+                assignment['id'])
+        if by_id is True:
+            assignments = qs.dict_list_to_dict(assignments)
+        return assignments
 
 
 def _should_make_request(cache, **kwargs):
