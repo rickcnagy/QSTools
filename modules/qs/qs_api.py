@@ -46,6 +46,8 @@ class QSAPIWrapper(qs.APIWrapper):
         self._section_enrollment_cache = qs.ListWithIDCache()
         self._assignment_cache = qs.ListWithIDCache(sort_key='name')
         self._grade_cache = qs.ListWithIDCache(id_key='_qstools_id')
+        self._report_cycle_cache = qs.ListWithIDCache()
+        self._report_card_cache = qs.ListWithIDCache(id_key='_qstools_id')
 
         self.schoolcode = None
         self.api_key = None
@@ -461,6 +463,69 @@ class QSAPIWrapper(qs.APIWrapper):
         if student_id:
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
+
+    # ================
+    # = Report Cards =
+    # ================
+
+    @qs.clean_arg
+    def get_report_card(self, student_id, report_cycle_id=None, **kwargs):
+        """GET the report card for a given student. Defaults to the active
+        report cycle.
+
+        Returns:
+            Dict of report card data, like so:
+            {
+                'reportCardLevel': {
+                    'report-date': '1234',
+                    ...
+                },
+                'sectionLevel': {
+                    '{sectionId}': {
+                        'marks': '100',
+                        ...
+                    },
+                    ...
+                }
+            }
+        """
+        cache = self._report_card_cache
+        report_cycle_id = (
+            qs.clean(report_cycle_id)
+            if report_cycle_id
+            else qs.clean_id(self.get_active_report_cycle()['id']))
+        kwargs['cache_filter'] = {
+            'reportCycleId': report_cycle_id,
+            'studentId': student_id
+        }
+
+        cache_id = qs.make_id(student_id, report_cycle_id)
+        if _should_make_request(cache, **kwargs):
+            uri = '/students/{}/reportcards/{}'.format(
+                student_id,
+                report_cycle_id)
+            request = QSRequest(
+                'GET a report card by student and report cycle',
+                uri)
+            rc = self._make_request(request, **kwargs)
+            rc['reportCycleId'] = report_cycle_id
+            rc['studentId'] = student_id
+            rc['_qstools_id'] = cache_id
+            cache.add(rc)
+        return cache.get(cache_id, **kwargs)
+
+    def get_report_cycles(self, **kwargs):
+        """GET all report cycles, which are then used to get report cards."""
+        cache = self._report_cycle_cache
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest('GET all report cycles', '/reportcycles')
+            cache.add(self._make_request(request, **kwargs))
+        return cache.get(**kwargs)
+
+    def get_active_report_cycle(self):
+        """GET the active report cycle"""
+        return [i for i in self.get_report_cycles() if i['isActive'] is True][0]
+
 
     # =============
     # = Protected =
