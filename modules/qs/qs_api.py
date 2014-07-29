@@ -253,7 +253,7 @@ class QSAPIWrapper(qs.APIWrapper):
             Otherwise either return exactly 1 dict or raise a LookupError.
         """
         section_dict = {}
-        if qs.is_valid_id(identifier):
+        if qs.is_valid_id(identifier, check_only=True):
             identifier = qs.clean_id(identifier)
             if identifier.isdigit():
                 section_dict = self.get_section(identifier)

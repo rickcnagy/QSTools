@@ -79,17 +79,25 @@ def clean_id(some_id, func_name=None):
         return str(some_id)
 
 
-def is_valid_id(some_id, func_name=None):
+def is_valid_id(some_id, check_only=False, func_name=None):
+    """Check if some_id is a valid id. If check_only is True, then no errors
+    are thrown, just a silent check.
+    """
     id_part = 'id {}'.format(some_id)
-    if func_name:
-        id_part += " for function '{}'".format(func_name)
-    if not some_id and some_id != 0:
-        raise ValueError('The {} must not be none'.format(id_part))
-    elif type(some_id) is int or str(some_id) == some_id:
-        return True
-    else:
-        raise TypeError('The {} must be a string or int'.format(id_part))
-    return False
+    try:
+        if func_name:
+            id_part += " for function '{}'".format(func_name)
+        if not some_id and some_id != 0:
+            raise ValueError('The {} must not be none'.format(id_part))
+        elif type(some_id) is int or str(some_id) == some_id:
+            return True
+        else:
+            raise TypeError('The {} must be a string or int'.format(id_part))
+    except:
+        if check_only:
+            return False
+        else:
+            raise
 
 
 def is_builtin(obj):

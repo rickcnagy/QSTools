@@ -47,6 +47,7 @@ def test_valid_id():
     for error in type_errors:
         with assert_raises(TypeError):
             qs.clean_id(error)
+        assert_false(qs.is_valid_id(error, check_only=True))
 
 
 def test_clean_args():
