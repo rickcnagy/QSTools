@@ -5,6 +5,7 @@ from nose.tools import *
 import qs
 from qs.test_data import *
 
+
 def setup():
     global q
     q = qs.API()
@@ -54,3 +55,37 @@ def test_get_section():
     new = qs.API()
     assert_equals(new.get_section(SECTION_ID)['sectionName'], SECTION_NAME)
     assert_greater(len(new._section_cache.get()), 1)
+
+
+#  =================
+#  = Match Section =
+#  =================
+
+def test_match_by_name():
+    match = q.match_section(SECTION_NAME)
+    assert_is_dnd(match)
+
+
+def test_match_id():
+    match = q.match_section(NAS1_SECTION_ID, match_name=False)
+
+
+def test_match_dict():
+    match_dict = {
+        'sectionName': 'Do Not Delete',
+        'sectionCode': 'DND',
+    }
+    match = q.match_section(match_dict)
+
+
+def test_multiple_match():
+    matches = q.match_section(DUPLICATE_SECTION_NAME, allow_multiple=True)
+    assert_is_instance(matches, list)
+    assert_equals(len(matches), DUPLICATE_SECTION_COUNT)
+    for section in matches:
+        assert_equals(section['sectionName'], DUPLICATE_SECTION_NAME)
+
+
+def assert_is_dnd(section):
+    assert_is_not_none(section)
+    assert_equals(section['id'], SECTION_ID)
