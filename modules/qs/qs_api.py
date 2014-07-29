@@ -229,7 +229,7 @@ class QSAPIWrapper(qs.APIWrapper):
         return cache.get(section_id, **kwargs)
 
     def match_section(self, identifier, target_semester_id=None,
-        student_id=None, allow_multiple=False, match_name=True,
+        student_id=None, allow_multiple=False, critical=False, match_name=True,
         match_code=True, match_class_id=False, match_class_name=True,
         match_teachers=True):
         """Match a section based on various identifying factors.
@@ -244,19 +244,29 @@ class QSAPIWrapper(qs.APIWrapper):
                 the current semester
             student_id: If supplied, limits possible matched sections to those
                 taken by this student.
-            allow_multiple: Allow multiple matches. Always results in a list
-                being returned, regardless of the number of matches.
+            allow_multiple: Allow multiple matches. A list is always returned
+                if there are matches, else None (or raise an error).
+            critical: Make a critical log if there isn't the correct number of
+                matches. If this is False, None is returned with the incorrect
+                number.
             match_*: determine whether this value needs to match in the
                 returned section.
         Returns:
-            If allow_multiple is True, always returns a list of all matches
-            Otherwise either return exactly 1 dict or raise a LookupError.
+            If there are 0 matches, returns None (or make a critical log if
+                critical is True)
+            Else if allow_multiple is True, returns a list
+            Else if there is 1 match, returns that match
+            Else return None or make a critical log.
         """
+        # validate and normalize input
         section_dict = {}
         if qs.is_valid_id(identifier, check_only=True):
             identifier = qs.clean_id(identifier)
             if identifier.isdigit():
                 section_dict = self.get_section(identifier)
+                section_dict['teacherIds'] = {
+                    i['id'] for i in section_dict['teachers']
+                }
             else:
                 section_dict = {'sectionName': qs.clean_id(identifier)}
         elif type(identifier) is dict:
@@ -266,22 +276,20 @@ class QSAPIWrapper(qs.APIWrapper):
                 'identifier must be a section id, section name, or section '
                 'dict.')
 
+        # get candidate pool
         target_semester_id = (
             qs.clean_id(target_semester_id)
             if target_semester_id
             else self.get_active_semester_id())
-
-        kwargs = {'semester_id': target_semester_id}
+        semester_id_kwarg = {'semester_id': target_semester_id}
         if student_id:
             student_id = qs.clean_id(student_id)
-            all_ids = self.get_student_enrollment(student_id, **kwargs)
-            candidate_pool = [self.get_section(i) for i in all_ids]
+            all_enrolled = self.get_student_enrollment(
+                student_id,
+                semester_id=target_semester_id)
+            candidate_pool = [self.get_section(i) for i in all_enrolled]
         else:
-            candidate_pool = self.get_sections(**kwargs)
-        teacher_ids = (
-            set([i['id'] for i in section_dict['teachers']])
-            if 'teachers' in section_dict
-            else ())
+            candidate_pool = self.get_sections(semester_id=target_semester_id)
 
         def dealbreaker(should_match, key):
             if should_match is False:
@@ -291,6 +299,7 @@ class QSAPIWrapper(qs.APIWrapper):
             else:
                 return section_dict.get(key) != candidate.get(key)
 
+        # actually search for matches
         matches = []
         for candidate in candidate_pool:
             teacher_ids = set([i['id'] for i in candidate['teachers']])
@@ -300,20 +309,34 @@ class QSAPIWrapper(qs.APIWrapper):
             if dealbreaker(match_class_name, 'className'): continue
             if dealbreaker(match_teachers, 'teacherIds'): continue
             matches.append(candidate)
-
         qs.sets_to_lists(matches)
+        qs.sets_to_lists([section_dict])
 
-        if allow_multiple:
-            return matches
-        elif len(matches) == 1:
-            return matches[0]
-        elif len(matches) == 0:
-            message = 'No matches found for section {}'.format(identifier)
-            raise LookupError(message)
-        else:
-            message = (
-                '{} matches found for section {}, but allow_multiple is '
-                'False'.format(len(matches), identifier))
+        # try to return a match
+        try:
+            if len(matches) == 0:
+                raise LookupError('No matches found for section')
+            elif allow_multiple:
+                return matches
+            elif len(matches) == 1:
+                return matches[0]
+            else:
+                raise LookupError(
+                    'Too many ({}) matches found for section'
+                    ''.format(len(matches)))
+        except LookupError as e:
+            logger_args = (e.args[0], {
+                'candidate pool size': len(candidate_pool),
+                'section': section_dict,
+                'matches': matches,
+                'student ID': student_id,
+                'semester ID': target_semester_id,
+            })
+            if critical is True:
+                qs.logger.critical(*logger_args)
+            else:
+                qs.logger.error(*logger_args)
+                return None
 
     # =======================
     # = Section Enrollments =
@@ -740,7 +763,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 section_id = section['id']
                 if section_id not in section_enrollments:
                     section_enrollments[section_id] = []
-            
+
             enrollment_list = [
                 {'id': k, 'students': v}
                 for k, v in section_enrollments.iteritems()

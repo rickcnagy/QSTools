@@ -86,6 +86,35 @@ def test_multiple_match():
         assert_equals(section['sectionName'], DUPLICATE_SECTION_NAME)
 
 
+def test_with_student_id():
+    match = q.match_section(SECTION_NAME, student_id=STUDENT_ID)
+    assert_is_dnd(match)
+
+
+def test_prior_semester():
+    match = q.match_section(
+        NAS1_SECTION_NAME,
+        target_semester_id=NAS1_SEMESTER_ID)
+    assert_equals(match['id'], NAS1_SECTION_ID)
+
+
+def test_with_student_id_and_prior_semester():
+    match = q.match_section(
+        NAS1_SECTION_ID,
+        target_semester_id=NAS1_SEMESTER_ID,
+        student_id=STUDENT_ID)
+    assert_equals(match['id'], NAS1_SECTION_ID)
+
+
+def test_no_match():
+    assert_is_none(q.match_section('Some Non-Existent Section Name'))
+
+
+def test_bad_identifier():
+    with assert_raises(TypeError):
+        q.match_section(['12345'])
+
+
 def assert_is_dnd(section):
     assert_is_not_none(section)
     assert_equals(section['id'], SECTION_ID)
