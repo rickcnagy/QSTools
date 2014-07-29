@@ -351,6 +351,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         self._update_section_enrollment_cache()
         cached = cache.get(section_id, **kwargs)
+
         if cached:
             return cached
         else:
@@ -727,6 +728,7 @@ class QSAPIWrapper(qs.APIWrapper):
         if _should_make_request(cache, **kwargs):
             students = self.get_students(fields='smsClassSubjectSetIdList')
             section_enrollments = {}
+
             for student in students:
                 for section_id in student['smsClassSubjectSetIdList']:
                     if section_id not in section_enrollments:
@@ -734,6 +736,11 @@ class QSAPIWrapper(qs.APIWrapper):
                     section_enrollments[section_id].append(
                         self._enrollment_dict(student)
                     )
+            for section in self.get_sections():
+                section_id = section['id']
+                if section_id not in section_enrollments:
+                    section_enrollments[section_id] = []
+            
             enrollment_list = [
                 {'id': k, 'students': v}
                 for k, v in section_enrollments.iteritems()
