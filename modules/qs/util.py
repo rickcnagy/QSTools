@@ -110,6 +110,16 @@ def make_id(*args):
     return ':'.join(str(i) for i in args)
 
 
+def sets_to_lists(list_of_dicts):
+    """Convert all sets in the values in a list of dicts to lists. This is good
+    when list_of_dicts will be JSON-serialized, since JSON doesn't take sets.
+    """
+    for original_dict in list_of_dicts:
+        for key, val in original_dict.iteritems():
+            if type(val) is set:
+                original_dict[key] = list(val)
+
+
 # ==============
 # = Decorators =
 # ==============
