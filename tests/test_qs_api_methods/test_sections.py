@@ -4,6 +4,7 @@
 from nose.tools import *
 import qs
 from qs.test_data import *
+from mock import MagicMock
 
 
 def setup():
@@ -84,6 +85,9 @@ def test_multiple_match():
     assert_equals(len(matches), DUPLICATE_SECTION_COUNT)
     for section in matches:
         assert_equals(section['sectionName'], DUPLICATE_SECTION_NAME)
+    qs.logger = MagicMock()
+    matches = q.match_section(DUPLICATE_SECTION_NAME)
+    assert_equals(qs.logger.error.call_count, 1)
 
 
 def test_with_student_id():
@@ -107,7 +111,11 @@ def test_with_student_id_and_prior_semester():
 
 
 def test_no_match():
+    qs.logger = MagicMock()
     assert_is_none(q.match_section('Some Non-Existent Section Name'))
+    assert_equals(qs.logger.error.call_count, 1)
+    q.match_section('Some Non-Existent Section Name', critical=True)
+    assert_equals(qs.logger.critical.call_count, 1)
 
 
 def test_bad_identifier():
