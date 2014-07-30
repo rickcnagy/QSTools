@@ -128,6 +128,21 @@ def sets_to_lists(list_of_dicts):
                 original_dict[key] = list(val)
 
 
+def format_phone(raw_phone):
+    """Format a phone number, such as '1234567890' --> '(123) 456-7890'"""
+    if not valid_us_phone(raw_phone): return raw_phone
+    return '(%s%s%s) %s%s%s-%s%s%s%s' % tuple(digits(raw_phone))
+
+
+def valid_us_phone(raw_phone):
+    """Tell whether a phone number is a valid US phone number"""
+    return raw_phone and len(digits(raw_phone)) == 10
+
+
+def digits(string):
+    """Return just the digits from string"""
+    return ''.join([i for i in string if i.isdigit()])
+
 # ==============
 # = Decorators =
 # ==============

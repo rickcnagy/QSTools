@@ -81,5 +81,16 @@ def test_make_id():
         qs.make_id([1234])
 
 
+def test_phone_funcs():
+    raw = '1234567890'
+    formatted = '(123) 456-7890'
+    assert_true(qs.valid_us_phone(raw))
+    assert_equals(qs.format_phone(raw), formatted)
+
+
+def test_digits():
+    assert_equals(qs.digits(' 123dfs'), '123')
+
+
 def test_titlcase():
     assert_equals(qs.tc('some string'), 'Some String')
