@@ -25,10 +25,11 @@ def main():
     csv.cols.insert(csv.cols.index('Full Name') + 2, 'Last Name')
     for row in csv:
         full_name = row['Full Name']
-        delim_loc = full_name.index(DELIMETER)
+        if DELIMETER in full_name:
+            delim_loc = full_name.index(DELIMETER)
 
-        row['First Name'] = qs.tc(full_name[delim_loc + 1:].strip())
-        row['Last Name'] = qs.tc(full_name[:delim_loc].strip())
+            row['First Name'] = qs.tc(full_name[delim_loc + 1:].strip())
+            row['Last Name'] = qs.tc(full_name[:delim_loc].strip())
     csv.save()
 
 
