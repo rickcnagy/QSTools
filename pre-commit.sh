@@ -30,6 +30,7 @@ build_doc '/gui/Transcripts' 'Transcript GUI Scripts'
 build_doc '/utility' 'Utility Scripts'
 build_doc '/modules' 'QSTools Modules'
 build_doc '/modules/qs' '`qs` Python Package'
+build_doc '/csv' 'CSV Scripts'
 docs_finished
 
 # fix all whitespace in Python files

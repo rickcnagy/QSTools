@@ -43,6 +43,7 @@ def generate_markdown(folder_path, title):
             docstring = docstring.replace('#', '\#')
             markdown += '{}\n\n'.format(docstring)
     markdown = markdown.strip()
+    markdown += '\n'
     return markdown
 
 

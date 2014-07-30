@@ -1,0 +1,12 @@
+CSV Scripts
+===
+
+####[`separate_first_last.py`](./separate_first_last.py)
+
+Extract the first and last names from a "Last, First" Full Name column.
+
+Requires:
+    A column entitled "Full Name" where all the names are in "Last, First"
+
+Outputs:
+    The same CSV, but with "First Name" and "Last Name" columns added.
