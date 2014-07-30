@@ -85,12 +85,24 @@ class CSV(object):
                     self.cleaned_values += cleaned_row.values()
             return
 
-    def save(self, overwrite=False, filepath=None):
+    def save(self, add_all_cols=True, overwrite=False, filepath=None):
+        """Save the CSV to disk.
+
+        Args:
+            add_all_cols: Add all the cols in any row to the saved CSV.
+            overwrite: Overwrite the original CSV on disk.
+            filepath: Manually supply the filepath
+        """
         if not overwrite and not filepath:
             original = os.path.splitext(self.filepath)
             filepath = original[0] + ' - modified' + original[1]
         elif not filepath:
             filepath = self.filepath
+
+        if add_all_cols is True:
+            for row in self:
+                self.cols += [i for i in row if i not in self.cols]
+
         write_csv(self.rows, filepath, keys=self.cols, flatten_delim=self.flatten_delim)
 
     def as_tree(self, cols=None, rows_key='_rows'):
