@@ -54,6 +54,15 @@ https://github.com/noamraph/tqdm
 
 Config dummy data for tests
 
+####[`titlecase.py`](./titlecase.py)
+
+
+Return a titlecased version of a string.
+Adapted from Stuart Colville http://muffinresearch.co.uk
+Original Perl version by: John Gruber http://daringfireball.net/ 10 May 2008
+License: http://www.opensource.org/licenses/mit-license.php
+
+
 ####[`util.py`](./util.py)
 
 Utility functions for inclusion in public QS package API

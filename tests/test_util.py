@@ -79,3 +79,7 @@ def test_make_id():
     assert_equals(qs.make_id(123, '456', u'789'), '123:456:789')
     with assert_raises(TypeError):
         qs.make_id([1234])
+
+
+def test_titlcase():
+    assert_equals(qs.tc('some string'), 'Some String')
