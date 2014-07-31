@@ -5,17 +5,22 @@
 
 source ~/.bash_profile
 wd=$(pwd);
+diffed_files=$(git diff --cached --name-only)
 
 # params: directory, name
 function build_doc {
 	dir="$wd$1"
 	name=$2
-	'./utility/readme_generator.py' "$dir" "$name"
-	if [ $? != 0 ]; then
-		echo "Doc build failed for dir: $dir" > ./build.log
-		exit 1;
-	fi
-	git add "./$1/README.md"
+    
+    last_path=$(basename $dir)
+    if [[ $diffed_files =~ .*$last_path.* ]]; then
+    	'./utility/readme_generator.py' "$dir" "$name"
+    	if [ $? != 0 ]; then
+    		echo "Doc build failed for dir: $dir" > ./build.log
+    		exit 1;
+    	fi
+    	git add "./$1/README.md"
+    fi
 }
 
 function docs_finished {
@@ -34,4 +39,8 @@ build_doc '/csv' 'CSV Scripts'
 docs_finished
 
 # fix all whitespace in Python files
-reindent --recurse --nobackup .
+while read -r filename; do
+    if [[ $filename =~ .*\.py ]]; then
+        reindent --nobackup ./$filename
+    fi
+done <<< "$diffed_files"
