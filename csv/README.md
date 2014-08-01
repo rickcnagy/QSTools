@@ -12,4 +12,4 @@ Requires:
     A column entitled "Full Name" where all the names are in "Last, First"
 
 Outputs:
-    The same CSV, but with "First Name" and "Last Name" columns added.
+    The same CSV, but with "First" and "Last" columns added.
