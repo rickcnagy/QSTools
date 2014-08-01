@@ -38,7 +38,7 @@ build_doc '/modules/qs' '`qs` Python Package'
 build_doc '/csv' 'CSV Scripts'
 docs_finished
 
-# fix all whitespace in Python files
+# fix all whitespace in changed Python files
 while read -r filename; do
     if [[ $filename =~ .*\.py ]]; then
         reindent --nobackup ./$filename

@@ -13,6 +13,7 @@ def setup():
 def test_get_assignments():
     assignments = q.get_assignments(SECTION_WITH_GB, by_id=True)
     assert_equals(assignments[ASSIGNMENT_ID]['name'], ASSIGNMENT_NAME)
+    assert_in('sectionId', q.get_assignments(SECTION_WITH_GB)[0])
 
 
 def test_get_final_grade():
@@ -31,6 +32,7 @@ def test_get_assignment():
     other_cache = qs.API()
     assignment = other_cache.get_assignment(ASSIGNMENT_ID)
     assert_equals(assignment['name'], ASSIGNMENT_NAME)
+    assert_in('sectionId', assignment)
 
 
 def test_with_grades():

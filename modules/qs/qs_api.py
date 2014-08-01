@@ -499,11 +499,9 @@ class QSAPIWrapper(qs.APIWrapper):
             request.params.update({
                 'includeFinalGrades': include_final_grades
             })
+            request.fields.append('sectionId')
             assignments = self._make_request(request, **kwargs)
-            if assignments:
-                for assignment in assignments:
-                    assignment['sectionId'] = section_id
-                cache.add(assignments)
+            cache.add(assignments)
 
         if include_grades is True:
             kwargs['cache_filter'] = {'sectionId': section_id}
@@ -520,6 +518,7 @@ class QSAPIWrapper(qs.APIWrapper):
             request = QSRequest(
                 'GET assignment',
                 '/assignments/{}'.format(assignment_id))
+            request.fields.append('sectionId')
             assignment = self._make_request(request, **kwargs)
             cache.add(assignment)
 
@@ -529,6 +528,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
             # Assembla #2219, #2218
             raise TypeError('include_grades cannot be true for get_assignment')
+            # TODO: after #2219, sectionId doesn't have to be known
         else:
             return cache.get(**kwargs)
 
@@ -546,6 +546,8 @@ class QSAPIWrapper(qs.APIWrapper):
             assignment_id: The assignment to GET grades.
             student_id: Filter the grades for an existing section or assignment
                 down to a specific student id.
+
+        #TODO: Assembla #2219 is now deployed, so section_id can be None
 
         Note that since grades do not have API
         assigned id's but the cache relies on an id, a unique id is generated
