@@ -10,10 +10,10 @@
  * matching the Add Inquiry Page
  */
 
-inquiries = QSImporter.getData();
+var inquiries = QSImporter.getData();
 
 new QSIterator("*", function() {
-    inquiry = inquiries[this.currentIndex];
+    var inquiry = inquiries[this.currentIndex];
     this.click("Add Student Inquiry");
     this.afterLoad(function() {
         for(var key in inquiry) {
