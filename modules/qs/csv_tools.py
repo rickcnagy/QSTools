@@ -100,8 +100,10 @@ class CSV(object):
             filepath = self.filepath
 
         if add_all_cols is True:
+            to_add = []
             for row in self:
-                self.cols += [i for i in row if i not in self.cols]
+                to_add += [i for i in row if i not in self.cols]
+            self.cols += sorted(list(set(to_add)))
 
         write_csv(self.rows, filepath, keys=self.cols, flatten_delim=self.flatten_delim)
 
