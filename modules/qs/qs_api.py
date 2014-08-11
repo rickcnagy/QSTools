@@ -659,6 +659,40 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(transcript)
         return cache.get(**kwargs)
 
+    # ==============
+    # = Discipline =
+    # ==============
+
+    @qs.clean_arg
+    def post_incident(self, student_id, teacher_id, detail, date,
+        demerit_points=1, **kwargs):
+        """POST a discipline incident, using the /incidents API from #2209.
+
+        Args:
+            student_id: The student the incident is for - "Student" in the GUI.
+            teacher_id: The teacher that reported the incident - "Reported By".
+            detail: The detail string of what occurred - "Incident detail".
+            date: A date string of the date it occurred in YYYY-MM-DD format -
+                "Incident date".
+            demerit_points: The demerit points applied (optional) - "Demerit
+                Points".
+        """
+        teacher_id = qs.clean_id(teacher_id)
+
+        request = QSRequest('POST a discipline incident', '/incidents')
+        request.verb = qs.POST
+        user_id = self.get_teachers(by_id=True, fields='userId')[teacher_id]['userId']
+        request.request_data.update({
+            'date': date,
+            'detail': detail,
+            'demeritPoints': demerit_points,
+            'teacherId': teacher_id,
+            'studentId': student_id,
+            'userId': user_id
+        })
+        return self._make_request(request, **kwargs)
+
+
     # =============
     # = Protected =
     # =============
