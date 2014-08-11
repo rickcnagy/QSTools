@@ -28,9 +28,9 @@ def main():
         if DELIMETER in full_name:
             delim_loc = full_name.index(DELIMETER)
 
-            row['First'] = qs.tc(full_name[delim_loc + 1:].strip())
-            row['Last'] = qs.tc(full_name[:delim_loc].strip())
-    csv.save()
+            row['First'] = full_name[delim_loc + 1:].strip()
+            row['Last'] = full_name[:delim_loc].strip()
+    csv.save("with first last")
 
 
 

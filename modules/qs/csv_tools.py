@@ -85,7 +85,7 @@ class CSV(object):
                     self.cleaned_values += cleaned_row.values()
             return
 
-    def save(self, add_all_cols=True, overwrite=False, filepath=None):
+    def save(self, suffix='modified', add_all_cols=True, overwrite=False,):
         """Save the CSV to disk.
 
         Args:
@@ -93,11 +93,10 @@ class CSV(object):
             overwrite: Overwrite the original CSV on disk.
             filepath: Manually supply the filepath
         """
-        if not overwrite and not filepath:
+        filepath = self.filepath
+        if overwrite is False:
             original = os.path.splitext(self.filepath)
-            filepath = original[0] + ' - modified' + original[1]
-        elif not filepath:
-            filepath = self.filepath
+            filepath = '{} - {}.csv'.format(original[0], suffix, original[1])
 
         if add_all_cols is True:
             to_add = []
