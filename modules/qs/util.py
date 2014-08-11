@@ -157,3 +157,5 @@ def clean_arg(func):
         args[index] = clean_id(args[index])
         return func(*args, **kwargs)
     return inner
+
+# TODO: implement clean_args for multiple args
