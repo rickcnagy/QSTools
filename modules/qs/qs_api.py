@@ -2,6 +2,7 @@
 
 import re
 import copy
+import json
 import qs
 from qs import QSRequest
 
@@ -338,6 +339,37 @@ class QSAPIWrapper(qs.APIWrapper):
                 qs.logger.error(*logger_args)
                 return None
 
+    def post_section(self, section_name, section_code, class_id, teacher_id,
+        credit_hours=1, **kwargs):
+        """POST to create a new section. teacher_id should be a single
+        teacher id or a list of teacher ids.
+        """
+        teacher_ids = teacher_ids if type(teacher_id) is list else [teacher_id]
+
+        request = QSRequest('POST new section', '/sections')
+        request.verb = qs.POST
+        request.request_data = {
+            'classId': class_id,
+            'sectionName': section_name,
+            'sectionCode': section_code,
+            'creditHours': credit_hours,
+            'teacherIds': json.dumps(teacher_ids)
+        }
+        return self._make_request(request, **kwargs)
+
+
+    @qs.clean_arg
+    def update_section(self, section_id, section_dict, **kwargs):
+        """POST to update an existing section by id. section_id should be a
+        dict of values to update, as per the API reference.
+        """
+        request = QSRequest(
+            'POST to update existing section',
+            '/sections/{}'.format(section_id))
+        request.verb = qs.POST
+        request.request_data = section_dict
+        return self._make_request(request, **kwargs)
+
     # =======================
     # = Section Enrollments =
     # =======================
@@ -447,6 +479,18 @@ class QSAPIWrapper(qs.APIWrapper):
         """
         enrollments = self.get_student_enrollments(by_id=True, **kwargs)
         return enrollments.get(student_id)
+
+
+    @qs.clean_arg
+    def post_section_enrollment(self, section_id, student_ids, **kwargs):
+        """POST enrollment to enroll all students in student ids to
+        section_id. section_ids should be a list of student ids."""
+        request = QSRequest(
+            'POST section enrollment',
+            '/sectionenrollments/{}'.format(section_id))
+        request.request_data = {'studentIds': json.dumps(student_ids)}
+        request.verb = qs.POST
+        return self._make_request(request, **kwargs)
 
     # ===============
     # = Assignments =
@@ -682,14 +726,14 @@ class QSAPIWrapper(qs.APIWrapper):
         request = QSRequest('POST a discipline incident', '/incidents')
         request.verb = qs.POST
         user_id = self.get_teachers(by_id=True, fields='userId')[teacher_id]['userId']
-        request.request_data.update({
+        request.request_data = {
             'date': date,
             'detail': detail,
             'demeritPoints': demerit_points,
             'teacherId': teacher_id,
             'studentId': student_id,
             'userId': user_id
-        })
+        }
         return self._make_request(request, **kwargs)
 
 
