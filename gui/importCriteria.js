@@ -45,7 +45,7 @@ new QSImporter.iterator(function() {
                     return $.trim($(this).text()) === "";
                 });
                 if (emptyCriteriaVal.length !== 1) {
-                    console.error("too many 'empty' criteria vals found", emptyCriteriaVal)
+                    console.error("too many 'empty' criteria vals found", emptyCriteriaVal);
                     this.quit();
                 } else {
                     emptyCriteriaVal.click();
@@ -56,7 +56,7 @@ new QSImporter.iterator(function() {
                     });
                 }
             }
-        }, this.item["Criteria"]);
+        }, this.item.Criteria);
         
         this.afterChildIterator(function() {
             this.click("Ok");
