@@ -55,6 +55,8 @@ new QSImporter.iterator(function() {
                         this.next();
                     });
                 }
+            } else {
+                this.next();
             }
         }, this.item.Criteria);
         
