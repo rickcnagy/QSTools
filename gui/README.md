@@ -21,9 +21,9 @@ GUI Scripts
 
  Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
 
-####[`importDiscipline.js`](./importDiscipline.js)
+####[`importCriteria.js`](./importCriteria.js)
 
- Import discipline data into the Discipline module. Like other imports, the data passed to QSImporter should be formatted in an array of incidents where the keys map to field names in the GUI, like so: [ { "Incident Date": "05/19/2014", "Student": "Alvin DeSilva", "Reported By": "Mr. Teacher", "Incident Detail": "Was talking back.", "Response": "Detention", "Demerit Points": 1, "Action taken": "No action.", }, { ... }, ... ] 
+ Import criteria into the Report Cards module. Relies on the current template being Super Basic. QSImporter should have an object like this: [ { "Template Name": "Reading 3-5", "Alternative Subject Section Name": "Reading", "Criteria": [ {"Criteria Name": "A,B,C,D,F"}, // dropdown "Criteria Name", // field ... ] }, ... ] 
 
 ####[`importInquiries.js`](./importInquiries.js)
 
