@@ -357,7 +357,6 @@ class QSAPIWrapper(qs.APIWrapper):
         }
         return self._make_request(request, **kwargs)
 
-
     @qs.clean_arg
     def update_section(self, section_id, section_dict, **kwargs):
         """POST to update an existing section by id. section_id should be a
@@ -479,7 +478,6 @@ class QSAPIWrapper(qs.APIWrapper):
         """
         enrollments = self.get_student_enrollments(by_id=True, **kwargs)
         return enrollments.get(student_id)
-
 
     @qs.clean_arg
     def post_section_enrollment(self, section_id, student_ids, **kwargs):
@@ -725,7 +723,8 @@ class QSAPIWrapper(qs.APIWrapper):
 
         request = QSRequest('POST a discipline incident', '/incidents')
         request.verb = qs.POST
-        user_id = self.get_teachers(by_id=True, fields='userId')[teacher_id]['userId']
+        teachers_by_id = self.get_teachers(by_id=True, fields='userId')
+        user_id = teachers_by_id[teacher_id]['userId']
         request.request_data = {
             'date': date,
             'detail': detail,
@@ -735,7 +734,6 @@ class QSAPIWrapper(qs.APIWrapper):
             'userId': user_id
         }
         return self._make_request(request, **kwargs)
-
 
     # =============
     # = Protected =

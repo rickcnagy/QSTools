@@ -81,9 +81,9 @@ def _titlecase(text):
 
             hyphenated = []
             for item in word.split('-'):
-                hyphenated.append(CAPFIRST.sub(lambda m: m.group(0).upper(), item))
+                to_append = CAPFIRST.sub(lambda m: m.group(0).upper(), item)
+                hyphenated.append(to_append)
             tc_line.append("-".join(hyphenated))
-
 
         result = " ".join(tc_line)
 

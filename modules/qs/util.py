@@ -147,6 +147,7 @@ def digits(string):
 # = Decorators =
 # ==============
 
+
 def clean_arg(func):
     """Clean the first argument of the decorated function. Useful if an ID is
     passed as the first arg.
