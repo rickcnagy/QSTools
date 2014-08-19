@@ -186,6 +186,9 @@ class CSV(object):
         """iterating returns each row, one at a time"""
         return iter(self.rows)
 
+    def __len__(self):
+        return len(self.rows)
+
     def json(self):
         return json.dumps(self.rows, indent=4)
 
