@@ -731,18 +731,20 @@ class QSAPIWrapper(qs.APIWrapper):
     # ================
 
     @qs.clean_arg
-    def post_charge(self, student_id, amount, date, description='',
-        fee_type='C', **kwargs):
+    def post_fee(self, student_id, amount, date, description='', **kwargs):
         """POST a charge to a student's profile via the Fee Tracking API,
         which is documented on Assembla #2210.
 
         Args:
             student_id: The student the charge is for.
-            amount: a number for the dollar amount of the charge.
+            amount: a number for the dollar amount of the charge. Make amount
+                negative to post a payment.
             date: PlainDate of the charge, e.g. '2014-05-25'
             description (optional): charge description.
             fee_type: Either 'C' for charge or 'P' for Payment
         """
+        amount = qs.finance_to_float(amount)
+        fee_type = 'C' if amount > 0 else 'P'
         request = QSRequest(
             'POST charge',
             '/students/{}/fees'.format(student_id))

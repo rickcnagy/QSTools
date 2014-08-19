@@ -143,6 +143,11 @@ def digits(string):
     """Return just the digits from string"""
     return ''.join([i for i in string if i.isdigit()])
 
+
+def finance_to_float(finance):
+    """Convert a finance number, such as '$100.07' to a float"""
+    return float(''.join([i for i in finance if i in '-.0123456789']))
+
 # ==============
 # = Decorators =
 # ==============
