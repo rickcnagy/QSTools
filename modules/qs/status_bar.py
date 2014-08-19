@@ -8,7 +8,7 @@ import sys
 import time
 
 
-def bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
+def status_bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
         mininterval=0.5, miniters=1):
     """Status bar for iterables, using tqdm: github.com/noamraph/tqdm
 
