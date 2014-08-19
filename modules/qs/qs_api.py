@@ -43,6 +43,7 @@ class QSAPIWrapper(qs.APIWrapper):
         self._teacher_cache = qs.ListWithIDCache(sort_key='fullName')
         self._semester_cache = qs.ListWithIDCache()
         self._student_cache = qs.ListWithIDCache(sort_key='fullName')
+        self._parent_cache = qs.ListWithIDCache(sort_key='fullName')
         self._section_cache = qs.ListWithIDCache(sort_key='sectionName')
         self._section_enrollment_cache = qs.ListWithIDCache()
         self._assignment_cache = qs.ListWithIDCache(sort_key='name')
@@ -149,6 +150,7 @@ class QSAPIWrapper(qs.APIWrapper):
             cache.add(students)
         return cache.get(**kwargs)
 
+    @qs.clean_arg
     def get_student(self, student_id, **kwargs):
         """GET a specific student by id."""
         return self._make_single_request(
@@ -156,6 +158,29 @@ class QSAPIWrapper(qs.APIWrapper):
             '/students',
             self.get_students,
             'GET student by id',
+            **kwargs)
+
+    # ===========
+    # = Parents =
+    # ===========
+
+    def get_parents(self, **kwargs):
+        """GET a list of all parents from /parents."""
+        cache = self._parent_cache
+        if _should_make_request(cache, **kwargs):
+            request = QSRequest('GET all parents', '/parents')
+            parents = self._make_request(request, **kwargs)
+            cache.add(parents)
+        return cache.get(**kwargs)
+
+    @qs.clean_arg
+    def get_parent(self, parent_id, **kwargs):
+        """GET a specific parent by id."""
+        return self._make_single_request(
+            parent_id,
+            '/parents',
+            self.get_parents,
+            'GET parent by id',
             **kwargs)
 
     # ============
@@ -700,6 +725,35 @@ class QSAPIWrapper(qs.APIWrapper):
             transcript['studentId'] = student_id
             cache.add(transcript)
         return cache.get(**kwargs)
+
+    # ================
+    # = Fee Tracking =
+    # ================
+
+    @qs.clean_arg
+    def post_charge(self, student_id, amount, date, description='',
+        fee_type='C', **kwargs):
+        """POST a charge to a student's profile via the Fee Tracking API,
+        which is documented on Assembla #2210.
+
+        Args:
+            student_id: The student the charge is for.
+            amount: a number for the dollar amount of the charge.
+            date: PlainDate of the charge, e.g. '2014-05-25'
+            description (optional): charge description.
+            fee_type: Either 'C' for charge or 'P' for Payment
+        """
+        request = QSRequest(
+            'POST charge',
+            '/students/{}/fees'.format(student_id))
+        request.verb = qs.POST
+        request.request_data = {
+            'date': date,
+            'description': description,
+            'amount': amount,
+            'feeType': fee_type
+        }
+        return self._make_request(request, **kwargs)
 
     # ==============
     # = Discipline =
