@@ -4,6 +4,7 @@ import csv
 import json
 import os
 from collections import OrderedDict
+import qs
 
 """Convenience static methods that don't require a CSV object"""
 
@@ -256,7 +257,7 @@ class CSVMatch(CSV):
                 raise ValueError(
                     "Multiple matches for value: {}\nmatches: {}".format(
                         val,
-                        matches
+                        qs.dumps(matches)
                     ))
         return matches[0]
 
@@ -277,9 +278,8 @@ class MultipleMatchError(Exception):
         self.matches = matches
 
     def __str__(self):
-        return "Multiple matches for value: {}\nmatches: {}".format(
+        return "Multiple matches for value: {}\nmatches:{}".format(
             self.val,
-            self.matches
-            )
+            qs.dumps(self.matches))
 
     pass
