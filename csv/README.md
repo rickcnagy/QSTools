@@ -3,10 +3,13 @@ CSV Scripts
 
 ####[`add_student_ids.py`](./add_student_ids.py)
 
-Add a Student ID to each student row based on the First and Last columns.
+Add a Student ID to each student row based on the First and Last or Full
+Name columns.
+
+If ignore_case is true, this will ignore case when matching student names
 
 Usage:
-    ./add_student_id {filename.csv} {schoolcode}
+    ./add_student_id {filename.csv} {schoolcode} {ignore_case}
 
 Requires:
     A CSV with "First" and "Last" columns, with an exact name match to the
@@ -15,6 +18,8 @@ Requires:
 Outputs:
     The same CSV, but with a "Student ID" column.
 
+
+####[`logs/`](./logs)
 
 ####[`separate_first_last.py`](./separate_first_last.py)
 
