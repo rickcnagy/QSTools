@@ -37,6 +37,22 @@ for creating fake gradebook data for demo schools or support trial schools.
 
 ####[`Gradebook Migration/`](./Gradebook Migration)
 
+####[`import_attendance.py`](./import_attendance.py)
+
+Import attendance records from a CSV.
+
+Required Columns:
+    Student ID
+    Teacher ID
+    Date
+    Status
+    Remarks
+    Description
+
+Command Line Usage:
+    ./import_attendance {filename} {schoolcode}
+
+
 ####[`import_fees.py`](./import_fees.py)
 
 Import fees for each student from a CSV. Imports 1 fee per row.
