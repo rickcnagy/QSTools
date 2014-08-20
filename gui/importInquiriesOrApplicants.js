@@ -1,26 +1,26 @@
 //
 //  importInquiries.js
-//  Rick Nagy (@br1ckb0t)
+
 //  2014-07-03
 //
 
 /**
- * Import inquiries from QSImporter.
+ * Import inquiries or applicants from QSImporter.
  * QSImporter should have a JSONArray, each with an object with fields
- * matching the Add Inquiry Page
+ * matching the Add Inquiry/Add Applicant page.
  */
 
 var inquiries = QSImporter.getData();
 
 new QSIterator("*", function() {
     var inquiry = inquiries[this.currentIndex];
-    this.click("Add Student Inquiry");
+    this.click("Add");
     this.afterLoad(function() {
         for(var key in inquiry) {
             var val = inquiry[key];
             QSIterator.setQPVal(key, val);
         }
-        this.click("Save And Close");
+        this.click(["Save & Close", "Save"]);
         this.afterLoad(this.next);
     });
 }, true, inquiries.length).start()

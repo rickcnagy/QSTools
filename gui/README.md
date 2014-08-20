@@ -25,9 +25,9 @@ GUI Scripts
 
  Import criteria into the Report Cards module. Relies on the current template being Super Basic. QSImporter should have an object like this: [ { "Template Name": "Reading 3-5", "Alternative Subject Section Name": "Reading", "Criteria": [ {"Criteria Name": "A,B,C,D,F"}, // dropdown "Criteria Name", // field ... ] }, ... ] 
 
-####[`importInquiries.js`](./importInquiries.js)
+####[`importInquiriesOrApplicants.js`](./importInquiriesOrApplicants.js)
 
- Import inquiries from QSImporter. QSImporter should have a JSONArray, each with an object with fields matching the Add Inquiry Page 
+ Import inquiries or applicants from QSImporter. QSImporter should have a JSONArray, each with an object with fields matching the Add Inquiry/Add Applicant page. 
 
 ####[`likertsToDropdowns.js`](./likertsToDropdowns.js)
 
