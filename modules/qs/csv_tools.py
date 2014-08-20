@@ -193,7 +193,7 @@ class CSV(object):
         return json.dumps(self.rows, indent=4)
 
     def dump_json(self, filename):
-        json.dump(self.rows, open(filename, 'w'), indent=4)
+        json.dump(self.rows, open(filename, 'w'), indent=4, sort_keys=True)
 
 
 class CSVMatch(CSV):

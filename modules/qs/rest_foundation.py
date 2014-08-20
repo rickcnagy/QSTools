@@ -140,6 +140,7 @@ class RestRequest(object):
         qs.logger.info(self, self._log_dict(), is_request=True)
 
     def _log_after(self):
+        # TODO: include response_type in log
         if not self.logged: return
         args = [self, self._log_dict()]
         kwargs = {'is_response': True}

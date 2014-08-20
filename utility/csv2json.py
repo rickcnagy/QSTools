@@ -2,16 +2,16 @@
 
 """Module for converting CSV's to JSONArray's of Row objects.
 Usage is as follows:
-./csv2json.py 'filepath1', 'filepath2'
+./csv2json.py {filepath1} {filepath2} {...}
 """
 
-from qs import csv_tools
 import sys
+import qs
 
 
 def main():
     for filepath in sys.argv[1:]:
-        csv = csv_tools.CSV(filepath)
+        csv = qs.CSV(filepath)
         new_filepath = filepath.replace('csv', 'json')
         csv.dump_json(new_filepath)
 

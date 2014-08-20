@@ -645,6 +645,37 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
+    # ==============
+    # = Attendance =
+    # ==============
+
+    @qs.clean_arg
+    def post_attendance(self, student_id, teacher_id, date, status, remarks='',
+        description='', **kwargs):
+        """POST attendance via the /attendance API method.
+
+        Status codes:
+            Present: P
+            Absent: A
+            Tardy: T
+            Absent with excuse: EA
+            Tardy with excuse: ET
+
+        Note that remarks are the notes taken normally via the GUI.
+        """
+        teacher_id = qs.clean_id(teacher_id)
+        request = QSRequest(
+            'POST attendance data by date/student',
+            '/students/{}/attendance/{}'.format(student_id, date))
+        request.verb = qs.POST
+        request.request_data = {
+            'status': status,
+            'teacherId': teacher_id,
+            'description': description,
+            'remarks': remarks,
+        }
+        return self._make_request(request, **kwargs)
+
     # ================
     # = Report Cards =
     # ================

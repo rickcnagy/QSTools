@@ -5,7 +5,7 @@ Utility Scripts
 
 Module for converting CSV's to JSONArray's of Row objects.
 Usage is as follows:
-./csv2json.py 'filepath1', 'filepath2'
+./csv2json.py {filepath1} {filepath2} {...}
 
 
 ####[`readme_generator.py`](./readme_generator.py)
