@@ -56,12 +56,16 @@ def info(description, data={}, is_response=False, is_request=False, cc_print=Fal
 
 
 def warning(description, data={}, is_response=False, is_request=False, cc_print=True):
-    """same as info, but warning level"""
+    """same as info, but warning level.
+
+    #TODO: maybe_print doesn't work here usually...
+    """
     if not should_log(): return
     check_config()
     log_message = format_for_log(description, data, is_request, is_response)
     syslog.syslog(syslog.LOG_ERR, log_message)
     logging.warning(log_message)
+    print log_message
     maybe_print(log_message, cc_print)
 
 
@@ -135,6 +139,8 @@ def format_for_log(description, data, is_request, is_response):
         else repr(description))
     description += " - RESPONSE" if is_response else ''
     description += " - REQUEST" if is_request else ''
+    if type(data) is set:
+        data = list(data)
     description += ('\n{}'.format(
         json.dumps(data, indent=4, sort_keys=True))
         if data else '')
