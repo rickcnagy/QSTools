@@ -63,6 +63,9 @@ class QSRequest(qs.RestRequest):
         elif type(parsed) is list:
             self.return_type = 'Flat List'
             return parsed
+        elif type(parsed) is dict and parsed.keys() == ['success']:
+            self.return_type = 'Success Only'
+            return parsed
 
         qs.logger.critical("Unrecognized response data type", parsed)
 
