@@ -3,7 +3,7 @@ QSTools
 [![Build Status](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master)](https://travis-ci.org/br1ckb0t/QSTools)
 [![Coverage Status](https://img.shields.io/coveralls/br1ckb0t/QSTools.svg)](https://coveralls.io/r/br1ckb0t/QSTools?branch=master)
 
-A toolset for programmatically interacting with the QuickSchools API and GUI quickly and efficiently.
+A toolset for programmatically controlling the QuickSchools API and GUI.
 
 ###How This Repo Works
 * This is a toolset designed to be the **building blocks for large and complicated scripts that can be written and run under a time pressure *without failing*.** As a result, it consists of lots of small, contained, and useful scripts.
