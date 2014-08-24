@@ -37,4 +37,8 @@ GUI Scripts
 
  Save all Gradebooks visible in the Gradebook module. 
 
+####[`saveAllStudentRecords.js`](./saveAllStudentRecords.js)
+
+ Save all student records visible in the Students module and trigger the blur() event on the full name field to update the name separation. 
+
 ####[`Transcripts/`](./Transcripts)
