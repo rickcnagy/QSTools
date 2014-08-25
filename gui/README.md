@@ -33,12 +33,16 @@ GUI Scripts
 
  Convert Likerts to dropdowns. This maintains the value in each criteria, but makes what was a likert value into a drop down. This requires that ALL criteria in each criteria set is a Likert. First written for lapazschool (\#32879). 
 
+####[`manuallyParseStudentNames.js`](./manuallyParseStudentNames.js)
+
+ Parse full names on the Students module and manually set First, MI, Last. This is an alternative to simply triggering the blur() event on the name field, when for some reason that isn't working. This parses full names like "Jobs, Steve P.", but the regex could be adapted to fit whatever format the full name is currently in. 
+
 ####[`saveAllGradebooks.js`](./saveAllGradebooks.js)
 
  Save all Gradebooks visible in the Gradebook module. 
 
 ####[`saveAllStudentRecords.js`](./saveAllStudentRecords.js)
 
- Save all student records visible in the Students module and trigger the blur() event on the full name field to update the name separation. 
+ Save all student records visible in the Students module and trigger the blur() event on the full name field to update the name separation. For more fine-grain control over the parsing, see ./manuallyParseStudentNames.js. 
 
 ####[`Transcripts/`](./Transcripts)
