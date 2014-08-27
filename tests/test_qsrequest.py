@@ -1,5 +1,6 @@
 """Test any request wrappers from rest_request_wrappers"""
 
+import json
 import qs
 from nose.tools import *
 from qs import QSRequest
@@ -11,7 +12,7 @@ _MAGIC_VAL = '1546'
 
 
 def setup(module):
-    global paged_list, single_object, flat_list
+    global paged_list, single_object, flat_list, success_only
     qs.logger.silence()
 
     paged_list = QSRequest('Paged List Request', '/students')
@@ -37,6 +38,16 @@ def setup(module):
     flat_list.set_api_key(API_KEY)
     flat_list.make_request()
 
+success_only = QSRequest('Success Only', '/grades')
+success_only.request_data = {
+    'sectionId': SECTION_WITH_GB,
+    'assignmentId': ASSIGNMENT_ID,
+    'grades': json.dumps([{"studentId": STUDENT_ID, "marks": MARKS}])
+}
+success_only.verb = qs.POST
+success_only.set_api_key(API_KEY)
+success_only.make_request()
+
 
 def test_paged_list():
     assert_is_instance(paged_list.data, list)
@@ -53,6 +64,13 @@ def test_flat_list():
     assert_is_instance(flat_list.data, list)
     assert_is_instance(flat_list.data[0], dict)
     assert_equals(flat_list.return_type, 'Flat List')
+
+
+def test_success_only():
+    assert_is_instance(success_only.data, dict)
+    assert_in('success', success_only.data)
+    assert_in(success_only.data['success'], [True, False])
+    assert_equals(success_only.return_type, 'Success Only')
 
 
 def test_live_url():
