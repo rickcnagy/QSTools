@@ -51,3 +51,6 @@ REPORT_CYCLE_COUNT = 2
 # Parents
 PARENT_NAME = "Jane's Parent"
 PARENT_ID = '185995'
+
+# Classes
+CLASS_ID = '236744'

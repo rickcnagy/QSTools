@@ -8,8 +8,9 @@ from mock import MagicMock
 
 
 def setup():
-    global q
+    global q, posted_section
     q = qs.API()
+    posted_section = q.post_section('Temp', 'Temp', CLASS_ID, TEACHER_ID)
     q.get_sections()
 
 
@@ -126,3 +127,29 @@ def test_bad_identifier():
 def assert_is_dnd(section):
     assert_is_not_none(section)
     assert_equals(section['id'], SECTION_ID)
+
+# ================
+# = POST section =
+# ================
+
+def test_posted_section():
+    assert_is_not_none(q.get_section(posted_section['id']))
+
+    posted_match = q.get_section(posted_section['id'])
+    for k, v in posted_section.iteritems():
+        if k in posted_match:
+            assert_equals(posted_match[k], v)
+
+# ==================
+# = DELETE section =
+# ==================
+
+def test_delete_section():
+    new = q.post_section('To Delete', 'To Delete', CLASS_ID, TEACHER_ID)
+    assert_in(new['id'], q.get_sections(by_id=True))
+    q.delete_section(new['id'])
+    assert_not_in(new['id'], q.get_sections(by_id=True))
+
+
+def teardown():
+    q.delete_section(posted_section['id'])
