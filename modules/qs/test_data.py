@@ -47,3 +47,7 @@ FINAL_GRADE_ID = '1076623'
 
 # Report Cycles
 REPORT_CYCLE_COUNT = 2
+
+# Parents
+PARENT_NAME = "Jane's Parent"
+PARENT_ID = '185995'
