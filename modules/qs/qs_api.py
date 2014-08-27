@@ -30,7 +30,7 @@ class QSAPIWrapper(qs.APIWrapper):
     Methods that involve an API call have a set of kwargs that can be applied:
         critical: If True, then logger.critical will be called upon failure.
         fields: A list or string of fields to add to the 'fields' param.
-        no_cache: (request-specific) If True, the cache will be ignored and
+        use_cache: (request-specific) If False, the cache will be ignored and
             reset for that resource.
         by_id: (request with list result specific) If True, return the data in
             a dict with {id: dict} values.
@@ -380,7 +380,10 @@ class QSAPIWrapper(qs.APIWrapper):
             'creditHours': credit_hours,
             'teacherIds': json.dumps(teacher_ids)
         }
-        return self._make_request(request, **kwargs)
+        response = self._make_request(request, **kwargs)
+        if request.successful:
+            self.get_section(response['id'])
+        return response
 
     @qs.clean_arg
     def update_section(self, section_id, section_dict, **kwargs):
@@ -393,6 +396,19 @@ class QSAPIWrapper(qs.APIWrapper):
         request.verb = qs.POST
         request.request_data = section_dict
         return self._make_request(request, **kwargs)
+
+    @qs.clean_arg
+    def delete_section(self, section_id, **kwargs):
+        """DELETE an existing section by id."""
+        request = QSRequest(
+            'DELETE section by id',
+            '/sections/{}'.format(section_id))
+        request.verb = qs.DELETE
+        response =self._make_request(request, **kwargs)
+        if request.successful:
+            self._section_cache.invalidate(section_id)
+        return response
+
 
     # =======================
     # = Section Enrollments =
@@ -956,11 +972,11 @@ def _should_make_request(cache, **kwargs):
     """Whether or not a new QS API request should be made, based on cache
     status and kwargs.
     """
-    no_cache = kwargs.get('no_cache')
+    use_cache = kwargs.get('use_cache')
     fields = kwargs.get('fields')
     cache_filter = kwargs.get('cache_filter')
 
-    if no_cache is True:
+    if use_cache is False:
         return True
     elif fields and cache.has_fields(fields) is False:
         return True

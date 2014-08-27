@@ -72,4 +72,4 @@ def request_with_field(field):
 def test_make_request_no_cache():
     students = q.get_students(fields='deleted')
     assert_true(all('deleted' in i for i in students))
-    assert_false(any('deleted' in i for i in q.get_students(no_cache=True)))
+    assert_false(any('deleted' in i for i in q.get_students(use_cache=False)))
