@@ -25,7 +25,7 @@ class RestCache(object):
         """Add data to the cache."""
         self._data = data
 
-    def invalidate(self):
+    def invalidate(self, **kwargs):
         """Invalidate the cache."""
         self._data = None
 
@@ -97,6 +97,13 @@ class ListWithIDCache(RestCache):
             self._data = {}
         cleaned_input = {qs.clean_id(i[self._id_key]): i for i in new_data}
         self._data.update(cleaned_input)
+
+    def invalidate(self, key=None):
+        """Invalidate either the entire cache or just a single key."""
+        if key:
+            del self._data[qs.clean_id(key)]
+        else:
+            super(ListWithIDCache, self).invalidate()
 
     def has_fields(self, fields):
         """Determine whether or not all of the cached data has all the fields
