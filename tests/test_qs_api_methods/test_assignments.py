@@ -46,7 +46,7 @@ def test_with_grades():
     found_student = False
     for grade in grades:
         if grade['studentId'] == STUDENT_ID:
-            assert_equals(grade['marks'], MARKS)
+            assert_equals(float(grade['marks']), float(MARKS))
             found_student = True
         assert_equals(grade['assignmentId'], ASSIGNMENT_ID)
     assert_true(found_student)

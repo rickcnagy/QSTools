@@ -15,7 +15,7 @@ def test_get_grades():
     for grade in grades:
         if (grade['studentId'] == STUDENT_ID
                 and grade['assignmentId'] == ASSIGNMENT_ID):
-            assert_equals(grade['marks'], MARKS)
+            assert_equals(float(grade['marks']), float(MARKS))
             assert_equals(grade['sectionId'], SECTION_WITH_GB)
 
 def test_get_grades_for_assignment():
