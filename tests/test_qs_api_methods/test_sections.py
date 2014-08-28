@@ -10,8 +10,10 @@ from mock import MagicMock
 def setup():
     global q, posted_section
     q = qs.API()
-    posted_section = q.post_section('Temp', 'Temp', CLASS_ID, TEACHER_ID)
-    q.get_sections()
+    for section in q.get_sections():
+        if 'temp' in section['sectionName']:
+            q.delete_section(section['id'])
+    posted_section = q.post_section('temp 1', 'temp 1', CLASS_ID, TEACHER_ID)
 
 
 def test_get_sections():
@@ -167,7 +169,7 @@ def test_posted_section():
 # ==================
 
 def test_delete_section():
-    new = q.post_section('To Delete', 'To Delete', CLASS_ID, TEACHER_ID)
+    new = q.post_section('temp 2', 'temp 2', CLASS_ID, TEACHER_ID)
     assert_in(new['id'], q.get_sections(by_id=True))
     q.delete_section(new['id'])
     assert_not_in(new['id'], q.get_sections(by_id=True))
