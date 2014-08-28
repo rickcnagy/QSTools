@@ -59,6 +59,28 @@ def test_get_section():
     assert_greater(len(new._section_cache.get()), 1)
 
 
+def test_no_semester_id_warning():
+    fake_section_id = 123
+    fake_section = {
+        'id': fake_section_id,
+        'classId': '236744',
+        'className': 'Kindergarten',
+        'sectionCode': 'Test123',
+        'sectionName': 'Test Create via API',
+        'smsAcademicSemesterId': '21340',
+        'teachers': [
+            {
+                'id': '82549',
+                'fullName': 'Rick'
+            }
+        ]
+    }
+    q._section_cache.add(fake_section)
+    qs.logger.warning = MagicMock()
+    q.get_sections()
+    assert_true(qs.logger.warning.called)
+    q._section_cache.invalidate(fake_section_id)
+
 #  =================
 #  = Match Section =
 #  =================

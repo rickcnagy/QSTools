@@ -234,6 +234,9 @@ class QSAPIWrapper(qs.APIWrapper):
             semester_id_dict = {'semesterId': self.get_active_semester_id()}
             kwargs.update({'cache_filter': semester_id_dict})
 
+        if not cache.has_fields('semesterId'):
+            qs.logger.warning("Not all cached sections have semester ids", {})
+
         return cache.get(**kwargs)
 
     @qs.clean_arg
