@@ -373,6 +373,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         request = QSRequest('POST new section', '/sections')
         request.verb = qs.POST
+        request.params = {'fields': 'smsAcademicSemesterId'}
         request.request_data = {
             'classId': class_id,
             'sectionName': section_name,
@@ -381,8 +382,9 @@ class QSAPIWrapper(qs.APIWrapper):
             'teacherIds': json.dumps(teacher_ids)
         }
         response = self._make_request(request, **kwargs)
-        if request.successful:
-            self.get_section(response['id'])
+        if request.successful is True:
+            response['semesterId'] = response['smsAcademicSemesterId']
+            self._section_cache.add(response)
         return response
 
     @qs.clean_arg
@@ -404,11 +406,10 @@ class QSAPIWrapper(qs.APIWrapper):
             'DELETE section by id',
             '/sections/{}'.format(section_id))
         request.verb = qs.DELETE
-        response =self._make_request(request, **kwargs)
+        response = self._make_request(request, **kwargs)
         if request.successful:
             self._section_cache.invalidate(section_id)
         return response
-
 
     # =======================
     # = Section Enrollments =
