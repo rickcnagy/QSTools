@@ -42,6 +42,5 @@ docs_finished
 while read -r filename; do
     if [[ $filename =~ .*\.py ]]; then
         reindent --nobackup ./$filename
-        git add $filename
     fi
 done <<< "$diffed_files"
