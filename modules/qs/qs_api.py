@@ -86,11 +86,11 @@ class QSAPIWrapper(qs.APIWrapper):
 
     def get_active_semester_id(self):
         """GET the id of the active semester."""
-        return self.get_active_semester()['id']
+        return qs.clean_id(self.get_active_semester()['id'])
 
     def get_active_year_id(self):
         """GET the active year id."""
-        return self.get_active_semester()['yearId']
+        return qs.clean_id(self.get_active_semester()['yearId'])
 
     def get_semesters_from_year(self, year_id=None):
         """GET a list of all semesters from a specific year. If year_id isn't
