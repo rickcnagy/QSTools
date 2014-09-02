@@ -148,6 +148,29 @@ def finance_to_float(finance):
     """Convert a finance number, such as '$100.07' to a float"""
     return float(''.join([i for i in finance if i in '-.0123456789']))
 
+def to_bool(string):
+    """Convert string to bool. Not case-sensitive.
+    Equates to True:
+        y, yes, t, true, (any number except 0)
+    Equates to False:
+        n, no, f, false, 0
+
+    If string is in neither of these, ValueError is raised
+    """
+    string = str(string).strip().lower()
+    try:
+        return bool(float(string))
+    except ValueError:
+        pass
+
+    if string in ['y', 'yes', 't', 'true']:
+        return True
+    elif string in ['n', 'no', 'f', 'false']:
+        return False
+    else:
+        raise ValueError
+
+
 # ==============
 # = Decorators =
 # ==============
