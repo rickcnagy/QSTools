@@ -23,7 +23,7 @@ import qs
 
 def main():
     filename = sys.argv[1]
-    overwrite = qs.to_bool(sys.argv[2]) if len(sys.argv) > 1 else False
+    overwrite = qs.to_bool(sys.argv[2]) if len(sys.argv) > 2 else False
     csv = qs.CSV(filename)
 
     csv.cols.insert(csv.cols.index('Full Name') + 1, 'First')
