@@ -9,7 +9,7 @@ Name columns.
 If ignore_case is true, this will ignore case when matching student names
 
 Usage:
-    ./add_student_id {filename.csv} {schoolcode} {ignore_case}
+    ./add_student_id {filename.csv} {schoolcode} {ignore_case} {enrolled_only}
 
 Requires:
     A CSV with "First" and "Last" columns, with an exact name match to the
@@ -26,10 +26,16 @@ Outputs:
 Extract the first and last names from a "Last, First" Full Name column.
 
 Usage:
-    ./separate_first_last {filename.csv}
+    ./separate_first_last {filename.csv} [{overwrite}]
 
 Requires:
-    A column entitled "Full Name" where all the names are in "Last, First"
+    A column entitled "Full Name" where all the names are in "Last, First" or
+    "First Last".
+
+Params:
+    filename: the filename
+    overwrite: whether or not to overwrite the existing file. Defaults to
+        False.
 
 Outputs:
     The same CSV, but with "First" and "Last" columns added.
