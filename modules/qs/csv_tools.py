@@ -189,6 +189,9 @@ class CSV(object):
     def __len__(self):
         return len(self.rows)
 
+    def __getitem__(self, index):
+        return self.rows[index]
+
     def json(self):
         return json.dumps(self.rows, indent=4)
 
