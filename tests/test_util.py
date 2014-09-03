@@ -10,7 +10,9 @@ def test_dumps():
     assert_equals(json.dumps(complex_obj, indent=4), qs.dumps(complex_obj))
     simple_obj = [{2: 1}, 5]
     simple_obj_json = '[\n    {\n        "2": 1\n    }, \n    5\n]'
-    assert_equals(simple_obj_json, qs.dumps(simple_obj))
+    simple_obj_json_sorted = '[\n    5, \n    {\n        "2": 1\n    }\n]'
+    assert_equals(simple_obj_json_sorted, qs.dumps(simple_obj))
+    assert_equals(simple_obj_json, qs.dumps(simple_obj, sort=False))
 
 
 def test_rand_str_length():

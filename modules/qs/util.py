@@ -9,10 +9,13 @@ import inspect
 import sys
 
 
-def dumps(arbitry_obj):
-    if type(arbitry_obj) is list:
+def dumps(arbitry_obj, sort=True):
+    """Dumps like json.dumps. Note that by default, list order is not
+    maintained.
+    """
+    if sort is True and type(arbitry_obj) is list:
         arbitry_obj = sorted(arbitry_obj)
-    return json.dumps(arbitry_obj, indent=4, sort_keys=True)
+    return json.dumps(arbitry_obj, indent=4, sort_keys=sort)
 
 
 def pp(arbitry_obj):  # pragma: no cover
