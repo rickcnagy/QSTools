@@ -150,6 +150,19 @@ def finance_to_float(finance):
     """Convert a finance number, such as '$100.07' to a float"""
     return float(''.join([i for i in finance if i in '-.0123456789']))
 
+
+def find_dups_in_dict_list(dict_list, key):
+    """Find all the duplicates in a list of dicts by a certain key. Only the
+    value for the key has to match for two dicts to be consdered a duplicate,
+    not the entire dict. Returns a list of the duplicate entries.
+    """
+    by_key = {i[key]: [] for i in dict_list}
+    for record in dict_list:
+        by_key[record[key]].append(record)
+    duplicates = [v for k, v in by_key.iteritems() if len(v) > 1]
+    return sum(duplicates, [])
+
+
 def to_bool(string):
     """Convert string to bool. Not case-sensitive.
     Equates to True:
