@@ -124,14 +124,21 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, show_deleted=False, show_has_left=False, **kwargs):
+    def get_students(self, show_deleted=False, show_has_left=False,
+        ignore_deleted_duplicates=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
         Args:
             show_deleted: Show deleted students.
             show_has_left: Show students that have left.
+            ignore_deleted_duplicates: Ignore any students that have  are
+                deleted that have a fullName that matches another student,
+                deleted or not. This is useful if the student names need to be
+                unique, but there are deleted copies of real students. This is
+                mute unless show_deleted=True.
         """
         cache = self._student_cache
+
         if show_deleted or show_has_left:
             request = QSRequest(
                 'GET all students, including deleted/has left',
@@ -140,9 +147,19 @@ class QSAPIWrapper(qs.APIWrapper):
                 'showDeleted': show_deleted,
                 'showHasLeft': show_has_left,
             })
+            request.fields += ['hasLeft', 'deleted']
             students = self._make_request(request, **kwargs)
-            if 'by_id' in kwargs and kwargs['by_id'] is True:
-                students = {i['id']: i for i in students}
+
+            if ignore_deleted_duplicates:
+                duplicates = qs.find_dups_in_dict_list(students, 'fullName')
+                students = qs.dict_list_to_dict(students)
+                for dup in duplicates:
+                    if dup['hasLeft'] is True or dup['deleted'] is True:
+                        del students[dup['id']]
+                students = qs.dict_to_dict_list(students)
+
+            if kwargs.get('by_id') is True:
+                students = qs.dict_list_to_dict(students)
             return students
         elif _should_make_request(cache, **kwargs):
             request = QSRequest('GET all students', '/students')
