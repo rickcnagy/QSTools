@@ -5,7 +5,7 @@ Name columns.
 If ignore_case is true, this will ignore case when matching student names
 
 Usage:
-    ./add_student_id {filename.csv} {schoolcode} {ignore_case}
+    ./add_student_id {filename.csv} {schoolcode} {ignore_case} {enrolled_only}
 
 Requires:
     A CSV with "First" and "Last" columns, with an exact name match to the
@@ -23,38 +23,61 @@ def main():
     filename = sys.argv[1]
     schoolcode = sys.argv[2]
     ignore_case = bool(sys.argv[3]) if len(sys.argv) > 3 else True
-    students = qs.CSV(filename)
+    enrolled_only = bool(sys.argv[4]) if len(sys.argv) > 4 else False
+    csv_students = qs.CSV(filename)
     q = qs.API(schoolcode)
 
-    by_name = {i['fullName']: i for i in q.get_students()}
-    if len(by_name) != len(q.get_students()):
-        qs.logger.critical('Student names are not unique in DB')
+    if not ('Full Name' in csv_students.cols
+            or ('First' in csv_students.cols
+            and 'Last' in csv_students.cols)):
+        raise ValueError('Full Name or First and Last name columns required.')
+
+    if enrolled_only is True:
+        db_students = q.get_students()
+    else:
+        db_students = q.get_students(
+            show_has_left=True,
+            remove_unenrolled_duplicates=True)
+    db_duplicates = qs.find_dups_in_dict_list(db_students, 'fullName')
+
+    if db_duplicates:
+        qs.logger.critical(
+            'Student names are not unique in DB, duplicates:',
+            db_duplicates)
     else:
         qs.logger.info('Student names are unique.')
+
+    if ignore_case is True:
+        for student in db_students:
+            student['fullName'] = student['fullName'].lower()
+    db_by_name = qs.dict_list_to_dict(db_students, 'fullName')
+
     student_names_not_matched = set()
-    for student in students:
-        if 'Full Name' in student:
-            full_name = student['Full Name']
+    for csv_student in csv_students:
+        if 'Full Name' in csv_student:
+            csv_full_name = csv_student['Full Name']
         else:
-            full_name = '{}, {}'.format(student['Last'], student['First'])
+            csv_full_name = '{}, {}'.format(
+                csv_student['Last'],
+                csv_student['First'])
 
-        if ignore_case is True:
-            by_name = {k.lower(): d for k, d in by_name.iteritems()}
-            full_name = full_name.lower()
-
-        match = by_name.get(full_name)
-        if match is None:
-            if ignore_case:
-                full_name = qs.tc(full_name)
-            student_names_not_matched.add(full_name)
+        csv_original_full_name = csv_full_name
+        if ignore_case:
+            csv_full_name = csv_full_name.lower()
+        db_match = db_by_name.get(csv_full_name)
+        if db_match:
+            csv_student['Student ID'] = db_match['id']
         else:
-            student['Student ID'] = match['id']
+            student_names_not_matched.add(csv_original_full_name)
+
     if student_names_not_matched:
         qs.logger.warning(
-            'Some students in the file were not found in the db',
+            ('{} students in the file were not found in the db'
+                ''.format(len(student_names_not_matched))),
             student_names_not_matched)
-    students.save("with student IDs")
-
+    else:
+        qs.logger.info('All students were matched in the db.')
+    csv_students.save("with student IDs")
 
 if __name__ == '__main__':
     main()
