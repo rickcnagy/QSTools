@@ -8,7 +8,7 @@
  */
 
 
-var nameRegex = /([A-Za-z\-]+)[,|.]* (\w+)( (\w).*)*/
+var nameRegex = /([A-Za-z\-]+)[,|.]* (\w+)( (\w+).*)*/
 
 new QSTableIterator(function() {
     var studentName = $(".recordHeaderWidget").find("h1").text();
