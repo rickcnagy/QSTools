@@ -24,5 +24,9 @@ new QSTableIterator(function() {
         setText(nameBoxes.eq(2), match[1]);
     }
     this.click("Save");
+    if (this.click("Ok")) {
+        this.click("Close");
+        this.click("Navigate away")
+    }
     this.next();
 }).start();
