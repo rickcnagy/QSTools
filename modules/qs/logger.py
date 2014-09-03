@@ -141,9 +141,7 @@ def format_for_log(description, data, is_request, is_response):
     description += " - REQUEST" if is_request else ''
     if type(data) is set:
         data = list(data)
-    description += ('\n{}'.format(
-        json.dumps(data, indent=4, sort_keys=True))
-        if data else '')
+    description += '\n' + qs.dumps(data) if data else ''
     return description
 
 

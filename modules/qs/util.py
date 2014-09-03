@@ -10,6 +10,8 @@ import sys
 
 
 def dumps(arbitry_obj):
+    if type(arbitry_obj) is list:
+        arbitry_obj = sorted(arbitry_obj)
     return json.dumps(arbitry_obj, indent=4, sort_keys=True)
 
 
