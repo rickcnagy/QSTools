@@ -15,6 +15,7 @@ from rest_request_wrappers import *
 from qs_api import *
 from rest_cache import *
 from titlecase import *
+from flash_object_util import *
 
 # import specific variables
 from qs_api import QSAPIWrapper as API

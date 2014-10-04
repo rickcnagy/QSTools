@@ -11,6 +11,21 @@ which is stored in ~/API keys.json
 
 Data migration via the QuickSchools API - utility module.
 
+####[`flash_object_util.py`](./flash_object_util.py)
+
+
+Utility for working with FlashObject tools. This is great for manipulating Raw
+Data Dumps, such as in the Templates module in Control.
+
+Originally developed for replace_template_colors
+
+Functions require that everything is based off of xml.etree.ElementTree
+(normally abbreviated as tree) and xml.etree.Element (abbreviated as element)
+
+Any functions/methods that use this module should be passing in and working
+with ElementTrees or Elements.
+
+
 ####[`logger.py`](./logger.py)
 
 Wrapper on top of the Logger for logging QuickSchools API requests.
@@ -65,4 +80,11 @@ License: http://www.opensource.org/licenses/mit-license.php
 
 ####[`util.py`](./util.py)
 
-Utility functions for inclusion in public QS package API
+Utility functions for inclusion in public QS package API.
+
+Includes lots of little functions that wouldn't be worth writing normally
+but end up being super useful over multiple scripts.
+
+The requirements for functionsto be in this module:
+    - Simple, intuitive
+    - Useful among multiple scripts/modules

@@ -1,9 +1,18 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Utility functions for inclusion in public QS package API"""
+"""Utility functions for inclusion in public QS package API.
+
+Includes lots of little functions that wouldn't be worth writing normally
+but end up being super useful over multiple scripts.
+
+The requirements for functionsto be in this module:
+    - Simple, intuitive
+    - Useful among multiple scripts/modules
+"""
 
 import json
 import string
 import random
+import textwrap
 import subprocess
 import inspect
 import sys
@@ -35,6 +44,13 @@ def print_break(break_str='*'):  # pragma: no cover
     print
     print break_str * int(columns / len(break_str))
     print
+
+
+def ask(message, width=70):
+    """Like w_print, but returns a valu based on the user typing"""
+    wrapper = textwrap.TextWrapper()
+    wrapper.width = width
+    return raw_input('\n' + wrapper.fill(message) + '\n').strip()
 
 
 def dict_list_to_dict(dict_list, id_key='id'):
@@ -187,6 +203,42 @@ def to_bool(string):
         return False
     else:
         raise ValueError
+
+
+def w_print(message, width=70):
+    """Wrapped print - wrapped to width chars per line"""
+    wrapper = textwrap.TextWrapper()
+    wrapper.width = width
+    print wrapper.fill(message) + '\n'
+
+
+def validate_xml(file_path):
+    """
+    Validates the XML file at file_path and returns the file object
+
+    Validates to check that the XML is actually an XML doc. If the file isn't
+    valid XML, then the script fails; any future use of the contents/file can
+    assume that the XML is valid.
+
+    Also adds the version tag to the start of the file if it's not there
+    already. This ensures that the XML is completely valid.
+
+    Args:
+        file_path: the path to the file
+
+    Returns:
+        the file contents as a valid XML string
+    """
+    xml = open(file_path, 'r+')
+    contents = xml.read()
+    xml.seek(0)
+    if not contents.startswith('<'):
+        raise ValueError(messages.invalid_file)
+    if not '<?xml version=' in contents:
+        contents = '<?xml version="1.0"?>\n\n' + contents
+        xml.write(contents)
+        xml.seek(0)
+    return xml
 
 
 # ==============
