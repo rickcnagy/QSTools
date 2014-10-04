@@ -234,7 +234,7 @@ def validate_xml(file_path):
     xml.seek(0)
     if not contents.startswith('<'):
         raise ValueError(messages.invalid_file)
-    if not '<?xml version=' in contents:
+    if '<?xml version=' not in contents:
         contents = '<?xml version="1.0"?>\n\n' + contents
         xml.write(contents)
         xml.seek(0)
@@ -250,6 +250,7 @@ def clean_arg(func):
     """Clean the first argument of the decorated function. Useful if an ID is
     passed as the first arg.
     """
+
     def inner(*args, **kwargs):
         args = list(args)
         index = 0 if is_builtin(args[0]) else 1
