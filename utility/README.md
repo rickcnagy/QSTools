@@ -8,6 +8,8 @@ Usage is as follows:
 ./csv2json.py {filepath1} {filepath2} {...}
 
 
+####[`manipulate_zeus_template/`](./manipulate_zeus_template)
+
 ####[`readme_generator.py`](./readme_generator.py)
 
 Generate README from in files in folder passed in via stdin
