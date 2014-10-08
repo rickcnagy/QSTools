@@ -34,6 +34,10 @@ Wrapper on top of the Logger for logging QuickSchools API requests.
 
 ####[`logs/`](./logs)
 
+####[`messages.py`](./messages.py)
+
+Messages for any long command line etc output.
+
 ####[`rate_limiting.py`](./rate_limiting.py)
 
 Limit request rates on REST servers by request base URL.

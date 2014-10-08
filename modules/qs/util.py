@@ -49,7 +49,7 @@ def print_break(break_str='*'):  # pragma: no cover
 
 
 def ask(message, width=70):
-    """Like w_print, but returns a valu based on the user typing"""
+    """Like print_wrapped, but returns a valu based on the user typing"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
     return raw_input('\n' + wrapper.fill(message) + '\n').strip()
@@ -207,7 +207,7 @@ def to_bool(string):
         raise ValueError
 
 
-def w_print(message, width=70):
+def print_wrapped(message, width=70):
     """Wrapped print - wrapped to width chars per line"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
