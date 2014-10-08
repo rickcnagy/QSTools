@@ -16,7 +16,7 @@ from xml.etree.ElementTree import ElementTree
 import qs
 
 
-def element_data(element, tree):
+def element_data(element, tree, str_when_possible=True):
     """Return the data that's encoded into the element in schema form
 
     This unpacks the element and returns a dictionary where the key is the
@@ -32,6 +32,10 @@ def element_data(element, tree):
 
     if the element isn't a normal element like Box or Page, an empty dictionary
     is returned (since that means there's no data)
+
+    Args:
+        str_when_possible: if True, return the string value from any text-based
+            elements
 
     Returns:
         the data dict or an empty dict
@@ -50,7 +54,7 @@ def element_data(element, tree):
     }
 
     for key, data in elem_data.iteritems():
-        if data.tag in ['d', 's', 'i']:
+        if str_when_possible is True and data.tag in ['d', 's', 'i']:
             elem_data[key] = data.text
 
     return elem_data
@@ -87,8 +91,7 @@ def get_file_path_and_tree(message):
     Returns:
         a tuple: (file_path, tree)
     """
-    # file_path = qs.ask(message)
-    file_path = '/Users/Rick/Desktop/TEMPLATE-RickTest.txt'
+    file_path = qs.ask(message)
     file_path = file_path.replace('\\', '')
 
     try:
@@ -97,7 +100,7 @@ def get_file_path_and_tree(message):
         tree.parse(xml)
         qs.print_wrapped(qs.messages.valid_file)
         return file_path, tree
-    except ValueError:
+    except (ValueError, IOError):
         return get_file_path_and_tree(qs.messages.invalid_file)
 
 
@@ -113,6 +116,16 @@ def match_element_by_identifier(identifier, tree):
     for element in tree.iter('FO'):
         if element_data(element, tree).get('elementId') == identifier:
             return element
+
+
+def find_by_scheme_type(schema_type, tree_or_elem):
+    """Find any contained flash objects by schema type string in
+    tree_or_elem
+    """
+    return [
+        i for i in tree_or_elem.iter('FO')
+        if i.attrib.get('n') == schema_type
+    ]
 
 
 def ask_decimal_as_hex(message):
