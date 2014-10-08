@@ -241,6 +241,17 @@ def validate_xml(file_path):
     return xml
 
 
+def hex_to_dec(hex_val):
+    """Convert a hex value to a decimal"""
+    modified_hex_val = str(hex_val)
+    modified_hex_val = modified_hex_val.strip().lstrip('#')
+    modified_hex_val = '0x' + modified_hex_val
+    try:
+        return int(modified_hex_val, 0)
+    except ValueError:
+        raise ValueError("{} isn't a valid hex value.".format(hex_val))
+
+
 # ==============
 # = Decorators =
 # ==============
