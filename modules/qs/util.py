@@ -301,7 +301,7 @@ def unique_path(original_file_path, suffix='', use_random=False,
             number = int(match.group(2)) + 1
         else:
             before_number = filename
-            number = 0
+            number = 1
         new_filename = '{}{}({})'.format(before_number, suffix, number)
 
     new_extension = (extension or original_extension).lstrip('.')
