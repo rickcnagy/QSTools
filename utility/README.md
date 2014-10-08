@@ -8,8 +8,6 @@ Usage is as follows:
 ./csv2json.py {filepath1} {filepath2} {...}
 
 
-####[`manipulate_zeus_template/`](./manipulate_zeus_template)
-
 ####[`readme_generator.py`](./readme_generator.py)
 
 Generate README from in files in folder passed in via stdin
@@ -19,3 +17,6 @@ Command Line Args (in order):
     (optional) README title
 Example Usage:
 ./utility/readme_generator.py ./api 'API Scripts'
+
+
+####[`zeus_xml/`](./zeus_xml)
