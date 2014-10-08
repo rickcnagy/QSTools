@@ -98,9 +98,9 @@ def test_titlcase():
     assert_equals(qs.tc('some string'), 'Some String')
 
 def test_unique_path():
-    assert_equals(qs.unique_path('./test.txt'), './test(0).txt')
+    assert_equals(qs.unique_path('./test.txt'), './test(1).txt')
     assert_equals(qs.unique_path('./test(5).txt'), './test(6).txt')
     assert_equals(
         qs.unique_path('./test.txt', suffix='suf'),
-        './testsuf(0).txt')
+        './testsuf(1).txt')
     assert_in('test', qs.unique_path('./test.txt', use_random=True))
