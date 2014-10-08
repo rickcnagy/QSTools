@@ -5,6 +5,7 @@ import data_migration
 import logger
 import api_keys
 import test_data
+import messages
 
 # import __all__ from modules
 from rest_foundation import *
