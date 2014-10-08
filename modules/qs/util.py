@@ -22,11 +22,17 @@ import sys
 
 def dumps(arbitry_obj, sort=True):
     """Dumps like json.dumps. Note that by default, list order is not
-    maintained.
+    maintained and non JSON objects are printed as their __str__.
     """
     if sort is True and type(arbitry_obj) is list:
         arbitry_obj = sorted(arbitry_obj)
-    return json.dumps(arbitry_obj, indent=4, sort_keys=sort)
+    return json.dumps(arbitry_obj, indent=4, sort_keys=sort,
+        default=_nofail_serializer)
+
+
+def _nofail_serializer(o):
+    """Use str() for non-encodable objects in json.dumps()"""
+    return str(o)
 
 
 def pp(arbitry_obj):  # pragma: no cover
