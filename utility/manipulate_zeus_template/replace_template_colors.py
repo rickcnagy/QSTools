@@ -11,7 +11,7 @@ import messages
 
 
 def main():
-    file_path = get_file_path()
+    file_path = ask_file_path()
     xml = qs.validate_xml(file_path)
 
     tree = ElementTree()
@@ -20,20 +20,16 @@ def main():
     colored_elem_id = qs.ask(messages.ask_colored_identifier)
     matching_colored_elements = find_colored_elements(colored_elem_id, tree)
 
-    print matching_colored_elements
+    new_bg_color = ask_decimal(messages.ask_replacement_color)
+    new_text_color = ask_decimal(messages.ask_replacement_color)
 
-    # new_bg_color_hex = qs.ask(messages.ask_replacement_color)
-    # new_bg_color_decimal = decimal(new_bg_color_hex)
-    # new_text_color_hex = qs.ask(messages.ask_change_text_color)
-    # new_text_color_decimal = decimal(new_text_color_hex)
-    #
     # make_color_replacements(
     #     matching_colored_elements,
     #     new_bg_color_decimal,
     #     new_text_color_decimal
     # )
-    #
-    # save_tree(tree, file_path)
+
+    save_tree(file_path, tree)
 
 
 def find_colored_elements(identifier, tree):
@@ -68,9 +64,23 @@ def find_colored_elements(identifier, tree):
     return match_list
 
 
-def get_file_path():
+def save_tree(file_path, tree):
+    output_path = qs.unique_path(file_path, extension='xml')
+    tree.write(output_path)
+    qs.w_print(messages.successful_save(output_path))
+
+
+def ask_file_path():
     file_path = qs.ask(messages.ask_file_path)
     return file_path.replace('\\', '')
+
+
+def ask_decimal(message):
+    try:
+        return qs.hex_to_dec(qs.ask(message))
+    except ValueError:
+        return ask_hex_converted_to_decimal(messages.invalid_hex)
+
 
 if __name__ == '__main__':
     main()

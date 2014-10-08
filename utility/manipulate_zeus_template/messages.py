@@ -9,6 +9,7 @@ ask_replacement_color = "What color would you like to replace the color with? In
 ask_change_text_color = "Would you like to change the text color of all text fields that are children of a box with this color (i.e. text with this background color)? If you are changing from a light to dark background (or vice-versa), it's often good to invert the text color. For a light text color, usually a light gray - such as #f0f0f0 - works better than white. Leave this blank to leave the text colors as they are."
 didnt_find_elems = "Didn't find any elements with that identifier. Try a different one...\n"
 invalid_file = "The input file doesn't look like a valid XML file or raw data dump."
+invalid_hex = "That doesn't look like a valid hex value - try again."
 
 
 def found_elements(colored_elements):
