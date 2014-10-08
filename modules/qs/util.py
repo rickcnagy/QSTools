@@ -9,6 +9,8 @@ The requirements for functionsto be in this module:
     - Useful among multiple scripts/modules
 """
 
+import os
+import re
 import json
 import string
 import random
@@ -251,6 +253,53 @@ def hex_to_dec(hex_val):
     except ValueError:
         raise ValueError("{} isn't a valid hex value.".format(hex_val))
 
+
+def unique_path(original_file_path, suffix='', use_random=False,
+        extension=None):
+    """Make a unique file path based on the provided original file path.
+
+    Defaults to adding an increasing integer at the end of the file name, such
+    as text.txt => text(0).txt, then text(0).txt => text(1).txt.
+
+    Suffix would add a specific suffix to reflect the fact the file has
+    changed, such as text.txt => text_changed.txt, then
+    text_changed.txt => text_changed(0).txt
+
+    If use_random is True, then a 3 digit random number is appended to the file
+    name, like so: text.txt => text594.txt, then text594.txt => text221.txt.
+
+    If random is true and suffix is defined, it'll be text_changed123.txt
+
+    Args:
+        original_file_path: the path of the original file to be similar to, but
+            not overwrite
+        suffix: suffix to add to file, such as '_changed'
+        use_random: append a random number to the file name if True
+        extension: supply a new extension instead of the existing one on
+            original_file_path.
+    """
+    base_path, filename_with_extension = os.path.split(original_file_path)
+    filename, original_extension = os.path.splitext(filename_with_extension)
+
+    if use_random is True:
+        before_number = filename[:-3]
+        last_three = filename[-3:]
+        if not all(i.isdigit() for i in last_three):
+            before_number += last_three
+        random_digits = str(random.randint(100, 999))
+        new_filename = '{}{}{}'.format(before_number, suffix, random_digits)
+    else:
+        match = re.match(r'(.+)\((\d+)\)$', filename)
+        if match:
+            before_number = match.group(1)
+            number = int(match.group(2)) + 1
+        else:
+            before_number = filename
+            number = 0
+        new_filename = '{}{}({})'.format(before_number, suffix, number)
+
+    new_extension = (extension or original_extension).lstrip('.')
+    return '{}/{}.{}'.format(base_path, new_filename, new_extension)
 
 # ==============
 # = Decorators =
