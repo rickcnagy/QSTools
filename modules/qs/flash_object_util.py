@@ -54,7 +54,7 @@ def element_data(element, tree, str_when_possible=True):
     }
 
     for key, data in elem_data.iteritems():
-        if str_when_possible is True and data.tag in ['d', 's', 'i']:
+        if str_when_possible is True and data.tag in ['d', 's', 'i', 'se']:
             elem_data[key] = data.text
 
     return elem_data
@@ -111,21 +111,30 @@ def save_tree(file_path, tree):
     qs.print_wrapped(qs.messages.successful_save(output_path))
 
 
-def match_element_by_identifier(identifier, tree):
-    """Find an element with the given identifier in the tree."""
-    for element in tree.iter('FO'):
-        if element_data(element, tree).get('elementId') == identifier:
-            return element
-
-
 def find_by_scheme_type(schema_type, tree_or_elem):
-    """Find any contained flash objects by schema type string in
-    tree_or_elem
-    """
+    """Find any contained elements by schema type string in tree_or_elem"""
     return [
         i for i in tree_or_elem.iter('FO')
         if i.attrib.get('n') == schema_type
     ]
+
+
+def find_by_elem_data(key, value, tree_or_elem, multiple=True):
+    """Find any contained elements by data key value, such as matching a
+    specific backgroundColor val.
+
+    If multiple is True, return a list. Else, return the first match
+    """
+    matches = [
+        i for i in tree_or_elem.iter('FO')
+        if element_data(i, tree_or_elem).get(key) == value
+    ]
+    if not matches:
+        return None
+    elif multiple is False:
+        return matches[0]
+    else:
+        return matches
 
 
 def ask_decimal_as_hex(message):
@@ -139,3 +148,40 @@ def ask_decimal_as_hex(message):
             return qs.hex_to_dec()
     except ValueError:
         return ask_decimal(messages.invalid_hex)
+
+
+def find_elements_with_user_input_color(tree):
+    """Finds elements with the matching color.
+
+    Finds all the elements with the same color as the first one in the template
+    with that identifier.
+
+    Args:
+        identifier: the identifier to search on.
+
+    Returns:
+        a list of matching elements
+    """
+    match_element = qs.find_by_elem_data(
+        'elementId',
+        qs.ask(qs.messages.ask_colored_identifier),
+        tree,
+        multiple=False)
+    while match_element is None:
+        match_element = qs.find_by_elem_data(
+            'elementId',
+            qs.ask(qs.messages.didnt_find_elem),
+            tree,
+            multiple=False)
+
+    match_elem_data = qs.element_data(match_element, tree)
+    if 'backgroundColor' in match_elem_data:
+        match_color = match_elem_data['backgroundColor']
+    else:
+        match_color = match_elem_data['color']
+
+    match_list = qs.find_by_elem_data('backgroundColor', match_color, tree)
+    match_list = match_list or []
+    match_list += qs.find_by_elem_data('color', match_color, tree) or []
+    qs.print_wrapped(qs.messages.found_elements(match_list))
+    return match_list

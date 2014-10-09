@@ -25,7 +25,7 @@ function build_doc {
 
 function docs_finished {
     d=$(date)
-    echo "All docs built successfully on$d" > ./build.log
+    echo "All docs built successfully on $d" > ./build.log
 }
 
 # build all docs
