@@ -18,6 +18,7 @@ import textwrap
 import subprocess
 import inspect
 import sys
+import datetime
 import requests
 
 
@@ -309,6 +310,16 @@ def unique_path(original_file_path, suffix='', use_random=False,
 
     new_extension = (extension or original_extension).lstrip('.')
     return '{}/{}.{}'.format(base_path, new_filename, new_extension)
+
+
+def parse_datestring(datestring):
+    """Parse the datestring using the normal QS date format into a date obj.
+
+    QS normally uses dates formatted like '2014-10-29'. This returns a datetime
+    representing the datestring,
+    """
+    return datetime.datetime.strptime(datestring, '%Y-%m-%d')
+
 
 # ==============
 # = Decorators =
