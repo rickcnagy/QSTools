@@ -31,25 +31,29 @@ The coverage metric ([![Coverage Status](https://img.shields.io/coveralls/br1ckb
 ###More On Testing
 Since the purpose of this repo is to provide lots of ready-made tools for quickly and efficiently making imports and manipulating data, it's *really* important that one can rely that the repo actually does what it says it does. As a result, there's a testing system to ensure that all implementations match their docstrings:
 * **Any script with a docstring** is considered testable.
+* **The coverage number reflects the amount of documented Python code that is covered by tests.**
 * If a file is testable, there are three options:
-    1. If it's a Python file, a test should exist for it in [tests/](../tests). Regardless of whether a test exists for it, it'll be included in the coverage number. **The coverage number reflects the amount of documented Python code that is covered by tests.**
+    1. If it's a Python file, a test should exist for it in [tests/](../tests). Regardless of whether a test exists for it, it'll be included in the coverage number.
     2. If it's a JavaScript file, it'll be hand-tested at regular intervals, and the status of the test will be included at the beginning of the docstring, like so:
-    3. It can be exempted from testing. For instance, [logger.py](./modules/qs/logger.py) is hard to test, and the output is being viewed all the time anyways. So, for similar instances, files can be tagged as `#TEST EXEMPT`, and the file will be included in its folders `README` without being included in the coverage metric.
-```
-/**
- * Last test: 7/14/14: #PASSED
- */
-```
-* For both Python and JavaScript files, if a testable script is ignored from tests (and thus coverage metrics) for some reason, a `#NOT TESTED` tag is added at the top of the docstring, like so:
-```
-"""#NOT TESTED. Some description here..."""
 
-/**
- * #NOT TESTED
- * ...
- */
-```
-Any script that is tagged as not tested should be considered not testable and thus will be ignored from all `README`s and should be treated as if they don't have a docstring.
+         ```
+         /**
+         * Last test: 7/14/14: #PASSED
+         */
+         ```
+         
+   3. It can be exempted from testing. For instance, [`logger.py`](./modules/qs/logger.py) is hard to test, and the output is being viewed all the time anyways. So, for similar instances, files can be tagged as `#TEST_EXEMPT` like so:
+      
+      ```
+      """#TEST_EXEMPT. Some description here..."""
+      
+      /**
+       * #TEST_EXEMPT
+       * ...
+       */
+      ```
+   
+      Any test exempt script should be added to `omit` in [`.coveragerc`](./.coveragerc).
 * Testing will be done on [qstools.quickschools.com](https://qstools.quickschools.com). For API scripts, this means that caching is imperative to keep testing time down - but this should be baked into the `qs` package anyways :+1:
 
 ###The `qs` Package
