@@ -18,12 +18,15 @@ import textwrap
 import subprocess
 import inspect
 import sys
+import requests
 
 
 def dumps(arbitry_obj, sort=True):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
     """
+    if isinstance(arbitry_obj, requests.Response):
+        arbitry_obj = arbitry_obj.json()
     if sort is True and type(arbitry_obj) is list:
         arbitry_obj = sorted(arbitry_obj)
     return json.dumps(arbitry_obj, indent=4, sort_keys=sort,
