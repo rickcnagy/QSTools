@@ -3,7 +3,15 @@
 import qs
 import json
 import random
+import datetime
 from nose.tools import *
+
+
+def setup():
+    global http
+    http = qs.HTTPBinRequest('test request', '/status/418')
+    http.make_request()
+
 
 def test_dumps():
     complex_obj = [3, {1: [4, 5], 2: 2}, '5']
@@ -13,6 +21,14 @@ def test_dumps():
     simple_obj_json_sorted = '[\n    5, \n    {\n        "2": 1\n    }\n]'
     assert_equals(simple_obj_json_sorted, qs.dumps(simple_obj))
     assert_equals(simple_obj_json, qs.dumps(simple_obj, sort=False))
+
+
+def assert_dumps_str():
+    assert_equals(qs.dumps(str), '"<type \'str\'>"')
+
+
+def test_dumps_with_http_response():
+    assert_in('teapot', http.response.text)
 
 
 def test_rand_str_length():
@@ -28,6 +44,7 @@ def test_rand_str_chars():
 
 def test_rand_str_randomness():
     assert_not_equal(qs.rand_str(), qs.rand_str())
+
 
 def test_merge():
     assert_equals(qs.merge({1: 1}, {2: 2}, {3: 3}), {1: 1, 2: 2, 3: 3})
@@ -97,6 +114,7 @@ def test_digits():
 def test_titlcase():
     assert_equals(qs.tc('some string'), 'Some String')
 
+
 def test_unique_path():
     assert_equals(qs.unique_path('./test.txt'), './test(1).txt')
     assert_equals(qs.unique_path('./test(5).txt'), './test(6).txt')
@@ -104,3 +122,40 @@ def test_unique_path():
         qs.unique_path('./test.txt', suffix='suf'),
         './testsuf(1).txt')
     assert_in('test', qs.unique_path('./test.txt', use_random=True))
+
+
+def test_finance_to_float():
+    assert_equals(qs.finance_to_float('$100.07'), 100.07)
+
+
+def test_find_dups_in_dict_list():
+    dict_1 = {'id': 1}
+    dict_2 = {'id': 1}
+    dict_3 = {'id': 2}
+
+    all_dicts = [dict_1, dict_2, dict_3]
+    dups = [dict_1, dict_2]
+
+    assert_equals(qs.find_dups_in_dict_list(all_dicts, 'id'), dups)
+
+
+def test_to_bool():
+    true_strings = ['y', 'yes', 't', 'true', '1', '10']
+    false_strings = ['n', 'no', 'f', 'false', '0']
+    for true_string in true_strings:
+        assert_true(qs.to_bool(true_string))
+    for false_string in false_strings:
+        assert_false(qs.to_bool(false_string))
+    with assert_raises(ValueError):
+        qs.to_bool('notabool')
+
+
+def test_hex_to_int():
+    assert_equals(qs.hex_to_int('#ffffff'), 16777215)
+    with assert_raises(ValueError):
+        qs.hex_to_int('notahex')
+
+
+def test_parse_datestring():
+    test_date = datetime.datetime(2014, 10, 13)
+    assert_equals(qs.parse_datestring('2014-10-13'), test_date)

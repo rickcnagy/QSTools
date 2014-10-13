@@ -22,7 +22,7 @@ import datetime
 import requests
 
 
-def dumps(arbitry_obj, sort=True):
+def dumps(arbitry_obj, sort=True, indent=4):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
     """
@@ -30,7 +30,7 @@ def dumps(arbitry_obj, sort=True):
         arbitry_obj = arbitry_obj.json()
     if sort is True and type(arbitry_obj) is list:
         arbitry_obj = sorted(arbitry_obj)
-    return json.dumps(arbitry_obj, indent=4, sort_keys=sort,
+    return json.dumps(arbitry_obj, indent=indent, sort_keys=sort,
         default=_nofail_serializer)
 
 
@@ -58,8 +58,8 @@ def print_break(break_str='*'):  # pragma: no cover
     print
 
 
-def ask(message, width=70):
-    """Like print_wrapped, but returns a valu based on the user typing"""
+def ask(message, width=70): # pragma: no cover
+    """Like print_wrapped, but returns a value based on the user input"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
     return raw_input('\n' + wrapper.fill(message) + '\n').strip()
@@ -183,9 +183,16 @@ def finance_to_float(finance):
 
 
 def find_dups_in_dict_list(dict_list, key):
-    """Find all the duplicates in a list of dicts by a certain key. Only the
-    value for the key has to match for two dicts to be consdered a duplicate,
-    not the entire dict. Returns a list of the duplicate entries.
+    """Find all the duplicates in a list of dicts by a certain key.
+
+    Only the value for the key has to match for two dicts to be consdered a
+    duplicate, not the entire dict. Returns a list of the duplicate entries.
+
+    For example, if two dicts both have the 'id' key equal to 1, then both of
+    those dicts would be returned in the return list.
+
+    Returns:
+        a list of dicts that contain duplicate values for the key.
     """
     by_key = {i[key]: [] for i in dict_list}
     for record in dict_list:
@@ -217,7 +224,7 @@ def to_bool(string):
         raise ValueError
 
 
-def print_wrapped(message, width=70):
+def print_wrapped(message, width=70): # pragma: no cover
     """Wrapped print - wrapped to width chars per line"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
@@ -253,8 +260,8 @@ def validate_xml(file_path):
     return xml
 
 
-def hex_to_dec(hex_val):
-    """Convert a hex value to a decimal"""
+def hex_to_int(hex_val):
+    """Convert a hex value to an integer."""
     modified_hex_val = str(hex_val)
     modified_hex_val = modified_hex_val.strip().lstrip('#')
     modified_hex_val = '0x' + modified_hex_val

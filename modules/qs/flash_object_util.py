@@ -141,11 +141,7 @@ def ask_decimal_as_hex(message):
     """Ask for a hex value and return the decimal version."""
     try:
         hex_value = qs.ask(message)
-        return None if not hex_value else qs.hex_to_dec(hex_value)
-        if not hex_value.strip():
-            return None
-        else:
-            return qs.hex_to_dec()
+        return None if not hex_value else qs.hex_to_int(hex_value)
     except ValueError:
         return ask_decimal(messages.invalid_hex)
 
