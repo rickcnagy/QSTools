@@ -6,21 +6,52 @@ import os
 from collections import OrderedDict
 import qs
 
-"""Convenience static methods that don't require a CSV object"""
+FLATTEN_DELIM = ','
 
-def write_csv(rows, filepath, keys=None, flatten_delim=' | '):
-    """Save a dict to CSV with header rows, ordered keys, flattened vals, etc"""
-    keys = keys or rows[0].keys()
 
-    def flatten_val(val, delim):
-        if type(val) is list:
-            val = delim.join([str(i) for i in val])
-        return val
+# ==============================================================
+# = Convenience static methods that don't require a CSV object =
+# ==============================================================
 
-    flattened_rows = [
-        {key: flatten_val(val, flatten_delim)
-            for key, val in row.iteritems()}
-        for row in rows]
+
+def write_csv(rows, filepath, overwrite=False, column_headers=None):
+    """Write a CSV to disk.
+
+    Takes a list of dicts, where keys map to columns, and values map to row
+    cells.
+
+    If a key exists in any dict, it'll be added to the CSV headers, so in
+    general all dicts should have the same keys.
+
+    By default, the column headers will be alphabetically sorted.
+
+    To specify custom column headers/sorting, supply the column_headers arg
+
+    By default, the filepath is made unique using the default behavior of
+    qs.unique_path.
+
+    Args:
+        rows: a list of dicts, each dict corresponding to a single row in the
+            CSV.
+        filepath: path to write the CSV to
+        overwrite: by default, this function finds a unique file path based
+            on the filepath supplied. To overwrite the file at that path,
+            set overwrite to True
+        column_headers: Supply a list of column headers to use in the CSV. This
+            is useful both for order and for specifying a specific subset of
+            headers to use instead of all keys in the rows array.
+    """
+    if column_headers is None:
+        column_headers = set()
+        for row in rows:
+            column_headers.update(row.keys())
+        column_headers = sorted(list(column_headers))
+
+    if overwrite is False:
+        filepath = qs.unique_path(filepath)
+
+    for row in rows:
+        _clean_row_for_csv(row)
 
     with open(filepath, 'w') as f:
         writer = csv.DictWriter(f, keys)
@@ -39,16 +70,26 @@ def dict_to_csv(data_dict, cols):
     # TODO: implement. Essentially is the reverse of CSV.as_tree()
 
 
-"""Classes for actually working with CSVs"""
+def _clean_row_for_csv(row):
+    for key, val in row.iteritems():
+        if type(val) is list:
+            row[key] = FLATTEN_DELIM.join([str(i for i in val)])
+        elif type(val) is not str:
+            row[key] = str(val)
+    return dict_to_flatten
+
+# ===============
+# = CSV Classes =
+# ===============
 
 
 class CSV(object):
     """
-    class for reading/writing CSV objects
-    can work standalone or as the backbone for CSVMatch
-    each row is a dictionary, and the values must be a string or list
-    if it's a list, it will be flattened to a single cell with .flatten() upon save
-    the delimeter is .delim
+    Class for reading/writing CSV objects.
+
+    Can work standalone or as the backbone for CSVMatch.
+
+    Each row is a dictionary.
     """
 
     def __init__(self, filepath):
@@ -84,28 +125,16 @@ class CSV(object):
                     }
                     self.cleaned_rows.append(cleaned_row)
                     self.cleaned_values += cleaned_row.values()
-            return
+            return True
 
-    def save(self, suffix='modified', add_all_cols=True, overwrite=False,):
-        """Save the CSV to disk.
-
-        Args:
-            add_all_cols: Add all the cols in any row to the saved CSV.
-            overwrite: Overwrite the original CSV on disk.
-            filepath: Manually supply the filepath
-        """
-        filepath = self.filepath
-        if overwrite is False:
-            original = os.path.splitext(self.filepath)
-            filepath = '{} - {}.csv'.format(original[0], suffix, original[1])
-
-        if add_all_cols is True:
-            to_add = []
-            for row in self:
-                to_add += [i for i in row if i not in self.cols]
-            self.cols += sorted(list(set(to_add)))
-
-        write_csv(self.rows, filepath, keys=self.cols, flatten_delim=self.flatten_delim)
+    def save(self, overwrite=False):
+        """Save the CSV to disk."""
+        write_csv(
+            self.rows,
+            self.filepath,
+            overwrite=overwrite,
+            column_headers=self.cols
+        )
 
     def as_tree(self, cols=None, rows_key='_rows'):
         """return a version of the rows as a tree
@@ -119,9 +148,9 @@ class CSV(object):
         def process_branch(current, col_index):
             """recursively process a branch all the way to the leaves
             args:
-            current         -- the current node to add nodes to, sibling to _row
-            col_index       -- the index in cols that children will be from
-            rows_key        -- the key in current that holds all the valid rows
+                current: the current node to add nodes to, sibling to _row
+                col_index: the index in cols that children will be from
+                rows_key: the key in current that holds all the valid rows
             """
             rows = current[rows_key]
             col = cols[col_index]
@@ -141,7 +170,10 @@ class CSV(object):
 
         def child_dict(rows, col):
             """make a dict from rows, with dict for each key in the column
-            the value of each key is the rows in rows that have the same val in col as the key"""
+
+            the value of each key is the rows in rows that have the same val in
+            col as the key
+            """
             return {
                 row[col]: {rows_key: [
                     child
@@ -222,7 +254,7 @@ class CSVMatch(CSV):
             values = self.cleaned_values
             rows = self.cleaned_rows
 
-        if (not val) or (not val in values): return
+        if not val or val not in values: return
 
         match = None
         for row in rows:
@@ -245,7 +277,7 @@ class CSVMatch(CSV):
         values = self.cleaned_values if use_cleaned else self.values
         rows = self.cleaned_rows if use_cleaned else self.rows
 
-        if (not val) or (not val in values): return
+        if not val or val not in values: return
 
         matches = [
             row for row
@@ -270,7 +302,9 @@ class CSVMatch(CSV):
     def row_for_object(self, match_function, object):
         """
         like row_for_value, but allows for a more complicated match.
-        match_function takes three parameters (vals, row, object) and returns true/false
+
+        match_function takes three parameters (vals, row, object) and returns
+        true/false
         """
         for row in self.rows:
             if match_function(row, object):
@@ -287,5 +321,3 @@ class MultipleMatchError(Exception):
         return "Multiple matches for value: {}\nmatches:{}".format(
             self.val,
             qs.dumps(self.matches))
-
-    pass
