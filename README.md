@@ -5,6 +5,17 @@ QSTools
 
 A toolset for programmatically controlling the QuickSchools API and GUI.
 
+###Installation:
+
+1. Download and unzip this repo.
+2. `cd` into the unzipped folder.
+3. Run:
+```
+pip install reindent requests
+python setup.py install
+```
+After doing this, a `qs` module will be importable from all Python scripts, and all scripts in this repo will have the necessary dependencies.
+
 ###How This Repo Works
 * This is a toolset designed to be the **building blocks for large and complicated scripts that can be written and run under a time pressure *without failing*.** As a result, it consists of lots of small, contained, and useful scripts.
 * If a script has a docstring at the top, it will not be deleted. Instead, it will be maintained and tested to continue to match that docstring, even if the implementation has to completely change.
@@ -57,16 +68,7 @@ Since the purpose of this repo is to provide lots of ready-made tools for quickl
 * Testing will be done on [qstools.quickschools.com](https://qstools.quickschools.com). For API scripts, this means that caching is imperative to keep testing time down - but this should be baked into the `qs` package anyways :+1:
 
 ###The `qs` Package
-Included in this repo is a Python package that provides a simple API for doing lots of complicated, often repeated tasks. Full documentation doesn't currently exist, but is in process. Installation:
-
-1. Download and unzip into this folder.
-2. `cd` into the unzipped folder.
-3. Run:
-```
-pip install reindent requests
-python setup.py install
-```
-After doing this, a `qs` module will be importable from all Python scripts and provide access the package's API.
+Included in this repo is a Python package that provides a simple API for doing lots of complicated, often repeated tasks. Full documentation doesn't currently exist, but is in process. See the installation section above for installation directions.
 
 ###Contributing and using
 At this point, there are `2` dependencies to running scripts in this repo:
