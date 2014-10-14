@@ -28,7 +28,7 @@ def assert_dumps_str():
 
 
 def test_dumps_with_http_response():
-    assert_in('teapot', http.response.text)
+    assert_in('teapot', qs.dumps(http.response))
 
 
 def test_rand_str_length():

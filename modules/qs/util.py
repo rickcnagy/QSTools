@@ -27,7 +27,10 @@ def dumps(arbitry_obj, sort=True, indent=4):
     maintained and non JSON objects are printed as their __str__.
     """
     if isinstance(arbitry_obj, requests.Response):
-        arbitry_obj = arbitry_obj.json()
+        try:
+            arbitry_obj = arbitry_obj.json()
+        except ValueError:
+            arbitry_obj = arbitry_obj.text
     if sort is True and type(arbitry_obj) is list:
         arbitry_obj = sorted(arbitry_obj)
     return json.dumps(arbitry_obj, indent=indent, sort_keys=sort,
