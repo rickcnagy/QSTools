@@ -37,7 +37,7 @@ def dumps(arbitry_obj, sort=True, indent=4):
         default=_nofail_serializer)
 
 
-def _nofail_serializer(o):
+def _nofail_serializer(o):  # pragma: no cover
     """Use str() for non-encodable objects in json.dumps()"""
     return str(o)
 
