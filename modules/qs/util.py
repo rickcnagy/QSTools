@@ -61,7 +61,7 @@ def print_break(break_str='*'):  # pragma: no cover
     print
 
 
-def ask(message, width=70): # pragma: no cover
+def ask(message, width=70):  # pragma: no cover
     """Like print_wrapped, but returns a value based on the user input"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
@@ -227,7 +227,7 @@ def to_bool(string):
         raise ValueError
 
 
-def print_wrapped(message, width=70): # pragma: no cover
+def print_wrapped(message, width=70):  # pragma: no cover
     """Wrapped print - wrapped to width chars per line"""
     wrapper = textwrap.TextWrapper()
     wrapper.width = width
@@ -278,6 +278,10 @@ def unique_path(original_file_path, suffix='', use_random=False,
         extension=None):
     """Make a unique file path based on the provided original file path.
 
+    Iteratively makes a unique filename based on whether there's a file on disk
+    there already. If original_file_path doesn't have a file at it yet, it's
+    simply returned.
+
     Defaults to adding an increasing integer at the end of the file name, such
     as text.txt => text(0).txt, then text(0).txt => text(1).txt.
 
@@ -298,6 +302,9 @@ def unique_path(original_file_path, suffix='', use_random=False,
         extension: supply a new extension instead of the existing one on
             original_file_path.
     """
+    if os.path.isfile(original_file_path) is False:
+        return original_file_path
+
     base_path, filename_with_extension = os.path.split(original_file_path)
     filename, original_extension = os.path.splitext(filename_with_extension)
 
@@ -319,7 +326,19 @@ def unique_path(original_file_path, suffix='', use_random=False,
         new_filename = '{}{}({})'.format(before_number, suffix, number)
 
     new_extension = (extension or original_extension).lstrip('.')
-    return '{}/{}.{}'.format(base_path, new_filename, new_extension)
+    new_filepath = '{}{}{}.{}'.format(
+        base_path,
+        '/' if base_path else '',
+        new_filename,
+        new_extension
+    )
+
+    return unique_path(
+        new_filepath,
+        suffix=suffix,
+        use_random=use_random,
+        extension=extension
+    )
 
 
 def parse_datestring(datestring):

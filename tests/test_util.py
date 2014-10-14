@@ -1,16 +1,19 @@
 """Test the util module"""
 
-import qs
+import os
 import json
 import random
 import datetime
 from nose.tools import *
+import qs
 
 
 def setup():
     global http
     http = qs.HTTPBinRequest('test request', '/status/418')
     http.make_request()
+    open('._qstest.txt', 'w').close()
+    open('._qstest(5).txt', 'w').close()
 
 
 def test_dumps():
@@ -66,15 +69,13 @@ def test_valid_id():
     for error in type_errors:
         with assert_raises(TypeError):
             qs.clean_id(error)
-        assert_false(qs.is_valid_id(error, check_only=True))
+        assert_false(qs.is_valid_id(error, check_only=True, func_name='test'))
 
 
 def test_clean_args():
-
     @qs.clean_arg
     def to_be_cleaned(some_id):
         return some_id
-
     assert_is_instance(to_be_cleaned(1234), str)
 
 
@@ -116,12 +117,13 @@ def test_titlcase():
 
 
 def test_unique_path():
-    assert_equals(qs.unique_path('./test.txt'), './test(1).txt')
-    assert_equals(qs.unique_path('./test(5).txt'), './test(6).txt')
+    assert_equals(qs.unique_path('._qstest.txt'), '._qstest(1).txt')
+    assert_equals(qs.unique_path('._qstest(3).txt'), '._qstest(3).txt')
+    assert_equals(qs.unique_path('._qstest(5).txt'), '._qstest(6).txt')
     assert_equals(
-        qs.unique_path('./test.txt', suffix='suf'),
-        './testsuf(1).txt')
-    assert_in('test', qs.unique_path('./test.txt', use_random=True))
+        qs.unique_path('._qstest.txt', suffix='suf'),
+        '._qstestsuf(1).txt')
+    assert_in('_qstest', qs.unique_path('._qstest.txt', use_random=True))
 
 
 def test_finance_to_float():
@@ -159,3 +161,8 @@ def test_hex_to_int():
 def test_parse_datestring():
     test_date = datetime.datetime(2014, 10, 13)
     assert_equals(qs.parse_datestring('2014-10-13'), test_date)
+
+
+def teardown():
+    os.remove('._qstest.txt')
+    os.remove('._qstest(5).txt')
