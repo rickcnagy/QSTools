@@ -21,6 +21,10 @@ GUI Scripts
 
  Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
 
+####[`exportCriteria.js`](./exportCriteria.js)
+
+ Export criteria from the Report Cards module. Relies on the current template being Super Basic. Data is exported in the import format from ./importCriteria.js, so an export from here can be imported back in using ./importCriteria.js 
+
 ####[`importCriteria.js`](./importCriteria.js)
 
  Import criteria into the Report Cards module. Relies on the current template being Super Basic. QSImporter should have an object like this: [ { "Template Name": "Reading 3-5", "Alternative Subject Section Name": "Reading", "Criteria": [ {"Criteria Name": "A,B,C,D,F"}, // dropdown "Criteria Name", // field ... ] }, ... ] 
