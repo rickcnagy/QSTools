@@ -17,6 +17,10 @@ GUI Scripts
 
  Create a final formula that consists of Assignments in each gradebook 
 
+####[`deleteAllCriteria.js`](./deleteAllCriteria.js)
+
+ Delete all criteria in the subject-specific criteria screen. 
+
 ####[`dropdownsToLikerts.js`](./dropdownsToLikerts.js)
 
  Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
@@ -27,7 +31,7 @@ GUI Scripts
 
 ####[`importCriteria.js`](./importCriteria.js)
 
- Import criteria into the Report Cards module. Relies on the current template being Super Basic. QSImporter should have an object like this: [ { "Template Name": "Reading 3-5", "Alternative Subject Section Name": "Reading", "Criteria": [ {"Criteria Name": "A,B,C,D,F"}, // dropdown "Criteria Name", // field ... ] }, ... ] 
+ Import criteria into the Report Cards module. Relies on the current template being Super Basic. If a subject template is found with the same name as the one being imported: - the criteria for that template will be added to the matched one. - The alternative subject section name will be updated to the one from the import. - If individual criteria are found that have the same value as the one being imported, those will be deleted and re-added if the type is different (i.e. one is adropdown and one is a field). QSImporter should have an object like this: [ { "Template Name": "Reading 3-5", "Alternative Subject Section Name": "Reading", "Criteria": [ {"Criteria Name": "A,B,C,D,F"}, // dropdown "Criteria Name", // field ... ] }, ... ] 
 
 ####[`importInquiriesOrApplicants.js`](./importInquiriesOrApplicants.js)
 
