@@ -341,6 +341,13 @@ def unique_path(original_file_path, suffix='', use_random=False,
     )
 
 
+def write_no_overwrite(file_contents, filename):
+    """Write file_contents to filename but without overwriting"""
+    print file_contents
+    with open(unique_path(filename), 'w') as f:
+        f.write(string)
+
+
 def parse_datestring(datestring):
     """Parse the datestring using the normal QS date format into a date obj.
 
