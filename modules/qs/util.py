@@ -25,7 +25,7 @@ import requests
 def dumps(arbitry_obj, sort=True, indent=4):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
-    
+
     TODO: On second thought, sorting probably shouldn't happen by default.
     """
     if isinstance(arbitry_obj, requests.Response):

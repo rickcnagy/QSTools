@@ -124,11 +124,12 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, show_deleted=False, show_has_left=False,
+    def get_students(self, search=None, show_deleted=False, show_has_left=False,
         ignore_deleted_duplicates=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
         Args:
+            search: add a search string as per API docs
             show_deleted: Show deleted students.
             show_has_left: Show students that have left.
             ignore_deleted_duplicates: Ignore any students that have  are
@@ -138,6 +139,10 @@ class QSAPIWrapper(qs.APIWrapper):
                 mute unless show_deleted=True.
         """
         cache = self._student_cache
+
+        if search:
+            kwargs['fields'] = kwargs.get['fields'] or {}
+            kwargs['fields']['search'] = search
 
         if show_deleted or show_has_left:
             request = QSRequest(
