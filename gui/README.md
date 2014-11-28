@@ -21,6 +21,10 @@ GUI Scripts
 
  Delete all criteria in the subject-specific criteria screen. 
 
+####[`downloadRCsFromOldSession.js`](./downloadRCsFromOldSession.js)
+
+ Download all report cards from an old (pre-HTML5 session) Any RC sessions from before HTML5 don't show up except through the student profile. This allows for a mass export of rc's from a given session. Be sure to "Allow site to download multiple files" when prompted. 
+
 ####[`dropdownsToLikerts.js`](./dropdownsToLikerts.js)
 
  Convert all dropdowns for a criteria to likert. This maintains the value in each criteria, but makes what was a dropdown into a likert. This uses the grading scale from the first dropdown, so if there are multiple grading scales in use that could be confusing. First written for lapazschool (\#32905). 
