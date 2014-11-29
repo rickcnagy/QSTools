@@ -140,18 +140,15 @@ class QSAPIWrapper(qs.APIWrapper):
         """
         cache = self._student_cache
 
-        if search:
-            kwargs['fields'] = kwargs.get['fields'] or {}
-            kwargs['fields']['search'] = search
-
         if show_deleted or show_has_left:
             request = QSRequest(
                 'GET all students, including deleted/has left',
                 '/students')
-            request.params.update({
+            request.params = {
                 'showDeleted': show_deleted,
                 'showHasLeft': show_has_left,
-            })
+                'search': search
+            }
             request.fields += ['hasLeft', 'deleted']
             students = self._make_request(request, **kwargs)
 
@@ -168,6 +165,7 @@ class QSAPIWrapper(qs.APIWrapper):
             return students
         elif _should_make_request(cache, **kwargs):
             request = QSRequest('GET all students', '/students')
+            request.params = {'search': search}
             students = self._make_request(request, **kwargs)
             cache.add(students)
         return cache.get(**kwargs)
