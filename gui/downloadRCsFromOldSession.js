@@ -5,18 +5,25 @@
  * profile. This allows for a mass export of rc's from a given session.
  * 
  * Be sure to "Allow site to download multiple files" when prompted.
+ * 
+ * To download from all sessions visible in the student profile, set
+ * SECTION_NAME to null, otherwise set it to a string of the section name.
  */
 
-SESSION_NAME = "2010/2011 End-Of-Year (Grades 1-6)";
+SESSION_NAME = null;
 
 
 new QSTableIterator(function() {
     this.click("Reports");
     this.afterLoad(function() {
-        $("span:contains(" + SESSION_NAME + ")")
-            .closest("tr")
-            .find(".smallDemotedButtonWidget:contains(View PDF)")
-            .click();
+        if(SESSION_NAME != null) {
+            var rows = $("span:contains(" + SESSION_NAME + ")").
+                closest("tr");
+        } else {
+            var rows = $(".dataTable:contains(Grading Cycle) .dataTableContentRow");
+        }
+        rows.find(".smallDemotedButtonWidget:contains(View PDF)").
+            click();
         this.click("Ok");   // for unfinalized RC session popup
         this.next();
     });
