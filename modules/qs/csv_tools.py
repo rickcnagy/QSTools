@@ -41,6 +41,8 @@ def write_csv(rows, filepath, overwrite=False, column_headers=None):
             is useful both for order and for specifying a specific subset of
             headers to use instead of all keys in the rows array.
     """
+    filepath = os.path.expanduser(filepath)
+
     if column_headers is None:
         column_headers = set()
         for row in rows:
@@ -54,9 +56,9 @@ def write_csv(rows, filepath, overwrite=False, column_headers=None):
         _clean_row_for_csv(row)
 
     with open(filepath, 'w') as f:
-        writer = csv.DictWriter(f, keys)
+        writer = csv.DictWriter(f, column_headers)
         writer.writeheader()
-        for row in flattened_rows:
+        for row in rows:
             writer.writerow(row)
 
 
@@ -76,7 +78,7 @@ def _clean_row_for_csv(row):
             row[key] = FLATTEN_DELIM.join([str(i for i in val)])
         elif type(val) is not str:
             row[key] = str(val)
-    return dict_to_flatten
+    return row
 
 # ===============
 # = CSV Classes =
