@@ -180,6 +180,13 @@ class QSAPIWrapper(qs.APIWrapper):
             'GET student by id',
             **kwargs)
 
+    def get_students_by_name(self, student_name):
+        """GET students by name. Returns a list of all possible matches."""
+        return [
+            i for i in self.get_students()
+            if student_name in i['fullName']
+        ]
+
     # ===========
     # = Parents =
     # ===========
@@ -875,6 +882,8 @@ class QSAPIWrapper(qs.APIWrapper):
                 instantiated this request, such as self.get_students().
         Returns:
             The data from the completed request
+
+        # TODO make silent a valid kwarg
         """
         request.set_api_key(self.api_key)
         critical = kwargs.get('critical')
