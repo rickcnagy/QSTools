@@ -1,95 +1,93 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+"""Utility script to analyze page count in report cards.
+
+This counts the number of pages in each RC and compares to the target length.
+For schools where the number of pages is important, this is a great way to
+get an overview of what changes need to be made.
+
+Searches the current directory (non recursively) for PDF's and counts their
+pages.
+
+CLI Usage:
+folder_pdf_page_count.py {schoolcode}
+
+If schoolcode is supplied (optional), then each student's class will be printed
+along with their name
+"""
 
 import re
 import os
 import json
+import qs
 
-folder_path = 'FOLDER PATH'
-rxcountpages = re.compile(r"/Type\s*/Page([^s]|$)", re.MULTILINE | re.DOTALL)
+TARGET_LENGTH = 4
 
 
 def main():
-    os.chdir(folder_path)
-    ordered_cards = ordered_list(get_report_cards(get_filenames()))
-    over_four = over_four_pages(ordered_cards)
-    under_five = under_five_pages(ordered_cards)
+    unordered = [ReportCard(i) for i in get_filenames()]
+    ordered_cards = sorted(unordered, key=lambda x: x.length)
 
-    print "\n{} rc's over 4 pages:".format(len(over_four))
-    for c in over_four:
-        print c
+    short_cards = too_short(ordered_cards)
+    long_cards = too_long(ordered_cards)
+    right_cards = just_right(ordered_cards)
 
-    print "\n\n{} rc's under 5 pages.".format(len(under_five))
-    # for c in under_five:
-    #     print c
+    qs.print_break()
+    print "{} too short:".format(len(short_cards))
+    print '\n'.join([str(i) for i in short_cards])
+    qs.print_break()
 
+    print "{} too long:".format(len(long_cards))
+    print '\n'.join([str(i) for i in long_cards])
+    qs.print_break()
 
-def ordered_list(unordered):
-    ordered = []
-    while len(unordered) > 0:
-        # find highest remaining in unordered
-        highest = unordered[0]
-        for i in unordered:
-            if i.compare(highest) > 1:
-                highest = i
-        ordered.append(highest)
-        unordered.remove(highest)
-    return ordered
+    print "{} just right".format(len(right_cards))
+    qs.print_break()
 
 
-def get_report_cards(filenames):
-    all_cards = []
-    for filename in filenames:
-        all_cards.append(LongReportCard(filename, count_pages(filename)))
-    return all_cards
+def too_short(cards):
+    return [i for i in cards if i.length() < 4]
 
 
-def under_five_pages(cards):
-    under_four_pages = []
-    for card in cards:
-        if card.length < 5:
-            under_four_pages.append(card)
-    return under_four_pages
+def too_long(cards):
+    return [i for i in cards if i.length() > 4]
 
 
-def over_four_pages(cards):
-    over_four_pages = []
-    for card in cards:
-        if card.length > 4:
-            over_four_pages.append(card)
-    return over_four_pages
+def just_right(cards):
+    return [i for i in cards if i.length() == 4]
 
 
 def get_filenames():
-    for root, dirs, files in os.walk(folder_path):
-        return files
+    for root, dirs, files in os.walk(os.curdir):
+        return [i for i in files if os.path.splitext(i)[1] == '.pdf']
 
 
-def count_pages(filename):
-    data = file(filename, 'rb').read()
-    return len(rxcountpages.findall(data))
+class ReportCard(object):
+    length_re =  re.compile(r"/Type\s*/Page([^s]|$)", re.MULTILINE | re.DOTALL)
 
+    # TODO: make schoolcode cli and optional
+    # qs_api = qs.API('SCHOOLCODE')
+    # qs.logger.silence()
+    # qs_api.get_students(silent=True)
 
-class LongReportCard(object):
-    def __init__(self, filename, length):
-        self.name = self.get_filename(filename)
-        self.length = length
+    def __init__(self, filename):
+        self.filename = filename
+
+        self.student_name = os.path.splitext(self.filename)[0]
+        self.student_name = self.student_name.split(' - ')[1]
 
     def __str__(self):
-        return "{}: {} pp".format(self.name, self.length)
+        return "{} ({}): {} pp".format(
+            self.student_name,
+            self.student_class_name(),
+            self.length())
 
+    def length(self):
+        data = file(self.filename, 'rb').read()
+        return len(self.length_re.findall(data))
 
-    def get_filename(self, name):
-        name = os.path.splitext(name)[0]
-        name = name[name.find('-') + 1:]
-        return name.strip()
-
-    def compare(self, other):
-        if other.length > self.length:
-            return -1
-        elif other.length == self.length:
-            return 0
-        else:
-            return 1
+    def student_class_name(self):
+        student = self.qs_api.get_students_by_name(self.student_name)[0]
+        return student['className']
 
 
 if __name__ == '__main__':
