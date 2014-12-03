@@ -26,6 +26,36 @@ If schoolcode is supplied (optional), then each student's class will be printed
 along with their name
 
 
+####[`parse_criteria_txt_file.py`](./parse_criteria_txt_file.py)
+
+Parse a subject criteria template file.
+
+This creates a JSON file that can be directly used in gui/importCriteria.js
+
+args:
+    1: Pass in the filename to open
+
+CLI Usage:
+./parse_criteria_txt_file.py {filename}
+
+The txt file should be formatted like so:
+
+    Subject Template Name1
+    Criteria 1.1
+    Criteria 1.2
+    Criteria 1.3
+
+    Subject Template Name3
+    Criteria 2.1
+    Criteria 2.2
+    Criteria 2.3
+
+To import dropdowns, run the export from this through
+./transform_criteria_to_dropdowns.py
+
+Alternative subject section names aren't currently supported
+
+
 ####[`readme_generator.py`](./readme_generator.py)
 
 Generate README from in files in folder passed in via stdin
@@ -35,6 +65,26 @@ Command Line Args (in order):
     (optional) README title
 Example Usage:
 ./utility/readme_generator.py ./api 'API Scripts'
+
+
+####[`transform_criteria_to_dropdowns.py`](./transform_criteria_to_dropdowns.py)
+
+Transform a file of criteria to dropdowns.
+
+This takes a JSON file of of normal criteria, then outputs a JSON file with
+dropdowns. The format is as in gui/importCriteria.js, so the output from here
+can be used directly to import into the GUI.
+
+The dropdodnws should be specified as they show up in the Setup Subject-
+Specific Criteria page, such as:
+
+    4,3,2,1,N/A
+
+CLI Usage:
+./transform_criteria_to_dropdowns.py {filename} [{dropdown_vals}]
+
+
+dropdown_vals is optional, and will default to 4,3,2,1,N/A
 
 
 ####[`zeus_xml/`](./zeus_xml)

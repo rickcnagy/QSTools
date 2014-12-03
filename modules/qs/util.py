@@ -343,11 +343,10 @@ def unique_path(original_file_path, suffix='', use_random=False,
     )
 
 
-def write_no_overwrite(file_contents, filename):
+def write_no_overwrite(file_contents, filename, **kwargs):
     """Write file_contents to filename but without overwriting"""
-    print file_contents
-    with open(unique_path(filename), 'w') as f:
-        f.write(string)
+    with open(unique_path(filename, **kwargs), 'w') as f:
+        f.write(file_contents)
 
 
 def parse_datestring(datestring):
