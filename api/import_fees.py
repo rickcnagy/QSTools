@@ -5,6 +5,7 @@
 The CSV should have the following columns:
 - Student ID
 - Amount
+- Date
 - Description
 
 Command line usage:
