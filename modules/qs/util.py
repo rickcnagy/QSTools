@@ -303,6 +303,10 @@ def unique_path(original_file_path, suffix='', use_random=False,
         use_random: append a random number to the file name if True
         extension: supply a new extension instead of the existing one on
             original_file_path.
+
+    #TODO: if extension changes, don't necessarily append (1) unless
+    #TODO: don't use (1) - use - 1 instead, since "(" needs to be escaped in
+        bash
     """
     if os.path.isfile(original_file_path) is False:
         return original_file_path

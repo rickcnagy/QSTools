@@ -40,6 +40,11 @@ new QSImporter.iterator(function() {
     }
 
     this.afterLoad(function() {
+        if(!verifyIsSuperBasic()) {
+            this.quit("Incorrect template - be sure to select Super Basic");
+            return;
+        }
+        
         var alt = "Alternative Subject Section Name";
         QSIterator.setQPVal("Template Name", this.item["Template Name"]);
         QSIterator.setQPVal(alt, this.item[alt]);
@@ -71,12 +76,14 @@ function addCriteria(criteriaName, isDropdown, dropdownVal) {
     this.click(isDropdown ? "Add Drop Down" : "Add Field");
     
     var emptyName = $(criteriaNameSel + ":contains(Subject-Specific Criteria)");
-    if(emptyName.length !== 1) {
+    if(emptyName.length > 1) {
         console.error("too many 'empty' criteria vals found", emptyCriteriaVal);
         this.quit();
         return;
+    } else if(emptyName < 1) {
+        this.quit("couldn't find any 'empty' criteria vals");
+        return;
     }
-    
     emptyName.text(criteriaName).blur();
     
     if(isDropdown) {
@@ -89,4 +96,22 @@ function addCriteria(criteriaName, isDropdown, dropdownVal) {
     } else {
         this.next();
     }
+}
+
+function verifyIsSuperBasic() {
+    var tds = $(".paperWidget td");
+    
+    if(tds.eq(0).attr("style") !== "width: 595px; padding: 0px;") {
+        return false;
+    }
+    
+    if(tds.eq(1).attr("style") !== "width: 396.666666666667px; padding: 0px 5px; border: 1px solid rgb(0, 0, 0); background: rgb(200, 200, 200);") {
+        return false;
+    }
+    
+    if(tds.eq(2).attr("style") !== "width: 99.1666666666667px; padding: 0px; border: 1px solid rgb(0, 0, 0); background: rgb(200, 200, 200);") {
+        return false;
+    }
+    
+    return true;
 }

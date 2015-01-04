@@ -40,7 +40,7 @@ def main():
             })
         subject_template['Criteria'] = new_criteria
 
-    qs.write_no_overwrite(json.dumps(subject_templates), filename)
+    qs.write_no_overwrite(qs.dumps(subject_templates), filename)
 
 if __name__ == '__main__':
     main()

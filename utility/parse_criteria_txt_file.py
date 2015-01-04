@@ -47,7 +47,7 @@ def main():
         subject_template['Alternative Subject Section Name'] = ''
         subject_template['Criteria'] = [i.strip() for i in subject_block]
 
-    output = json.dumps(subject_templates)
+    output = qs.dumps(subject_templates)
     qs.write_no_overwrite(output, filename, extension='json')
 
 if __name__ == '__main__':
