@@ -100,6 +100,48 @@ class QSAPIWrapper(qs.APIWrapper):
         return [i for i in self.get_semesters() if i['yearId'] == year_id]
 
     # ============
+    # = Classes =
+    # ============
+
+    def get_classes(self, **kwargs):
+        """GET classes via the /classes endpoint.
+
+        Only gets classes from the current semester, as per the API docs.
+        """
+        cache = self._class_cache
+        if _should_make_request(cache, **kwargs):
+            request = self._request('GET classes', '/classes')
+            cache.add(self._make_request(request, **kwargs))
+        return cache.get(**kwargs)
+
+    @qs.clean_arg
+    def get_class(self, class_id, **kwargs):
+        """GET a specific class by id."""
+        return self._make_single_request(
+            class_id,
+            '/classes',
+            self.get_classes,
+            'GET class by ID',
+            **kwargs)
+
+    @qs.clean_arg
+    def match_class(self, source_class_id, **kwargs):
+        """Get a match for a class from a previous semester.
+
+        The match is by name and the matching class has to be in the current
+        semester.
+
+        Returns a class dictionary or None
+
+        Args:
+            source_class_id: the id of the class to match from.
+        """
+        source_class = self.get_class(source_class_id)
+        for current_class in self.get_classes():
+            if current_class['name'] == source_class['name']:
+                return current_class
+
+    # ============
     # = Teachers =
     # ============
 

@@ -61,6 +61,7 @@ Import fees for each student from a CSV. Imports 1 fee per row.
 The CSV should have the following columns:
 - Student ID
 - Amount
+- Date
 - Description
 
 Command line usage:
