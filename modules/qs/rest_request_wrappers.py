@@ -17,7 +17,7 @@ class HTTPBinRequest(qs.RestRequest):
 
 
 class QSRequest(qs.RestRequest):
-    """QS-Specific Requests
+    """Requests to the QS REST API on the live server
 
     Attributes:
         return_type: The return type, such as Flat List, Single Object, etc.
@@ -27,14 +27,11 @@ class QSRequest(qs.RestRequest):
     base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'
 
-    def __init__(self, description, uri, live=True):
-        if not live:
-            self.base_url = self.base_url.replace(
-                'quickschools',
-                'smartschoolcentral')
+    def __init__(self, description, uri):
         self.return_type = None
         self.paging_info = None
         self.fields = []
+
         super(QSRequest, self).__init__(description, uri)
 
     def _before_request(self):
@@ -76,3 +73,10 @@ class QSRequest(qs.RestRequest):
         if (self.return_type == 'Paged List'
                 and int(self.paging_info['number_of_pages']) > 1):
             qs.logger.critical('Receieved too may responses', self._log_dict())
+
+class QSBackupRequest(QSRequest):
+    base_url = 'https://api.smartschoolcentral.com/sms/v1'
+
+
+class QSLocalRequest(QSRequest):
+    base_url = 'http://localhost:8080/sms/v1'

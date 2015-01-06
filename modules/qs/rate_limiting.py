@@ -48,6 +48,8 @@ def get_server(url):
         return _servers['github']
     elif 'httpbin' in url:
         return _servers['httpbin']
+    elif 'localhost' in url:
+        return _servers['localhost']
     qs.logger.warning(
         'Making request/response at unrecognized URL, so no '
         'rate limiting or request tracking is in place for', url)
@@ -72,6 +74,7 @@ def _init_servers():
             'github',
             _GITHUB_LIMIT_HEADER),
         'httpbin': _Server('httpbin'),
+        'localhost': _Server('localhost'),
     }
     return _servers
 

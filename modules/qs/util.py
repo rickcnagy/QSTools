@@ -22,11 +22,9 @@ import datetime
 import requests
 
 
-def dumps(arbitry_obj, sort=True, indent=4):
+def dumps(arbitry_obj, sort=False, indent=4):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
-
-    TODO: On second thought, sorting probably shouldn't happen by default.
     """
     if isinstance(arbitry_obj, requests.Response):
         try:
@@ -307,6 +305,7 @@ def unique_path(original_file_path, suffix='', use_random=False,
     #TODO: if extension changes, don't necessarily append (1) unless
     #TODO: don't use (1) - use - 1 instead, since "(" needs to be escaped in
         bash
+    #TODO: address extension for new filename
     """
     if os.path.isfile(original_file_path) is False:
         return original_file_path
