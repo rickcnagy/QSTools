@@ -48,7 +48,7 @@ def test_adding_api_key():
 
 
 def test_live():
-    assert_true(qs.API().live)
+    assert_equals(qs.API().server, 'live')
 
 
 def test_key_path():

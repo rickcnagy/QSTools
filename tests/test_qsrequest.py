@@ -3,7 +3,7 @@
 import json
 import qs
 from nose.tools import *
-from qs import QSRequest
+from qs import QSRequest, QSBackupRequest, QSLocalRequest
 from mock import MagicMock
 from qs.test_data import *
 
@@ -80,7 +80,7 @@ def test_live_url():
 
 def test_backup_url():
     sem_backup_url = 'https://api.smartschoolcentral.com/sms/v1/semesters'
-    backup_request = QSRequest('Testing', '/semesters', live=False)
+    backup_request = QSBackupRequest('Testing', '/semesters')
     assert_equals(backup_request._full_url(), sem_backup_url)
 
 
