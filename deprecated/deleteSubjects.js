@@ -2,7 +2,8 @@
  * Delete all subjects visible on the screen.
  * Includes clearing enrollment.
  *
- * #DEPRECATED by Assembla #2187
+ * #DEPRECATED by Assembla #2187 - we now have an API method. See
+ * qs.QSAPIWrapper.delete_section().
  */
 
 var iter = new QSIterator(".dttd .linkWidget", function() {

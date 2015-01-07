@@ -216,7 +216,11 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def get_student(self, student_id, **kwargs):
-        """GET a specific student by id."""
+        """GET a specific student by id.
+
+        #TODO bug: if a student is looked up that wasn't already in the cache,
+        it doesn't get cached
+        """
         return self._make_single_request(
             student_id,
             '/students',
@@ -690,6 +694,25 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return cache.get(**kwargs)
 
+    @qs.clean_arg
+    def post_assignment(self, section_id, name, date, total_marks_possible,
+        column_category_id=None, grading_scale_id=None, **kwargs):
+        """POST an assignment to section with id=section_id."""
+        uri = '/sections/{}/assignments'.format(section_id)
+        request = self._request('POST an assignment', uri)
+        request.verb = qs.POST
+        request.request_data = {
+            'name': name,
+            'date': date,
+            'totalMarksPossible': total_marks_possible,
+            'columnCategoryId': column_category_id,
+            'gradingScaleId': grading_scale_id,
+        }
+        response = self._make_request(request, **kwargs)
+        if request.successful is True:
+            self._assignment_cache.add(response)
+        return response
+
     # ==========
     # = Grades =
     # ==========
@@ -735,6 +758,35 @@ class QSAPIWrapper(qs.APIWrapper):
         if student_id:
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
+
+
+    @qs.clean_arg
+    def post_grades(self, section_id, assignment_id, grades, **kwargs):
+        """POST grades to /grades endpoint.
+
+        grades arg should be dict like at
+        http://apidocs.quickschools.com/#assignment:
+
+        [
+            {
+                studentId: ...
+                marks: ...
+            }
+        ]
+        """
+        assignment_id = qs.clean_id(assignment_id)
+
+        request = self._request('POST grades for assignment', '/grades')
+        request.verb = qs.POST
+        request.request_data = {
+            'sectionId': section_id,
+            'assignmentId': assignment_id,
+            'grades': json.dumps(grades)
+        }
+        response = self._make_request(request, **kwargs)
+        if request.successful is True:
+            self._grade_cache.invalidate()
+        return response
 
     # ==============
     # = Attendance =

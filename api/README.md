@@ -19,6 +19,18 @@ Check that all sections in source_semester have an exact match in the active sem
 
 Clear the gradebook in all sections section_ids
 
+####[`delete_all_sections.py`](./delete_all_sections.py)
+
+
+DELETE all sections.
+
+For now, requires enrollment to be 0 for all sections - otherwise, QS throws
+a soft error.
+
+Usage:
+./delete_all_sections {schoolcode} {server}
+
+
 ####[`delete_assignments_from_sections.py`](./delete_assignments_from_sections.py)
 
 Delete assignments with specified ids from the specified sections.
