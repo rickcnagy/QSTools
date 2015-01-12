@@ -13,9 +13,9 @@ GUI Scripts
 
  Copy & Paste switches between Zeus templates. \#TODO: move to qs-supporttools 
 
-####[`createFinalFormulas.js`](./createFinalFormulas.js)
+####[`createGradebookFinalGradeFormulas.js`](./createGradebookFinalGradeFormulas.js)
 
- Create a final formula that consists of Assignments in each gradebook 
+ Create a final grade formula in each gradebook. The final grade formula is simply 100% assignment. 
 
 ####[`deleteAllCriteria.js`](./deleteAllCriteria.js)
 
