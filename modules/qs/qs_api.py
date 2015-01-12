@@ -5,6 +5,7 @@ import copy
 import json
 import qs
 
+
 class QSAPIWrapper(qs.APIWrapper):
     """An API Wrapper specific for the QuickSchools API.
 
@@ -168,8 +169,8 @@ class QSAPIWrapper(qs.APIWrapper):
     # = Students =
     # ============
 
-    def get_students(self, search=None, show_deleted=False, show_has_left=False,
-        ignore_deleted_duplicates=False, **kwargs):
+    def get_students(self, search=None, show_deleted=False,
+            show_has_left=False, ignore_deleted_duplicates=False, **kwargs):
         """GET a list of all enrolled students from /students.
 
         Args:
@@ -263,7 +264,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # ============
 
     def get_sections(self, semester_id=None, all_semesters=False,
-        active_only=True, **kwargs):
+            active_only=True, **kwargs):
         """GET sections from the /sections endpoint.
 
         Args:
@@ -283,10 +284,12 @@ class QSAPIWrapper(qs.APIWrapper):
 
         if semester_id:
             semester_id = qs.clean_id(semester_id)
-            kwargs.update({'cache_filter': {'semesterId': semester_id}})
+            kwargs.update({'cachedata': {'semesterId': semester_id}})
 
             if _should_make_request(cache, **kwargs):
-                request = self._request('GET sections from semester', '/sections')
+                request = self._request(
+                    'GET sections from semester',
+                    '/sections')
                 request.params.update({'semesterId': semester_id})
                 sections = self._make_request(request, **kwargs)
                 mark_sections(sections, semester_id)
@@ -333,9 +336,9 @@ class QSAPIWrapper(qs.APIWrapper):
         return cache.get(section_id, **kwargs)
 
     def match_section(self, identifier, target_semester_id=None,
-        student_id=None, allow_multiple=False, critical=False, match_name=True,
-        match_code=True, match_class_id=False, match_class_name=True,
-        match_teachers=True):
+            student_id=None, allow_multiple=False, critical=False,
+            match_name=True, match_code=True, match_class_id=False,
+            match_class_name=True, match_teachers=True):
         """Match a section based on various identifying factors.
 
         Args:
@@ -443,7 +446,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 return None
 
     def post_section(self, section_name, section_code, class_id, teacher_id,
-        credit_hours=1, **kwargs):
+            credit_hours=1, **kwargs):
         """POST to create a new section. teacher_id should be a single
         teacher id or a list of teacher ids.
         """
@@ -615,7 +618,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # ===============
 
     def get_assignments(self, section_id, include_final_grades=False,
-        include_grades=False, **kwargs):
+            include_grades=False, **kwargs):
         """GET a list of assignments for the specified section_id.
 
         Args:
@@ -696,7 +699,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def post_assignment(self, section_id, name, date, total_marks_possible,
-        column_category_id=None, grading_scale_id=None, **kwargs):
+            column_category_id=None, grading_scale_id=None, **kwargs):
         """POST an assignment to section with id=section_id."""
         uri = '/sections/{}/assignments'.format(section_id)
         request = self._request('POST an assignment', uri)
@@ -719,7 +722,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def get_grades(self, section_id, assignment_id=None, student_id=None,
-        **kwargs):
+            **kwargs):
         """GET all grades for a section.
 
         Args:
@@ -759,7 +762,6 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
-
     @qs.clean_arg
     def post_grades(self, section_id, assignment_id, grades, **kwargs):
         """POST grades to /grades endpoint.
@@ -794,7 +796,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def post_attendance(self, student_id, teacher_id, date, status, remarks='',
-        description='', **kwargs):
+            description='', **kwargs):
         """POST attendance via the /attendance API method.
 
         Status codes:
@@ -937,7 +939,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def post_incident(self, student_id, teacher_id, detail, date,
-        demerit_points=1, **kwargs):
+            demerit_points=1, **kwargs):
         """POST a discipline incident, using the /incidents API from #2209.
 
         Args:
@@ -974,7 +976,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         Returns either QSRequest or a subclass based on self.server
         """
-        request_class =  {
+        request_class = {
             'live': qs.QSRequest,
             'backup': qs.QSBackupRequest,
             'local': qs.QSLocalRequest
@@ -1013,7 +1015,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
     @qs.clean_arg
     def _make_single_request(self, identifier, base_uri, request_all_method,
-        request_description, **kwargs):
+            request_description, **kwargs):
         """Make a single request to a resource that has both a method to
         request all and a method to request a single resource. Handles both
         the request part and caching part.
