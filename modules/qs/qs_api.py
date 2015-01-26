@@ -481,8 +481,15 @@ class QSAPIWrapper(qs.APIWrapper):
         return self._make_request(request, **kwargs)
 
     @qs.clean_arg
-    def delete_section(self, section_id, **kwargs):
-        """DELETE an existing section by id."""
+    def delete_section(self, section_id, delete_enrollment=False, **kwargs):
+        """DELETE an existing section by id.
+
+        If delete_enrollment is True, this will delete enrollment first, then
+        delete the section.
+        """
+        if delete_enrollment:
+            self.delete_section_enrollments(section_id)
+
         request = self._request(
             'DELETE section by id',
             '/sections/{}'.format(section_id))
@@ -612,6 +619,35 @@ class QSAPIWrapper(qs.APIWrapper):
         request.request_data = {'studentIds': json.dumps(student_ids)}
         request.verb = qs.POST
         return self._make_request(request, **kwargs)
+
+    @qs.clean_arg
+    def delete_section_enrollments(self, section_id, student_ids=None,
+            **kwargs):
+        """DELTE all enrollments for a given section.
+
+        student_ids should be a list of student ids, and, if supplied,
+        only those students are unenrolled.
+        """
+        if not student_ids or type(student_ids) is not list:
+            student_ids = self.get_section_enrollment(section_id)
+            student_ids = [i['id'] for i in student_ids['students']]
+        request = self._request(
+            'DELETE section enrollments',
+            '/sectionenrollments/{}'.format(section_id))
+        request.verb = qs.DELETE
+        request.request_data = {
+            'studentIds': json.dumps(student_ids)
+        }
+        response = self._make_request(request, **kwargs)
+        if request.successful:
+            self._section_enrollment_cache.invalidate(section_id)
+        return response
+
+    @qs.clean_arg
+    def delete_section_enrollment(self, section_id, student_id, **kwargs):
+        """DELETE enrollment for a single student in a single section"""
+        student_id = qs.clean_id(student_id)
+        return self.delete_section_enrollments(section_id, [student_id])
 
     # ===============
     # = Assignments =
