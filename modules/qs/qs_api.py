@@ -284,7 +284,7 @@ class QSAPIWrapper(qs.APIWrapper):
 
         if semester_id:
             semester_id = qs.clean_id(semester_id)
-            kwargs.update({'cachedata': {'semesterId': semester_id}})
+            kwargs.update({'cache_filter': {'semesterId': semester_id}})
 
             if _should_make_request(cache, **kwargs):
                 request = self._request(
@@ -329,9 +329,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 '/sections/{}'.format(section_id))
             request.fields += ['smsAcademicSemesterId']
             section = self._make_request(request, **kwargs)
-            cache.add(section)
-            self.get_sections(
-                semester_id=section['smsAcademicSemesterId'],
+            self.get_sections(semester_id=section['smsAcademicSemesterId'],
                 **kwargs)
         return cache.get(section_id, **kwargs)
 
@@ -339,7 +337,7 @@ class QSAPIWrapper(qs.APIWrapper):
             student_id=None, allow_multiple=False, critical=False,
             match_name=True, match_code=True, match_class_id=False,
             match_class_name=True, match_teachers=True):
-        """Match a section based on various identifying factors.
+        """Match a section based on id, name, or section dict.
 
         Args:
             identifier: The identifier to match on. There are a few options for
@@ -412,6 +410,7 @@ class QSAPIWrapper(qs.APIWrapper):
             teacher_ids = set([i['id'] for i in candidate['teachers']])
             candidate['teacherIds'] = teacher_ids
             if dealbreaker(match_name, 'sectionName'): continue
+            if dealbreaker(match_code, 'sectionCode'): continue
             if dealbreaker(match_class_id, 'classId'): continue
             if dealbreaker(match_class_name, 'className'): continue
             if dealbreaker(match_teachers, 'teacherIds'): continue
