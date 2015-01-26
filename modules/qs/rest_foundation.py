@@ -153,7 +153,10 @@ class RestRequest(object):
                 qs.logger.error(*args, cc_print=True, **kwargs)
 
     def _log_dict(self):
-        """The dict-based description of this request, mainly for logging"""
+        """The dict-based description of this request, mainly for logging
+
+        #TODO: add the full URL with params so that it can be repeated via curl
+        """
         desc = {
             'URI': self.uri,
             'full URI': self._full_url(),

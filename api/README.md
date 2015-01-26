@@ -27,6 +27,17 @@ CLI usage:
 ./copy_enrollments_from_backup_server.py {schoolcode}
 
 
+####[`delete_all_assignments.py`](./delete_all_assignments.py)
+
+Delete ALL assignments, including final grades, for ALL sections in the
+active semester
+
+Be VERY careful with this one.
+
+CLI Usage:
+./delete_all_assignments {schoolcode}
+
+
 ####[`delete_all_section_enrollments.py`](./delete_all_section_enrollments.py)
 
 Unenroll all students from all sections in the active semester.

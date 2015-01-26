@@ -487,7 +487,7 @@ class QSAPIWrapper(qs.APIWrapper):
         delete the section.
         """
         if delete_enrollment:
-            self.delete_section_enrollments(section_id)
+            self.delete_all_section_enrollments_for_section(section_id)
 
         request = self._request(
             'DELETE section by id',
@@ -509,6 +509,8 @@ class QSAPIWrapper(qs.APIWrapper):
 
         Takes the sames kwargs as `.get_sections()` for deciding which
         sections to show.
+
+        #TODO: by default return the 'students' list, not the full API obj
         """
         self._update_section_enrollment_cache()
         by_id = kwargs.get('by_id')
@@ -654,7 +656,9 @@ class QSAPIWrapper(qs.APIWrapper):
     def delete_all_section_enrollments_for_section(self, section_id, **kwargs):
         """"Delete all the sections enrollments for a section"""
         to_delete = self.get_section_enrollment(section_id)
-        self.delete_section_enrollments(section_id, to_delete)
+        to_delete = [i['smsStudentStubId'] for i in to_delete['students']]
+        if to_delete:
+            self.delete_section_enrollments(section_id, to_delete)
 
     # ===============
     # = Assignments =
@@ -759,6 +763,18 @@ class QSAPIWrapper(qs.APIWrapper):
             self._assignment_cache.add(response)
         return response
 
+    @qs.clean_arg
+    def delete_assignment(self, section_id, assignment_id, **kwargs):
+        """DELETE the assignment provided"""
+        request = self._request(
+            'DELETE assignment by id',
+            '/sections/{}/assignments/{}'.format(section_id, assignment_id))
+        request.verb = qs.DELETE
+        response = self._make_request(request, **kwargs)
+        if request.successful:
+            self._assignment_cache.invalidate(assignment_id)
+        return response
+
     # ==========
     # = Grades =
     # ==========
@@ -775,6 +791,7 @@ class QSAPIWrapper(qs.APIWrapper):
                 down to a specific student id.
 
         #TODO: Assembla #2219 is now deployed, so section_id can be None
+        #TODO: include some way to not get final grades
 
         Note that since grades do not have API
         assigned id's but the cache relies on an id, a unique id is generated

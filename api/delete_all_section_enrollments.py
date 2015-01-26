@@ -13,7 +13,7 @@ import qs
 def main():
     qs.logger.config(__file__)
     schoolcode = sys.argv[1]
-    q = qs.API(schoolcode)
+    q = qs.API(schoolcode, 'local')
 
     for section_dict in qs.bar(q.get_sections()):
         q.delete_all_section_enrollments_for_section(section_dict['id'])

@@ -2,18 +2,23 @@
 """Unenroll enrolled_no_valid_grades students from Q1
 
 Run with either quarter active.
+
+CLI Usage:
+./unenroll.py {schoolcode}
 """
 
+import sys
 import json
 import qs
 
 
 def main():
     qs.logger.config(__file__)
-    q = qs.API('invtla2', 'live')
-    downloaded = json.load(open('rolling_migration.json'))
+    schoolcode = sys.argv[1]
+    q = qs.API(schoolcode, 'local')
+    data = json.load(open('rolling_migration.json'))
 
-    for section_id, section_dict in qs.bar(downloaded.iteritems()):
+    for section_id, section_dict in qs.bar(data.iteritems()):
         to_delete = section_dict['enrolled_no_valid_grades']
         if to_delete:
             q.delete_section_enrollments(section_id, to_delete)

@@ -84,6 +84,9 @@ class ListWithIDCache(RestCache):
 
     def add(self, new_data):
         """Add to the cache with a list or single dict. Like list.append."""
+        if not new_data:
+            qs.logger.warning("new_data is None, so noop")
+            return
         if type(new_data) not in [dict, list]:
             raise TypeError('new_data must be a dict or list, not {}'.format(
                 type(new_data)))

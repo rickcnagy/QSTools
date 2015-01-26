@@ -5,19 +5,23 @@ CLI usage:
 ./copy_enrollments_from_backup_server.py {schoolcode}
 """
 
+import sys
 import qs
 
 
 def main():
     qs.logger.config(__file__)
-    backup = qs.API('intvla2', 'backup')
-    live = qs.API('intvla2', 'local')
+    schoolcode = sys.argv[1]
+    backup = qs.API(schoolcode, 'backup')
+    live = qs.API(schoolcode, 'local')
 
-    for section_id in qs.bar(backup.get_sections()):
+    for section_dict in qs.bar(backup.get_sections()):
+        section_id = section_dict['id']
         backup_enrollment = backup.get_section_enrollment(section_id)
+        backup_enrollment = backup_enrollment['students']
         enrolled_ids = [i['smsStudentStubId'] for i in backup_enrollment]
 
-        live.post_section_enrollments(enrolled_ids)
+        live.post_section_enrollment(section_id, enrolled_ids)
 
 if __name__ == '__main__':
     main()
