@@ -19,6 +19,14 @@ Check that all sections in source_semester have an exact match in the active sem
 
 Clear the gradebook in all sections section_ids
 
+####[`copy_enrollments_from_backup_server.py`](./copy_enrollments_from_backup_server.py)
+
+Run with Q1 active on live and backup
+
+CLI usage:
+./copy_enrollments_from_backup_server.py {schoolcode}
+
+
 ####[`delete_all_section_enrollments.py`](./delete_all_section_enrollments.py)
 
 Unenroll all students from all sections in the active semester.

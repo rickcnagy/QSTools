@@ -15,7 +15,7 @@ import qs
 def main():
     qs.logger.config(__file__)
     q = qs.API('intvla2', 'local')
-    downloaded = json.load(open('download.json'))
+    downloaded = json.load(open('rolling_migration.json'))
 
     for old_section_id, old_section_dict in qs.bar(downloaded.iteritems()):
         new_section = q.match_section(old_section_id)

@@ -39,7 +39,7 @@ def main():
 
         output[section_id] = section_output
 
-    qs.write_no_overwrite(qs.dumps(output), 'download.json')
+    qs.write_no_overwrite(qs.dumps(output), 'rolling_migration.json')
 
 
 def get_valid_and_invalid_grades(section_id):

@@ -1,5 +1,9 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Run with Q1 active on live and backup"""
+"""Run with Q1 active on live and backup
+
+CLI usage:
+./copy_enrollments_from_backup_server.py {schoolcode}
+"""
 
 import qs
 

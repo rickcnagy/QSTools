@@ -11,7 +11,7 @@ import qs
 def main():
     qs.logger.config(__file__)
     q = qs.API('invtla2', 'live')
-    downloaded = json.load(open('download.json'))
+    downloaded = json.load(open('rolling_migration.json'))
 
     for section_id, section_dict in qs.bar(downloaded.iteritems()):
         to_delete = section_dict['enrolled_no_valid_grades']
