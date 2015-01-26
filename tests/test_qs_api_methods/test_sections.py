@@ -49,15 +49,18 @@ def test_active_only():
     assert_not_in(NAS1_SECTION_ID, q.get_sections(by_id=True))
     assert_in(NAS1_SECTION_ID, q.get_sections(by_id=True, active_only=False))
 
+
 def test_get_all():
     all_sections = q.get_sections(by_id=True, all_semesters=True)
     assert_in(NAS2_SECTION_ID, all_sections)
     assert_in(NAS1_SECTION_ID, all_sections)
     assert_in(SECTION_ID, all_sections)
 
+
 def test_get_section():
     new = qs.API()
     assert_equals(new.get_section(SECTION_ID)['sectionName'], SECTION_NAME)
+    # assures that ALL sections from that semester are retrieved
     assert_greater(len(new._section_cache.get()), 1)
 
 
@@ -87,6 +90,7 @@ def test_no_semester_id_warning():
 #  = Match Section =
 #  =================
 
+
 def test_match_by_name():
     match = q.match_section(SECTION_NAME)
     assert_is_dnd(match)
@@ -94,6 +98,7 @@ def test_match_by_name():
 
 def test_match_id():
     match = q.match_section(NAS1_SECTION_ID, match_name=False)
+    assert_is_dnd(match)
 
 
 def test_match_dict():
@@ -102,6 +107,7 @@ def test_match_dict():
         'sectionCode': 'DND',
     }
     match = q.match_section(match_dict)
+    assert_is_dnd(match)
 
 
 def test_multiple_match():
@@ -156,6 +162,7 @@ def assert_is_dnd(section):
 # = POST section =
 # ================
 
+
 def test_posted_section():
     assert_is_not_none(q.get_section(posted_section['id']))
 
@@ -167,6 +174,7 @@ def test_posted_section():
 # ==================
 # = DELETE section =
 # ==================
+
 
 def test_delete_section():
     new = q.post_section('temp 2', 'temp 2', CLASS_ID, TEACHER_ID)
