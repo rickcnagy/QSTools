@@ -99,9 +99,14 @@ class ListWithIDCache(RestCache):
         self._data.update(cleaned_input)
 
     def invalidate(self, key=None):
-        """Invalidate either the entire cache or just a single key."""
+        """Invalidate either the entire cache or just a single key.
+
+        If key is provided and not in the cache, nothing is invalidated
+        """
+        if not self._data: return
         if key:
-            del self._data[qs.clean_id(key)]
+            if key in self._data:
+                del self._data[qs.clean_id(key)]
         else:
             super(ListWithIDCache, self).invalidate()
 
