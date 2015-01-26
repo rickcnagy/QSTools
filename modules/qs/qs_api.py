@@ -620,16 +620,18 @@ class QSAPIWrapper(qs.APIWrapper):
         return self._make_request(request, **kwargs)
 
     @qs.clean_arg
-    def delete_section_enrollments(self, section_id, student_ids=None,
+    def delete_section_enrollments(self, section_id, student_ids,
             **kwargs):
         """DELTE all enrollments for a given section.
 
         student_ids should be a list of student ids, and, if supplied,
         only those students are unenrolled.
         """
-        if not student_ids or type(student_ids) is not list:
-            student_ids = self.get_section_enrollment(section_id)
-            student_ids = [i['id'] for i in student_ids['students']]
+        if type(student_ids) is not list:
+            raise TypeError("student_ids should be list")
+        elif len(student_ids) == 0:
+            raise ValueError("student_ids can't be empty list")
+
         request = self._request(
             'DELETE section enrollments',
             '/sectionenrollments/{}'.format(section_id))
@@ -647,6 +649,12 @@ class QSAPIWrapper(qs.APIWrapper):
         """DELETE enrollment for a single student in a single section"""
         student_id = qs.clean_id(student_id)
         return self.delete_section_enrollments(section_id, [student_id])
+
+    @qs.clean_arg
+    def delete_all_section_enrollments_for_section(self, section_id, **kwargs):
+        """"Delete all the sections enrollments for a section"""
+        to_delete = self.get_section_enrollment(section_id)
+        self.delete_section_enrollments(section_id, to_delete)
 
     # ===============
     # = Assignments =

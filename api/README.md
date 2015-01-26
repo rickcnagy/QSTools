@@ -19,6 +19,15 @@ Check that all sections in source_semester have an exact match in the active sem
 
 Clear the gradebook in all sections section_ids
 
+####[`delete_all_section_enrollments.py`](./delete_all_section_enrollments.py)
+
+Unenroll all students from all sections in the active semester.
+
+CLI usage:
+
+./delete_all_section_enrollments.py {schoolcode}
+
+
 ####[`delete_all_sections.py`](./delete_all_sections.py)
 
 
@@ -83,6 +92,8 @@ Command line usage:
 ####[`logs/`](./logs)
 
 ####[`Report Card Grades to Transcripts/`](./Report Card Grades to Transcripts)
+
+####[`Rolling Enrollment Semester Migration/`](./Rolling Enrollment Semester Migration)
 
 ####[`student_name_to_id_matcher.py`](./student_name_to_id_matcher.py)
 
