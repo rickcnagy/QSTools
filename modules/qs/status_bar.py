@@ -6,6 +6,7 @@ https://github.com/noamraph/tqdm
 
 import sys
 import time
+import itertools
 
 
 def status_bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
@@ -76,7 +77,11 @@ def status_bar(iterable, desc='', total=None, leave=True, file=sys.stderr,
         try:
             total = len(iterable)
         except TypeError:
-            total = None
+            if 'next' in dir(iterable):
+                iterable, iterable_for_len = itertools.tee(iterable)
+                total = len([i for i in iterable_for_len])
+            else:
+                total = None
 
     prefix = desc + ': ' if desc else ''
 
