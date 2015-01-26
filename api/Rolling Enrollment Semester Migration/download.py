@@ -16,7 +16,7 @@ import qs
 
 schoolcode = sys.argv[1]
 CUTOFF_DATE = qs.parse_datestring('2014-9-22')
-q = qs.API(schoolcode, 'local')
+q = qs.API(schoolcode)
 
 
 def main():

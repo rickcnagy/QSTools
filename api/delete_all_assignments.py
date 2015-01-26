@@ -15,7 +15,7 @@ import qs
 def main():
     qs.logger.config(__file__)
     schoolcode = sys.argv[1]
-    q = qs.API(schoolcode, 'local')
+    q = qs.API(schoolcode)
 
     for section in qs.bar(q.get_sections()):
         section_id = section['id']

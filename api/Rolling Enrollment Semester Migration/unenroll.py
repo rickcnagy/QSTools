@@ -15,7 +15,7 @@ import qs
 def main():
     qs.logger.config(__file__)
     schoolcode = sys.argv[1]
-    q = qs.API(schoolcode, 'local')
+    q = qs.API(schoolcode)
     data = json.load(open('rolling_migration.json'))
 
     for section_id, section_dict in qs.bar(data.iteritems()):

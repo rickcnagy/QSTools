@@ -13,7 +13,7 @@ def main():
     qs.logger.config(__file__)
     schoolcode = sys.argv[1]
     backup = qs.API(schoolcode, 'backup')
-    live = qs.API(schoolcode, 'local')
+    live = qs.API(schoolcode)
 
     for section_dict in qs.bar(backup.get_sections()):
         section_id = section_dict['id']
