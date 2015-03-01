@@ -12,4 +12,4 @@ $(".resultsHolder li").each(function() {
     if (switches.indexOf($(this).text()) > -1) {
         $(this).click();
     }
-})
+});

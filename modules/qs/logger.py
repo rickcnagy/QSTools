@@ -151,10 +151,15 @@ def filename(path, filename):
     If there's a path param, includes the sender's name (e.g. download.py).
     Filename has precedence for log filename unless None
     """
-    if path:
+    log_path = path
+    if log_path:
         log_path = path if os.path.isdir(path) else os.path.dirname(path)
-    else:
+
+    # get the current dir if the path is empty or if os.path.dirname(path)
+    # is empty
+    if not log_path:
         log_path = os.getcwd()
+
     log_path += '/logs'
     if not os.path.exists(log_path):
         os.mkdir(log_path)

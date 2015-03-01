@@ -1,5 +1,7 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Run with Q1 active on live and backup
+"""Copy subject enrollment from all subjects on the backup server to live.
+
+Run with Q1 active on live and backup
 
 CLI usage:
 ./copy_enrollments_from_backup_server.py {schoolcode}
@@ -21,7 +23,8 @@ def main():
         backup_enrollment = backup_enrollment['students']
         enrolled_ids = [i['smsStudentStubId'] for i in backup_enrollment]
 
-        live.post_section_enrollment(section_id, enrolled_ids)
+        if enrolled_ids:
+            live.post_section_enrollment(section_id, enrolled_ids)
 
 if __name__ == '__main__':
     main()

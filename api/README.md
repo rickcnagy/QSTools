@@ -21,6 +21,8 @@ Clear the gradebook in all sections section_ids
 
 ####[`copy_enrollments_from_backup_server.py`](./copy_enrollments_from_backup_server.py)
 
+Copy subject enrollment from all subjects on the backup server to live.
+
 Run with Q1 active on live and backup
 
 CLI usage:

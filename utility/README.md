@@ -67,6 +67,14 @@ Example Usage:
 ./utility/readme_generator.py ./api 'API Scripts'
 
 
+####[`titlecase_all.py`](./titlecase_all.py)
+
+Titlecase all cells (except for headers) in a CSV
+
+CLI Usage:
+python titlecase_all.py filepath
+
+
 ####[`transform_criteria_to_dropdowns.py`](./transform_criteria_to_dropdowns.py)
 
 Transform a file of criteria to dropdowns.
