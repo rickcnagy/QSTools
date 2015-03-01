@@ -5,6 +5,7 @@
 var iter = new QSGradebookIterator(function() {
     this.click("Edit it anyways");
     this.click("Save");
+    this.next();
 });
 
 iter.onComplete(function() {
