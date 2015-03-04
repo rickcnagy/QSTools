@@ -55,7 +55,10 @@ def print_break(break_str='*'):  # pragma: no cover
     Args:
         break_str: the string to use in the break on repeat.
     """
-    columns = float(subprocess.check_output(['stty', 'size']).split()[1])
+    try:
+        columns = float(subprocess.check_output(['stty', 'size']).split()[1])
+    except subprocess.CalledProcessError:
+        columns = 80
     print
     print break_str * int(columns / len(break_str))
     print

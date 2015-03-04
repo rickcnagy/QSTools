@@ -50,7 +50,7 @@ def write_csv(rows, filepath, overwrite=False, column_headers=None):
         column_headers = sorted(list(column_headers))
 
     if overwrite is False:
-        filepath = qs.unique_path(filepath)
+        filepath = qs.unique_path(filepath, extension='csv')
 
     for row in rows:
         _clean_row_for_csv(row)
