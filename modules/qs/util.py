@@ -144,6 +144,7 @@ def is_builtin(obj):
     builtins = [int, str, dict, list, set, float]
     return type(obj) in builtins
 
+
 def make_id(*args):
     """Make an id based on arbitrary number of args. This id is in the format
     of: 'arg1:arg2:...:argn'. This is useful for when multiple values must
@@ -357,6 +358,13 @@ def write(file_contents, filename):
 def write_no_overwrite(file_contents, filename, **kwargs):
     """Write file_contents to filename but without overwriting"""
     write(file_contents, unique_path(filename, **kwargs))
+
+
+def escape_filename(filename):
+    unsafe_characters = ['/']
+    return ''.join([
+        i if i not in unsafe_characters else '-'
+        for i in filename])
 
 
 def parse_datestring(datestring):
