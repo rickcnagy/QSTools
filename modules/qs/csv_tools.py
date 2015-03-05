@@ -130,9 +130,18 @@ class CSV(object):
             return True
 
     def save(self, filepath=None, overwrite=False):
-        """Save the CSV to disk."""
+        """Save the CSV to disk.
+
+        This also adds any columns in self.rows to self.cols so that they'll
+        also be written. This would only occur when a column has been added
+        implicitly by putting data in a row key that isn't in self.cols.
+        """
         if filepath:
             self.filepath = filepath
+
+        for row in self.rows:
+            new_cols = {i for i in row.keys() if i not in self.cols}
+            self.cols.extend(new_cols)
 
         write_csv(
             self.rows,
