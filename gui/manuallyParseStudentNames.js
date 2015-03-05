@@ -8,16 +8,17 @@
  */
 
 
-var nameRegex = /([\w' -]+)[,|.]* ([\w'-]+)( ([\w' -]+).*)*/
+var nameRegex = /([\w' -]+)[,|.]* ([\w'-]+)( ([\w' -]+).*)*/;
 
 new QSTableIterator(function() {
     var studentName = $(".recordHeaderWidget").find("h1").text();
     var match = nameRegex.exec(studentName);
-    if (match) {
-        function setText(elem, text) {
-            elem.val(text).change().blur();
-        }
-        
+
+    function setText(elem, text) {
+        elem.val(text).change().blur();
+    }
+
+    if (match) {     
         var nameBoxes = QSIterator.qpInputByLabel("Name", null, true);
         setText(nameBoxes.eq(0), match[2]);
         setText(nameBoxes.eq(1), match[4]);
@@ -26,7 +27,7 @@ new QSTableIterator(function() {
     this.click("Save");
     if (this.click("Ok")) {
         this.click("Close");
-        this.click("Navigate away")
+        this.click("Navigate away");
     }
     this.next();
 }).start();
