@@ -82,7 +82,7 @@ def main():
             student_names_not_matched)
     else:
         qs.logger.info('All students were matched in the db.')
-    csv_students.save("with student IDs")
+    csv_students.save(filepath="with student IDs")
 
 if __name__ == '__main__':
     main()

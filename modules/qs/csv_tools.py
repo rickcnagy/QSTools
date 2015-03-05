@@ -129,8 +129,11 @@ class CSV(object):
                     self.cleaned_values += cleaned_row.values()
             return True
 
-    def save(self, overwrite=False):
+    def save(self, filepath=None, overwrite=False):
         """Save the CSV to disk."""
+        if filepath:
+            self.filepath = filepath
+
         write_csv(
             self.rows,
             self.filepath,
