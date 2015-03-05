@@ -4,8 +4,10 @@ Name columns.
 
 If ignore_case is true, this will ignore case when matching student names
 
+This doesn't save unless it finds matches for **all students in the csv**.
+
 Usage:
-    ./add_student_id {filename.csv} {schoolcode} {ignore_case} {enrolled_only}
+    ./add_student_id {schoolcode} {filename.csv} {ignore_case} {enrolled_only}
 
 Requires:
     A CSV with "First" and "Last" columns, with an exact name match to the
@@ -20,8 +22,10 @@ import qs
 
 
 def main():
-    filename = sys.argv[1]
-    schoolcode = sys.argv[2]
+    qs.logger.config(__file__)
+
+    schoolcode = sys.argv[1]
+    filename = sys.argv[2]
     ignore_case = bool(sys.argv[3]) if len(sys.argv) > 3 else True
     enrolled_only = bool(sys.argv[4]) if len(sys.argv) > 4 else False
     csv_students = qs.CSV(filename)
