@@ -177,11 +177,11 @@ class QSAPIWrapper(qs.APIWrapper):
             search: add a search string as per API docs
             show_deleted: Show deleted students.
             show_has_left: Show students that have left.
-            ignore_deleted_duplicates: Ignore any students that have  are
-                deleted that have a fullName that matches another student,
-                deleted or not. This is useful if the student names need to be
-                unique, but there are deleted copies of real students. This is
-                mute unless show_deleted=True.
+            ignore_deleted_duplicates: Ignore any students that are deleted
+                and have a fullName that matches another student, deleted or
+                not. This is useful if the student names need to be unique, but
+                there are deleted copies of real students. This is mute
+                unless show_deleted=True.
         """
         cache = self._student_cache
 

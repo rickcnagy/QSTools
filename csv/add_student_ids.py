@@ -41,7 +41,8 @@ def main():
     else:
         db_students = q.get_students(
             show_has_left=True,
-            ignore_unenrolled_duplicates=True)
+            show_deleted=True,
+            ignore_deleted_duplicates=True)
     db_duplicates = qs.find_dups_in_dict_list(db_students, 'fullName')
 
     if db_duplicates:

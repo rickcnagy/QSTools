@@ -115,7 +115,3 @@ Command line usage:
 ####[`Report Card Grades to Transcripts/`](./Report Card Grades to Transcripts)
 
 ####[`Rolling Enrollment Semester Migration/`](./Rolling Enrollment Semester Migration)
-
-####[`student_name_to_id_matcher.py`](./student_name_to_id_matcher.py)
-
-Take a CSV with student names and add a student ID column with Student IDs matched by name
