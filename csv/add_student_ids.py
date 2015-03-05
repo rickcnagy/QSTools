@@ -7,7 +7,7 @@ If ignore_case is true, this will ignore case when matching student names
 This doesn't save unless it finds matches for **all students in the csv**.
 
 Usage:
-    ./add_student_id {schoolcode} {filename.csv} {ignore_case} {enrolled_only}
+    ./add_student_id {schoolcode} {filename.csv} {opt ignore_case} {opt enrolled_only}
 
 Requires:
     A CSV with "First" and "Last" columns, with an exact name match to the
