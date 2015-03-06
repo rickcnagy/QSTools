@@ -6,7 +6,12 @@
  * all semesters that don't have formulas.
  *
  * The formulas is a final grade formula, simply 100% assignment.
+ *
+ * If you don't want to start on a particular teacher, leave startingTeacher
+ * blank.
  */
+
+var startingTeacher = "Zahir";
 
 new QSGradebookIterator(function() {
     if ($(".formulaColumn").length) {
@@ -21,4 +26,4 @@ new QSGradebookIterator(function() {
     this.click("Save");
 
     this.afterLoad(this.next);
-}).start();
+}, startingTeacher).start();

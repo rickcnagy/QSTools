@@ -15,7 +15,7 @@ GUI Scripts
 
 ####[`createGradebookFinalGradeFormulas.js`](./createGradebookFinalGradeFormulas.js)
 
- Create a final grade formula in each gradebook that DOESN'T HAVE ANY FORMULA COLUMNS. This spans all semesters, so it'll create final grades in all gradebooks in all semesters that don't have formulas. The formulas is a final grade formula, simply 100% assignment. 
+ Create a final grade formula in each gradebook that DOESN'T HAVE ANY FORMULA COLUMNS. This spans all semesters, so it'll create final grades in all gradebooks in all semesters that don't have formulas. The formulas is a final grade formula, simply 100% assignment. If you don't want to start on a particular teacher, leave startingTeacher blank. 
 
 ####[`deleteAllCriteria.js`](./deleteAllCriteria.js)
 
