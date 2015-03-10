@@ -1,5 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-"""Utility script to analyze page count in report cards.
+"""Utility script to analyze page count in report cards in the current dir.
 
 This counts the number of pages in each RC and compares to the target length.
 For schools where the number of pages is important, this is a great way to
@@ -9,18 +9,19 @@ Searches the current directory (non recursively) for PDF's and counts their
 pages.
 
 CLI Usage:
-folder_pdf_page_count.py {schoolcode}
+folder_pdf_page_count.py {schoolcode} {target_length}
 
-If schoolcode is supplied (optional), then each student's class will be printed
-along with their name
+The target length is how long we *want* the PDF's to be.
 """
 
 import re
+import sys
 import os
 import json
 import qs
 
-TARGET_LENGTH = 4
+_length_re = None
+_api = None
 
 
 def main():
@@ -45,15 +46,15 @@ def main():
 
 
 def too_short(cards):
-    return [i for i in cards if i.length() < 4]
+    return [i for i in cards if i.length() < target_length()]
 
 
 def too_long(cards):
-    return [i for i in cards if i.length() > 4]
+    return [i for i in cards if i.length() > target_length()]
 
 
 def just_right(cards):
-    return [i for i in cards if i.length() == 4]
+    return [i for i in cards if i.length() == target_length()]
 
 
 def get_filenames():
@@ -61,19 +62,32 @@ def get_filenames():
         return [i for i in files if os.path.splitext(i)[1] == '.pdf']
 
 
+def target_length():
+    return float(sys.argv[2])
+
+
+def length_re():
+    global _length_re
+    if not _length_re:
+        re_str = r"/Type\s*/Page([^s]|$)"
+        _length_re = re.compile(re_str, re.MULTILINE | re.DOTALL)
+    return _length_re
+
+
+def api():
+    global _api
+    if not _api:
+        _api = qs.API(sys.argv[1])
+    return _api
+
+
 class ReportCard(object):
-    length_re =  re.compile(r"/Type\s*/Page([^s]|$)", re.MULTILINE | re.DOTALL)
-
-    # TODO: make schoolcode cli and optional
-    # qs_api = qs.API('SCHOOLCODE')
-    # qs.logger.silence()
-    # qs_api.get_students(silent=True)
-
     def __init__(self, filename):
         self.filename = filename
 
         self.student_name = os.path.splitext(self.filename)[0]
         self.student_name = self.student_name.split(' - ')[1]
+        self.student_name = qs.unicode_decode(self.student_name)
 
     def __str__(self):
         return "{} ({}): {} pp".format(
@@ -83,10 +97,10 @@ class ReportCard(object):
 
     def length(self):
         data = file(self.filename, 'rb').read()
-        return len(self.length_re.findall(data))
+        return len(length_re().findall(data))
 
     def student_class_name(self):
-        student = self.qs_api.get_students_by_name(self.student_name)[0]
+        student = api().get_students_by_name(self.student_name, silent=True)[0]
         return student['className']
 
 

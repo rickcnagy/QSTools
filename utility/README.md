@@ -10,7 +10,7 @@ Usage is as follows:
 
 ####[`folder_pdf_page_count.py`](./folder_pdf_page_count.py)
 
-Utility script to analyze page count in report cards.
+Utility script to analyze page count in report cards in the current dir.
 
 This counts the number of pages in each RC and compares to the target length.
 For schools where the number of pages is important, this is a great way to
@@ -20,10 +20,9 @@ Searches the current directory (non recursively) for PDF's and counts their
 pages.
 
 CLI Usage:
-folder_pdf_page_count.py {schoolcode}
+folder_pdf_page_count.py {schoolcode} {target_length}
 
-If schoolcode is supplied (optional), then each student's class will be printed
-along with their name
+The target length is how long we *want* the PDF's to be.
 
 
 ####[`parse_criteria_txt_file.py`](./parse_criteria_txt_file.py)
