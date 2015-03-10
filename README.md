@@ -11,7 +11,6 @@ A toolset for programmatically controlling the QuickSchools API and GUI.
 2. `cd` into the unzipped folder.
 3. Run:
 ```
-pip install reindent requests
 python setup.py install
 ```
 After doing this, a `qs` module will be importable from all Python scripts, and all scripts in this repo will have the necessary dependencies.

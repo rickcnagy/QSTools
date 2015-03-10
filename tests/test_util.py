@@ -163,6 +163,20 @@ def test_parse_datestring():
     assert_equals(qs.parse_datestring('2014-10-13'), test_date)
 
 
+def test_unicode_decode():
+    # 2 representations (different encodings) of o with accent
+    latin_1 = '\xf3'
+    utf_8 = 'o\xcc\x81'
+
+    dec_latin_1 = qs.unicode_decode(latin_1)
+    dec_utf_8 = qs.unicode_decode(utf_8)
+
+    assert_equals(dec_latin_1, dec_utf_8)
+
+    assert_equals(len(dec_latin_1), 1)
+    assert_equals(len(dec_utf_8), 1)
+
+
 def teardown():
     os.remove('._qstest.txt')
     os.remove('._qstest(5).txt')

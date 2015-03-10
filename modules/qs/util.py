@@ -18,8 +18,10 @@ import textwrap
 import subprocess
 import inspect
 import sys
+import unicodedata
 import datetime
 import requests
+import chardet
 
 
 def dumps(arbitry_obj, sort=False, indent=4):
@@ -365,6 +367,18 @@ def escape_filename(filename):
     return ''.join([
         i if i not in unsafe_characters else '-'
         for i in filename])
+
+
+def is_ascii(string):
+    """Check if a string is ascii"""
+    return all(ord(character) < 128 for character in string)
+
+
+def unicode_decode(string):
+    """Detects encoding and decodes a unicode encoded string."""
+    encoding = chardet.detect(string)['encoding']
+    raw_unicode = unicode(string, encoding)
+    return unicodedata.normalize('NFC', raw_unicode)
 
 
 def parse_datestring(datestring):
