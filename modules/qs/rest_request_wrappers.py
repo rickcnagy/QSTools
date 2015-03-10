@@ -27,12 +27,12 @@ class QSRequest(qs.RestRequest):
     base_params = {'itemsPerPage': 1000}
     base_url = 'https://api.quickschools.com/sms/v1'
 
-    def __init__(self, description, uri):
+    def __init__(self, description, uri, **kwargs):
         self.return_type = None
         self.paging_info = None
         self.fields = []
 
-        super(QSRequest, self).__init__(description, uri)
+        super(QSRequest, self).__init__(description, uri, **kwargs)
 
     def _before_request(self):
         if self.fields:
@@ -73,6 +73,7 @@ class QSRequest(qs.RestRequest):
         if (self.return_type == 'Paged List'
                 and int(self.paging_info['number_of_pages']) > 1):
             qs.logger.critical('Receieved too may responses', self._log_dict())
+
 
 class QSBackupRequest(QSRequest):
     base_url = 'https://api.smartschoolcentral.com/sms/v1'

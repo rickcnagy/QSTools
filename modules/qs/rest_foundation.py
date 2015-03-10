@@ -42,7 +42,7 @@ class RestRequest(object):
         request_data: A dictionary of request-specific data to include.
         critical: A boolean indicating whether or not to exit if this request
             fails.
-        Logged: A boolean indicating whether or not this request should be
+        Silent: A boolean indicating whether or not this request should be
             logged or stay silent.
         verb: The HTTP verb to use, in all caps, such as: 'GET' or 'POST'
         base_uri:
@@ -60,21 +60,23 @@ class RestRequest(object):
         description: a description of this request. It should be in the form of
             "{verb} {noun}", like "GET data" or "POST results".
         uri: the uri of the resource to make the request at, beginning with '/'
+        kwargs can include:
+            silent to set request to silent
     """
     base_url = ''
     base_params = {}
     base_request_data = {}
     base_headers = {}
 
-    def __init__(self, description, uri):
+    def __init__(self, description, uri, **kwargs):
         self.description = description
         self.uri = uri
 
         self.params = {}
         self.request_data = {}
         self.headers = {}
+        self.silent = True if kwargs.get('silent') is True else False
         self.critical = False
-        self.logged = True
         self.verb = 'GET'
 
         self.response = None
@@ -84,7 +86,7 @@ class RestRequest(object):
     def make_request(self):
         """Make the request at the uri with specified data and params.
 
-        If logged is True, then the data will be logged before and after the
+        If silent is False, then the data will be logged before and after the
         request with vital information. If critical is True, then if the
         request fails, sys.exit() will be called.
 
@@ -136,12 +138,12 @@ class RestRequest(object):
         return self.response.status_code == 200
 
     def _log_before(self):
-        if not self.logged: return
+        if self.silent: return
         qs.logger.info(self, self._log_dict(), is_request=True)
 
     def _log_after(self):
         # TODO: include response_type in log
-        if not self.logged: return
+        if self.silent: return
         args = [self, self._log_dict()]
         kwargs = {'is_response': True}
         if self.successful:
