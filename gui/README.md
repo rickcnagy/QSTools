@@ -53,6 +53,10 @@ GUI Scripts
 
  Save all Gradebooks visible in the Gradebook module. 
 
+####[`saveAllParentRecords.js`](./saveAllParentRecords.js)
+
+ Open up all student records and then open all parents and save them. This doesn't actually resave the students, just the parents inside the students. At this point, parents are saved once per siblings, so often many times. This requires parent cards be on. 
+
 ####[`saveAllStudentRecords.js`](./saveAllStudentRecords.js)
 
  Save all student records visible in the Students module and trigger the blur() event on the full name field to update the name separation. For more fine-grain control over the parsing, see ./manuallyParseStudentNames.js. 
