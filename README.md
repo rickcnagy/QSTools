@@ -26,6 +26,7 @@ After doing this, a `qs` module will be importable from all Python scripts, and 
     * [**utility**](./utility): Anything that you run locally that’s a utility - like converting stuff, counting stuff, etc. These generally don't rely on QSTools modules (though can) but more just are useful utilities for automating things locally.
     * [**deprecated**](./deprecated): When something changes in the API, GUI, etc to make a script either useless or impossible, it is moved here. These scripts are here just for archive purposes and won't be maintained.
     * [**tests**](./tests): All unit tests and integration tests, covering Python only for now. As stated above, *any file with a docstring* will be included in the coverage metrics and tested if possible. More on this below.
+    * [**samples**](./samples): Sample data for what scripts need to ingest to run properly.
     * [**fun**](./fun): Fun stuff, like changing the labels on Zendesk for `Tickets` to `Mysteries` :smiley:
 
 ###Git Hooks, the Build, and Coverage
