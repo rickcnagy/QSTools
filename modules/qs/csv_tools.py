@@ -53,7 +53,7 @@ def write_csv(rows, filepath, overwrite=False, column_headers=None):
         filepath = qs.unique_path(filepath, extension='csv')
 
     for row in rows:
-        _clean_row_for_csv(row)
+        _sanitized_row_for_csv(row)
 
     with open(filepath, 'w') as f:
         writer = csv.DictWriter(f, column_headers)
@@ -72,7 +72,7 @@ def dict_to_csv(data_dict, cols):
     # TODO: implement. Essentially is the reverse of CSV.as_tree()
 
 
-def _clean_row_for_csv(row):
+def _sanitized_row_for_csv(row):
     for key, val in row.iteritems():
         if type(val) is list:
             row[key] = FLATTEN_DELIM.join([str(i for i in val)])
@@ -98,132 +98,66 @@ class CSV(object):
         self.filepath = filepath
         self.values = []
         self.cols = []
-        self.cleaned_values = []
         self.rows = []
-        self.cleaned_rows = []
-        self.clean_func = None
         self.filter_func = None
         self.flatten_delim = ':'
 
         self.read()
 
     def read(self):
-        """
-        use val_funct to operate on all the values before as they are read in
-        process must return something - to leave as is, return val
-        """
         with open(self.filepath, 'rU') as f:
             self.cols = csv.reader(f).next()
             f.seek(0)
             raw_csv = csv.DictReader(f)
+
             for row in raw_csv:
+                row = {
+                    self._sanitized(key): self._sanitized(val)
+                    for key, val in row.iteritems()
+                }
                 self.rows.append(row)
                 self.values += row.values()
-                if self.clean_func:
-                    cleaned_row = {
-                        key: self.clean_func(key, val)
-                        for key, val
-                        in row.iteritems()
-                    }
-                    self.cleaned_rows.append(cleaned_row)
-                    self.cleaned_values += cleaned_row.values()
+
             return True
 
     def save(self, filepath=None, overwrite=False):
-        """Save the CSV to disk.
+        """Save the CSV to disk."""
+        output_filepath = self._prepare_for_saving(filepath, overwrite, 'csv')
+        write_csv(
+            self.rows,
+            output_filepath,
+            overwrite=True,
+            column_headers=self.cols
+        )
 
-        This also adds any columns in self.rows to self.cols so that they'll
-        also be written. This would only occur when a column has been added
-        implicitly by putting data in a row key that isn't in self.cols.
-        """
-        if filepath:
-            self.filepath = filepath
+    def save_as_json(self, filepath=None, overwrite=False):
+        output_filepath = self._prepare_for_saving(filepath, overwrite, 'json')
+        qs.write(self.get_json(), output_filepath)
+
+    def get_json(self):
+        return qs.dumps(self.rows)
+
+    def _sanitized(self, key):
+        if key:
+            return qs.unicode_decode(key)
+        else:
+            return None
+
+    def _prepare_for_saving(self, filepath, overwrite, new_extension):
+        """Processes the rows for saving and returns the filepath to use."""
+        filepath = filepath or self.filepath
 
         for row in self.rows:
             new_cols = {i for i in row.keys() if i not in self.cols}
             self.cols.extend(new_cols)
 
-        write_csv(
-            self.rows,
-            self.filepath,
-            overwrite=overwrite,
-            column_headers=self.cols
-        )
+        original_extension = os.path.splitext(self.filepath)[1]
+        if overwrite:
+            return self.filepath.replace(original_extension, new_extension)
+        else:
+            return qs.unique_path(self.filepath, extension=new_extension)
 
-    def as_tree(self, cols=None, rows_key='_rows'):
-        """return a version of the rows as a tree
-        format:
-        Name | Subject | Grade
-        -->
-        {'Name': {'Subject': Grade}}
-        """
-        cols = cols or self.cols
 
-        def process_branch(current, col_index):
-            """recursively process a branch all the way to the leaves
-            args:
-                current: the current node to add nodes to, sibling to _row
-                col_index: the index in cols that children will be from
-                rows_key: the key in current that holds all the valid rows
-            """
-            rows = current[rows_key]
-            col = cols[col_index]
-            current.update(child_dict(rows, col))
-
-            for key, new_current in current.iteritems():
-                if key == rows_key: continue
-
-                new_col_index = col_index + 1
-                new_col = cols[new_col_index]
-                if new_col_index == len(cols) - 1:
-                    process_leaf(current, key, col, new_col)
-                else:
-                    process_branch(new_current, new_col_index)
-
-            del current[rows_key]
-
-        def child_dict(rows, col):
-            """make a dict from rows, with dict for each key in the column
-
-            the value of each key is the rows in rows that have the same val in
-            col as the key
-            """
-            return {
-                row[col]: {rows_key: [
-                    child
-                    for child in rows
-                    if child[col] == row[col]]}
-                for row in rows
-            }
-
-        def process_leaf(current, key, node_col, leaf_col):
-            matching_vals = [
-                row[leaf_col]
-                for row in current[rows_key]
-                if leaf_col in row and row[node_col] == key
-            ]
-            matching_vals = list(set(matching_vals))
-            if len(matching_vals) == 1:
-                matching_vals = matching_vals[0]
-            elif len(matching_vals) == 0:
-                print "Warning: leaf is empty:\n{}".format(current[rows_key])
-            else:
-                print "Warning: leaf is list:\n{}".format(current[rows_key])
-            current[key] = matching_vals
-
-        root = child_dict(self.rows, cols[0])
-        for _, new_current in root.iteritems():
-            process_branch(new_current, 1)
-        return root
-
-    def unique(self, seq):
-        return list(OrderedDict.fromkeys(seq))
-
-    def cleaned_for_row(self, row):
-        return self.cleaned_rows[self.rows.index(row)]
-
-    def row_for_cleaned(self, cleaned):
-        return self.rows[self.cleaned_rows.index(cleaned)]
 
     def __str__(self):
         return self.json()
@@ -238,22 +172,86 @@ class CSV(object):
     def __getitem__(self, index):
         return self.rows[index]
 
-    def json(self):
-        return json.dumps(self.rows, indent=4)
 
-    def dump_json(self, filename):
-        json.dump(self.rows, open(filename, 'w'), indent=4, sort_keys=True)
+class CSVTree(CSV):
+    """A CSV that we want to convert to a dict tree via .tree()
+
+    The format:
+    Name | Subject | Grade
+    -->
+    {'Name': {'Subject': Grade}}
+    """
+
+    def tree(self, cols=None, rows_key='_rows'):
+        cols = cols or self.cols
+
+        root = self._child_dict(self.rows, cols[0])
+        for _, new_current in root.iteritems():
+            self._process_branch(new_current, 1)
+        return root
+
+    def _child_dict(rows, col):
+        """make a dict from rows, with dict for each key in the column
+
+        the value of each key is the rows in rows that have the same val in
+        col as the key
+        """
+        return {
+            row[col]: {rows_key: [
+                child
+                for child in rows
+                if child[col] == row[col]]}
+            for row in rows
+        }
+
+    def _process_branch(current, col_index):
+        """recursively process a branch all the way to the leaves
+        args:
+            current: the current node to add nodes to, sibling to _row
+            col_index: the index in cols that children will be from
+            rows_key: the key in current that holds all the valid rows
+        """
+        rows = current[rows_key]
+        col = cols[col_index]
+        current.update(child_dict(rows, col))
+
+        for key, new_current in current.iteritems():
+            if key == rows_key: continue
+
+            new_col_index = col_index + 1
+            new_col = cols[new_col_index]
+            if new_col_index == len(cols) - 1:
+                process_leaf(current, key, col, new_col)
+            else:
+                process_branch(new_current, new_col_index)
+
+        del current[rows_key]
+
+    def _process_leaf(current, key, node_col, leaf_col):
+        matching_vals = [
+            row[leaf_col]
+            for row in current[rows_key]
+            if leaf_col in row and row[node_col] == key
+        ]
+        matching_vals = list(set(matching_vals))
+        if len(matching_vals) == 1:
+            matching_vals = matching_vals[0]
+        elif len(matching_vals) == 0:
+            print "Warning: leaf is empty:\n{}".format(current[rows_key])
+        else:
+            print "Warning: leaf is list:\n{}".format(current[rows_key])
+        current[key] = matching_vals
 
 
 class CSVMatch(CSV):
 
-    def row_for_key_val(self, key, val, use_cleaned=False):
+    def row_for_key_val(self, key, val, use_sanitized=False):
         """
         returns a list of matching rows
         args
             key: the column name on the CSV
             value: the value to match in that column
-            use_cleaned: match using the cleaned list.
+            use_sanitized: match using the cleaned list.
                  note: still returns the raw data, not the cleaned data
 
         if there are multiple matches:
@@ -264,7 +262,7 @@ class CSVMatch(CSV):
         # TODO: This doesn't work right now, copy from row_for_val
         values = self.values
         rows = self.rows
-        if use_cleaned:
+        if use_sanitized:
             values = self.cleaned_values
             rows = self.cleaned_rows
 
@@ -276,11 +274,11 @@ class CSVMatch(CSV):
                 match = row
                 if match:
                     raise MultipleMatchError()
-                if use_cleaned:
-                    match = self.row_for_cleaned(match)
+                if use_sanitized:
+                    match = self.row_for_sanitizeded(match)
         return match
 
-    def row_for_val(self, val, use_cleaned=False, multiple_ok=False):
+    def row_for_val(self, val, use_sanitized=False, multiple_ok=False):
         """
         same as row_for_key_val, but searches all columns
         args:
@@ -288,8 +286,8 @@ class CSVMatch(CSV):
                 will return a list if there are multiple matches
                 otherwise raise a ValueError
         """
-        values = self.cleaned_values if use_cleaned else self.values
-        rows = self.cleaned_rows if use_cleaned else self.rows
+        values = self.cleaned_values if use_sanitized else self.values
+        rows = self.cleaned_rows if use_sanitized else self.rows
 
         if not val or val not in values: return
 
@@ -299,8 +297,8 @@ class CSVMatch(CSV):
             if val in row.values()
         ]
 
-        if use_cleaned:
-            matches = [self.row_for_cleaned(cleaned) for cleaned in matches]
+        if use_sanitized:
+            matches = [self.row_for_sanitizeded(cleaned) for cleaned in matches]
 
         if len(matches) > 1:
             if multiple_ok:
