@@ -121,7 +121,7 @@ class CSV(object):
             return True
 
     def save(self, filepath=None, overwrite=False):
-        """Save the CSV to disk."""
+        """Save the CSV to disk. Returns the filepath of the saved file."""
         output_filepath = self._prepare_for_saving(filepath, overwrite, 'csv')
         write_csv(
             self.rows,
@@ -129,10 +129,13 @@ class CSV(object):
             overwrite=True,
             column_headers=self.cols
         )
+        return output_filepath
 
     def save_as_json(self, filepath=None, overwrite=False):
+        """Save the CSV as a JSON object. Returns the filepath of the file."""
         output_filepath = self._prepare_for_saving(filepath, overwrite, 'json')
         qs.write(self.get_json(), output_filepath)
+        return output_filepath
 
     def get_json(self):
         return qs.dumps(self.rows)

@@ -13,8 +13,8 @@ def main():
     for filepath in sys.argv[1:]:
         csv = qs.CSV(filepath)
         new_filepath = filepath.replace('csv', 'json')
-        csv.save_as_json(new_filepath)
-
+        json_filepath = csv.save_as_json(new_filepath)
+        print "Saved {} as a JSON file:\n{}".format(filepath, json_filepath)
 
 if __name__ == '__main__':
     main()
