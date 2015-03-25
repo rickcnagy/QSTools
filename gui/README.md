@@ -49,6 +49,10 @@ GUI Scripts
 
  Parse full names on the Students module and manually set First, MI, Last. This is an alternative to simply triggering the blur() event on the name field, when for some reason that isn't working. This parses full names like "Jobs, Steve P.", but the regex could be adapted to fit whatever format the full name is currently in. 
 
+####[`openAllReportCards.js`](./openAllReportCards.js)
+
+ Opens all report cards, but doesn't save. This can be useful to recalculate JavaSnippets. 
+
 ####[`saveAllGradebooks.js`](./saveAllGradebooks.js)
 
  Save all Gradebooks visible in the Gradebook module. 
