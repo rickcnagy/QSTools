@@ -3,7 +3,7 @@
  * QSImporter should have a JSON Array that contains objects with fields
  * matching the Add Inquiry/Add Applicant page.
  *
- * See sample at samples/importInquiriesOrApplicants.sample.json
+ * See sample at examples/importInquiriesOrApplicants.sample.json
  */
 
 var importIterator = new QSImporter.iterator(function() {

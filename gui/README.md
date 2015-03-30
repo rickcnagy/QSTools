@@ -39,7 +39,7 @@ GUI Scripts
 
 ####[`importInquiriesOrApplicants.js`](./importInquiriesOrApplicants.js)
 
- Import inquiries or applicants from QSImporter. QSImporter should have a JSON Array that contains objects with fields matching the Add Inquiry/Add Applicant page. See sample at samples/importInquiriesOrApplicants.sample.json 
+ Import inquiries or applicants from QSImporter. QSImporter should have a JSON Array that contains objects with fields matching the Add Inquiry/Add Applicant page. See sample at examples/importInquiriesOrApplicants.sample.json 
 
 ####[`likertsToDropdowns.js`](./likertsToDropdowns.js)
 
