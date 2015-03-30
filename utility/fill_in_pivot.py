@@ -18,6 +18,9 @@ Turns into this:
 |    1 |    2 |    5 |
 +------+------+------+
 
+Example input sheet:
+examples/fill_in_pivot.sample.csv
+
 CLI Usage:
 python fill_in_pivot.py {pivot CSV filename}
 """
