@@ -8,6 +8,31 @@ Usage is as follows:
 ./csv2json.py {filepath1} {filepath2} {...}
 
 
+####[`fill_in_pivot.py`](./fill_in_pivot.py)
+
+Fill in a pivot table CSV such that this:
++------+------+------+
+| Col1 | Col2 | Col3 |
++------+------+------+
+|    1 |    1 |    1 |
+|      |      |    2 |
+|      |    2 |    4 |
+|      |      |    5 |
++------+------+------+
+
+Turns into this:
+| Col1 | Col2 | Col3 |
++------+------+------+
+|    1 |    1 |    1 |
+|    1 |    1 |    2 |
+|    1 |    2 |    4 |
+|    1 |    2 |    5 |
++------+------+------+
+
+CLI Usage:
+python fill_in_pivot.py {pivot CSV filename}
+
+
 ####[`folder_pdf_page_count.py`](./folder_pdf_page_count.py)
 
 Utility script to analyze page count in report cards in the current dir.

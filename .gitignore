@@ -9,7 +9,6 @@ build/
 
 # private files/dirs
 *.p
-*.csv
 *.log
 logs/
 private/

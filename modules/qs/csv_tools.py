@@ -160,8 +160,6 @@ class CSV(object):
         else:
             return qs.unique_path(self.filepath, extension=new_extension)
 
-
-
     def __str__(self):
         return self.json()
 
