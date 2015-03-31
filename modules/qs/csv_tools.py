@@ -141,7 +141,11 @@ class CSV(object):
         return qs.dumps(self.rows)
 
     def _sanitized(self, key):
-        if key:
+        if not isinstance(key, basestring):
+            return key
+        if isinstance(key, unicode):
+            return key
+        elif key:
             return qs.unicode_decode(key)
         else:
             return None
@@ -244,6 +248,24 @@ class CSVTree(CSV):
         current[key] = matching_vals
 
 
+class CSVFromJSON(CSV):
+
+    def read(self):
+        with open(self.filepath, 'rU') as f:
+            data = json.load(f)
+            self.cols = data[0].keys()
+
+            for row in data:
+                row = {
+                    self._sanitized(key): self._sanitized(val)
+                    for key, val in row.iteritems()
+                }
+                self.rows.append(row)
+                self.values += row.values()
+
+            return True
+
+
 class CSVMatch(CSV):
 
     def row_for_key_val(self, key, val, use_sanitized=False):
@@ -299,7 +321,10 @@ class CSVMatch(CSV):
         ]
 
         if use_sanitized:
-            matches = [self.row_for_sanitizeded(cleaned) for cleaned in matches]
+            matches = [
+                self.row_for_sanitizeded(cleaned)
+                for cleaned in matches
+            ]
 
         if len(matches) > 1:
             if multiple_ok:
