@@ -74,7 +74,9 @@ def dict_to_csv(data_dict, cols):
 
 def _sanitized_row_for_csv(row):
     for key, val in row.iteritems():
-        if type(val) is list:
+        if not val:
+            row[key] = ''
+        elif type(val) is list:
             row[key] = FLATTEN_DELIM.join([str(i for i in val)])
         elif type(val) is not str:
             row[key] = str(val)
@@ -91,7 +93,10 @@ class CSV(object):
 
     Can work standalone or as the backbone for CSVMatch.
 
-    Each row is a dictionary.
+    Each row is a dictionary, and self.cols is the correctly ordered list of
+    columns.
+
+    Empty rows are removed.
     """
 
     def __init__(self, filepath):
@@ -111,6 +116,9 @@ class CSV(object):
             raw_csv = csv.DictReader(f)
 
             for row in raw_csv:
+                if not any(v for k, v in row.iteritems()):
+                    continue
+
                 row = {
                     self._sanitized(key): self._sanitized(val)
                     for key, val in row.iteritems()
