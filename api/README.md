@@ -110,8 +110,35 @@ Command line usage:
 ./import_fees {CSV filename} {schoolcode}
 
 
+####[`import_rc_section_level.py`](./import_rc_section_level.py)
+
+Import report card data at the section level.
+
+Combines things so no more than one POST per student.
+
+Uses the current report cycle.
+
+Will soft error if an entry fails (error but not exit).
+
+Takes a CSV with the following format:
++------------+------------+--------------+-------+
+| Student ID | Section ID |  Identifier  | Value |
++------------+------------+--------------+-------+
+|     252251 |     669067 | marks        | 110   |
+|     252251 |     669067 | letter-grade | A++   |
++------------+------------+--------------+-------+
+
+
+See examples/import_section_level.example.csv for an example import file.
+
+CLI Usage:
+python import_section_level.py {schoolcode} {csv_filename}
+
+
 ####[`logs/`](./logs)
 
 ####[`Report Card Grades to Transcripts/`](./Report Card Grades to Transcripts)
+
+####[`Report Card Import/`](./Report Card Import)
 
 ####[`Rolling Enrollment Semester Migration/`](./Rolling Enrollment Semester Migration)

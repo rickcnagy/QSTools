@@ -45,8 +45,10 @@ ASSIGNMENT_NAME = 'Do Not Delete'
 MARKS = '80'
 FINAL_GRADE_ID = '1076623'
 
-# Report Cycles
+# Report Cards
 REPORT_CYCLE_COUNT = 2
+SUBJECT_SPECIFIC_CRITERIA_NAME = 'Criteria Name'
+ALT_SUBJECT_SPECIFIC_CRITERIA_NAME = 'Criteria 2'
 
 # Parents
 PARENT_NAME = "Jane's Parent"

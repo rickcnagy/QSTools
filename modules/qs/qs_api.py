@@ -934,7 +934,7 @@ class QSAPIWrapper(qs.APIWrapper):
             'studentId': student_id
         }
 
-        cache_id = qs.make_id(student_id, report_cycle_id)
+        cache_id = self._rc_id_for_cache(student_id, report_cycle_id)
         if _should_make_request(cache, **kwargs):
             uri = '/students/{}/reportcards/{}'.format(
                 student_id,
@@ -944,10 +944,10 @@ class QSAPIWrapper(qs.APIWrapper):
                 uri,
                 **kwargs)
             rc = self._make_request(request, **kwargs)
-            rc['reportCycleId'] = report_cycle_id
-            rc['studentId'] = student_id
-            rc['_qstools_id'] = cache_id
-            cache.add(rc)
+            rc_data['studentId'] = student_id
+            rc_data['reportCycleId'] = report_cycle_id
+            rc_data['_qstools_id'] = cache_id
+            self._report_card_cache.add(rc_data)
         return cache.get(cache_id, **kwargs)
 
     def get_report_cycles(self, **kwargs):
@@ -964,6 +964,42 @@ class QSAPIWrapper(qs.APIWrapper):
         """GET the active report cycle"""
         rc_cycles = self.get_report_cycles()
         return [i for i in rc_cycles if i['isActive'] is True][0]
+
+    @qs.clean_arg
+    def post_report_card_section_level(self, student_id, report_cycle_id,
+            section_level_data, **kwargs):
+        """POST section or criteria-level report card data.
+
+        The section_level_data should be a dict in this format:
+        {
+            "section_id": {
+                "values": {
+                    "marks": "110",
+                    "grade": "A++",
+                }
+            },
+            ...
+        }
+
+        This currently doesn't support criteria, but probably will.
+        """
+        report_cycle_id = qs.clean_id(report_cycle_id)
+        request_data = {
+            'sectionLevel': json.dumps(section_level_data)
+        }
+
+        url = '/students/{}/reportcards/{}'.format(student_id, report_cycle_id)
+        request = self._request('POST section-level rc data', url, **kwargs)
+        request.verb = qs.POST
+        request.request_data = {
+            'sectionLevel': json.dumps(section_level_data)
+        }
+
+        response = self._make_request(request, **kwargs)
+        if request.successful:
+            cache_id = self._rc_id_for_cache(student_id, report_cycle_id)
+            self._report_card_cache.invalidate()
+        return response
 
     # ===============
     # = Transcripts =
@@ -1178,6 +1214,9 @@ class QSAPIWrapper(qs.APIWrapper):
                 for k, v in section_enrollments.iteritems()
             ]
             cache.add(enrollment_list)
+
+    def _rc_id_for_cache(self, student_id, report_cycle_id):
+        return qs.make_id(student_id, report_cycle_id)
 
     def _assignments_with_grades(self, **kwargs):
         """Add the the 'grades' key to each assignment in assignments.
