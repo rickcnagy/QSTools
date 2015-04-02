@@ -944,10 +944,10 @@ class QSAPIWrapper(qs.APIWrapper):
                 uri,
                 **kwargs)
             rc = self._make_request(request, **kwargs)
-            rc_data['studentId'] = student_id
-            rc_data['reportCycleId'] = report_cycle_id
-            rc_data['_qstools_id'] = cache_id
-            self._report_card_cache.add(rc_data)
+            rc['studentId'] = student_id
+            rc['reportCycleId'] = report_cycle_id
+            rc['_qstools_id'] = cache_id
+            self._report_card_cache.add(rc)
         return cache.get(cache_id, **kwargs)
 
     def get_report_cycles(self, **kwargs):
