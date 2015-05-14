@@ -1,0 +1,5 @@
+unidecode>=0.04.17
+reindent>=0.1.1
+requests>=2.5.3
+chardet>=2.3.0
+nose>=1.3.3
