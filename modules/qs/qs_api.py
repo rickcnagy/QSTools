@@ -732,6 +732,8 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return cache.get(**kwargs)
 
+    HI ANNA
+
     @qs.clean_arg
     def get_assignment(self, assignment_id, include_grades=False, **kwargs):
         """GET a specific assignment by ID."""
@@ -866,6 +868,24 @@ class QSAPIWrapper(qs.APIWrapper):
         if request.successful is True:
             self._grade_cache.invalidate()
         return response
+
+    @qs.clean_arg
+    def post_new_assignments_and_grades(self, section_id, grade, student_id, **kwargs):
+    """POST New grades 
+        Args:
+            section_id: section to post the grade for - mandatory
+            grade: value for marks for this new grade - mandatory
+            student_id: post grades for a particular student - mandatory
+
+        This function is designed for taking marks data and making an
+        assignmentthen posting grades to that assignment, especially as part of
+        a gradebook import.
+    """
+    # get section info and student info
+    # post assignment
+    # get assignment id
+    # post marks
+
 
     # ==============
     # = Attendance =
