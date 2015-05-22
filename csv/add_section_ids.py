@@ -28,7 +28,6 @@ The same CSV with an "Section ID" column
 import sys
 import qs
 
-
 def main():
     qs.logger.config(__file__)
 
@@ -36,10 +35,12 @@ def main():
     filename = sys.argv[2]
     csv_sections = qs.CSV(filename)
     q = qs.API(schoolcode)
+    row_num = 1
 
     for csv_section_info in csv_sections:
         section_name = csv_section_info[u'Section Name']
         student = csv_section_info[u'Student ID']
+        row_num = row_num + 1
 
         section = q.match_section(
             identifier=section_name,
@@ -47,7 +48,8 @@ def main():
             match_name=True)
         section_id = section[u'id']
         csv_section_info['Section ID'] = section_id
-        qs.pp({"section_name": section_name,
+        qs.pp({"row_num": row_num,
+               "section_name": section_name,
                "student": student,
                "section_id": section_id})
 
