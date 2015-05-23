@@ -33,7 +33,8 @@ After doing this, a `qs` module will be importable from all Python scripts, and 
 There is one important git hook: building docs in the `pre-commit` hook. The `pre-commit` must call [`pre-commit.sh`](./pre-commit.sh), which contains the actual logic. This serves two purposes:
 
 1. It ensures that all automatically generated `README`s (such as [the ./api README](./api/README.md)]) are always up to date with each commit.
-2. It ensures that all files in documented folders can at least be successfully imported, which clears alot of the issues that would cause tests to fail.
+1. It ensures that all files in documented folders can at least be successfully imported, which clears alot of the issues that would cause tests to fail.
+1. It lints the code and fixes things like incorrect whitespace.
 
 Sample `pre-commit` hook at `.git/hooks/pre-commit`:
 
