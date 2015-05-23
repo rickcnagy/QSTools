@@ -130,7 +130,12 @@ class CSV(object):
 
     def save(self, filepath=None, overwrite=False):
         """Save the CSV to disk. Returns the filepath of the saved file."""
-        output_filepath = self._prepare_for_saving(filepath, overwrite, 'csv')
+        self._prepare_for_saving()
+        output_filepath = self._get_output_filepath(
+            filepath,
+            overwrite,
+            'csv')
+
         write_csv(
             self.rows,
             output_filepath,
@@ -141,7 +146,12 @@ class CSV(object):
 
     def save_as_json(self, filepath=None, overwrite=False):
         """Save the CSV as a JSON object. Returns the filepath of the file."""
-        output_filepath = self._prepare_for_saving(filepath, overwrite, 'json')
+        self._prepare_for_saving()
+        output_filepath = self._get_output_filepath(
+            filepath,
+            overwrite,
+            'json')
+
         qs.write(self.get_json(), output_filepath)
         return output_filepath
 
@@ -158,14 +168,15 @@ class CSV(object):
         else:
             return None
 
-    def _prepare_for_saving(self, filepath, overwrite, new_extension):
-        """Processes the rows for saving and returns the filepath to use."""
-        filepath = filepath or self.filepath
-
+    def _prepare_for_saving(self):
+        """Processes the rows for saving"""
         for row in self.rows:
             new_cols = {i for i in row.keys() if i not in self.cols}
             self.cols.extend(new_cols)
+        return True
 
+    def _get_output_filepath(self, filepath, overwrite, new_extension):
+        filepath = filepath or self.filepath
         original_extension = os.path.splitext(self.filepath)[1]
         if overwrite:
             return self.filepath.replace(original_extension, new_extension)
@@ -184,6 +195,42 @@ class CSV(object):
 
     def __getitem__(self, index):
         return self.rows[index]
+
+
+class CSVFromJSONFile(CSV):
+
+    def read(self):
+        data = self._get_json()
+        self.cols = data[0].keys()
+
+        for row in data:
+            row = {
+                self._sanitized(key): self._sanitized(val)
+                for key, val in row.iteritems()
+            }
+            self.rows.append(row)
+            self.values += row.values()
+
+        return True
+
+    def _get_json(self):
+        with open(self.filepath, 'rU') as f:
+            return json.load(f)
+
+
+class CSVFromRowList(CSVFromJSONFile):
+
+    def __init__(self, row_list, output_filepath):
+        self.row_list = row_list
+        self.output_filepath = output_filepath
+
+        super(CSVFromRowList, self).__init__(None)
+
+    def _get_json(self):
+        return self.row_list
+
+    def _get_output_filepath(self, filepath, overwrite, new_extension):
+        return self.output_filepath
 
 
 class CSVTree(CSV):
@@ -254,25 +301,6 @@ class CSVTree(CSV):
         else:
             print "Warning: leaf is list:\n{}".format(current[rows_key])
         current[key] = matching_vals
-
-
-class CSVFromJSON(CSV):
-
-    def read(self):
-        with open(self.filepath, 'rU') as f:
-            data = json.load(f)
-            self.cols = data[0].keys()
-
-            for row in data:
-                row = {
-                    self._sanitized(key): self._sanitized(val)
-                    for key, val in row.iteritems()
-                }
-                self.rows.append(row)
-                self.values += row.values()
-
-            return True
-
 
 class CSVMatch(CSV):
 
