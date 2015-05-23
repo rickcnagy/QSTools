@@ -30,12 +30,20 @@ After doing this, a `qs` module will be importable from all Python scripts, and 
     * [**fun**](./fun): Fun stuff, like changing the labels on Zendesk for `Tickets` to `Mysteries` :smiley:
 
 ###Git Hooks, the Build, and Coverage
-There is one important git hook: building docs in the `pre-commit` hook. The `pre-commit` must call [`buildocs.sh`](./pre-commit.sh), which contains the actual logic. This serves two purposes:
+There is one important git hook: building docs in the `pre-commit` hook. The `pre-commit` must call [`pre-commit.sh`](./pre-commit.sh), which contains the actual logic. This serves two purposes:
 
 1. It ensures that all automatically generated `README`s (such as [the ./api README](./api/README.md)]) are always up to date with each commit.
 2. It ensures that all files in documented folders can at least be successfully imported, which clears alot of the issues that would cause tests to fail.
 
-The build currently takes place on [travis-ci](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master) with each commit (usually after a ≈2 minute delay) and the status ([![Build Status](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master)](https://travis-ci.org/br1ckb0t/QSTools)) is always present at the top of this document.
+Sample `pre-commit` hook at `.git/hooks/pre-commit`:
+
+```
+#!/bin/sh
+
+./pre-commit.sh
+```
+
+The build takes place on [travis-ci](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master) with each commit (usually after a ~2 minute delay) and the status ([![Build Status](https://travis-ci.org/br1ckb0t/QSTools.svg?branch=master)](https://travis-ci.org/br1ckb0t/QSTools)) is always present at the top of this document.
 
 The coverage metric ([![Coverage Status](https://img.shields.io/coveralls/br1ckb0t/QSTools.svg)](https://coveralls.io/r/br1ckb0t/QSTools?branch=master)) reflects the amount of testable Python code that is currently covered by tests. A high coverage number shows that this module is probably ready for most Python-centric imports.
 
