@@ -670,6 +670,17 @@ class QSAPIWrapper(qs.APIWrapper):
         if to_delete:
             self.delete_section_enrollments(section_id, to_delete)
 
+    @qs.clean_arg
+    def check_section_enrollment_match(self, section_1_id, section_2_id):
+        """Checks that enrollment in section_1 and section_2 match exactly"""
+        section_2_id = qs.clean_id(section_2_id)
+
+        def enrollment_ids(section_id):
+            enrollment = self.get_section_enrollment(section_id)['students']
+            return set([i['id'] for i in enrollment])
+
+        return enrollment_ids(section_1_id) == enrollment_ids(section_2_id)
+
     # ===============
     # = Assignments =
     # ===============
