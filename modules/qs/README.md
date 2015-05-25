@@ -38,6 +38,8 @@ Wrapper on top of the Logger for logging QuickSchools API requests.
 
 Messages for any long command line etc output.
 
+####[`__pycache__/`](./__pycache__)
+
 ####[`rate_limiting.py`](./rate_limiting.py)
 
 Limit request rates on REST servers by request base URL.
