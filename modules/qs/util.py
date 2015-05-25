@@ -23,7 +23,6 @@ import datetime
 import requests
 import chardet
 
-tototototo
 def dumps(arbitry_obj, sort=False, indent=4):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
