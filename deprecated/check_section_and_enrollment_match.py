@@ -5,7 +5,7 @@
 import qs
 import json
 
-SOURCE_SEMESTER = 17900
+SOURCE_SEMESTER = 26743
 
 def main():
     discrepencies = qs.enrollment_discrepancies(SOURCE_SEMESTER)

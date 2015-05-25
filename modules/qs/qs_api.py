@@ -731,9 +731,7 @@ class QSAPIWrapper(qs.APIWrapper):
             return self._assignments_with_grades(**kwargs)
         else:
             return cache.get(**kwargs)
-
-    HI ANNA
-
+            
     @qs.clean_arg
     def get_assignment(self, assignment_id, include_grades=False, **kwargs):
         """GET a specific assignment by ID."""
