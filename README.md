@@ -84,5 +84,21 @@ At this point, there are `2` dependencies to running scripts in this repo:
 * The `qs` package (installation above).
 * QS Support Tools ([install extension here](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh))
 
+If you're modifying the `qs` Python package, you'll need to first uninstall if you have it installed:
+
+```
+sudo python setup.py install --record files.txt
+# inspect files.txt to make sure it looks ok. Then in bash:
+tr '\n' '\0' < files.txt | xargs -0 rm -f --
+```
+
+Then you need to add it to your `PYTHONPATH`. To do this, add the following line to your `~/.bashrc`:
+
+```
+export PYTHONPATH=$PYTHONPATH:path/to/QSTools/modules
+```
+
+Be sure to replace `path/to/QSTools/modules` with the actual path.
+
 ###Support
 If you have any questions on this repo, feel free to contact me on HipChat :smile:
