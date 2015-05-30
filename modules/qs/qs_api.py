@@ -837,7 +837,6 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
-    @qs.clean_arg
     def post_grades(self, section_id, assignment_id, grades, **kwargs):
         """POST grades to /grades endpoint.
 

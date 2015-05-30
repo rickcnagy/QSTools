@@ -1,5 +1,5 @@
 """
-Add Subject IDs
+Add Section IDs
 
 Designed to run after add_student_ids.py, which checks for
 duplicate names and gets the students' ids. This script is
@@ -38,6 +38,7 @@ def main():
     row_num = 1
 
     for csv_section_info in csv_sections:
+        print csv_section_info
         section_name = csv_section_info[u'Section Name']
         student = csv_section_info[u'Student ID']
         row_num = row_num + 1
