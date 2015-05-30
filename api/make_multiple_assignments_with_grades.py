@@ -58,11 +58,11 @@ def main():
         total = student_section_record[u'Total Pts']
         gr_id = student_section_record[u'Grd ID']
         marks = student_section_record[u'Marks']
-        student = student_section_record[u'Full Name']
+        student = student_section_record[u'Student ID']
         
         if section not in grades:
             grades[section] = list()
-        grades[section].append({student: marks})
+        grades[section].append({'studentId': student, 'marks': marks})
 
         sections[section] = {'cat_id': cat_id,
                              'total': total,
@@ -72,48 +72,23 @@ def main():
                              'section_id': section}
     for section in sections:
         sections[section]['grades_data'] = grades[section]
-        print ""
-        print section
-        print sections[section]['grades_data']
-   
-    print ""
-    print sections
-
-
-"""
-   # Add grades to assignments
-    for student_grades in csv_grades:
-        section = student_grades[u'Section ID']
-        student = student_grades[u'Student ID']
-        marks = student_grades[u'Marks']   
-        sections[section]['grades_data'][student] = marks
-        grades_data = sections[section]['grades_data']  
 
     # POST assignment and POST grades to it
     for section in sections:
-        print section
-        assign_name = sections[section]['assign_name']
-        assign_date = sections[section]['assign_date']
-        total_possible = sections[section]['total']
-        cat_id = sections[section]['cat_id']
-        gr_id = sections[section]['gr_id'] 
 
-        for section in sections:
-            grades.append({student: grades_data[student]}) 
-            print section
-        
-        print grades
-        grades = []
-
-        new_assignment = q.post_assignment(section, assign_name, assign_date,
-                                           total_possible, cat_id, gr_id)
+        new_assignment = q.post_assignment(section,
+                                           sections[section]['assign_name'],
+                                           sections[section]['assign_date'],
+                                           sections[section]['total'],
+                                           sections[section]['cat_id'],
+                                           sections[section]['gr_id'])
         assignment = new_assignment[u'id']
-        new_grade = q.post_grades(section_id, assignment,
-                                  [sections[section_id]['grades_data']])
+        new_grade = q.post_grades(section, assignment,
+                                  sections[section]['grades_data'])
 
-        qs.pp({"section": section_id,
-               "new assignment id": assignment,
-               "grade": sections[section_id]['grades_data'],
-               "status": new_grade[u'success']}) """
+        qs.logger.info({"section": section,
+                        "new assignment id": assignment,
+                        "grade": sections[section]['grades_data'],
+                        "status": new_grade[u'success']})
 if __name__ == '__main__':
     main()

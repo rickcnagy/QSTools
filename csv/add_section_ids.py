@@ -49,10 +49,10 @@ def main():
             match_name=True)
         section_id = section[u'id']
         csv_section_info['Section ID'] = section_id
-        qs.pp({"row_num": row_num,
-               "section_name": section_name,
-               "student": student,
-               "section_id": section_id})
+        qs.logger.info({"row_num": row_num,
+                        "section_name": section_name,
+                        "student": student,
+                        "section_id": section_id})
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
     csv_sections.save(filepath)
