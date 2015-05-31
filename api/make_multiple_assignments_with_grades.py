@@ -28,7 +28,7 @@
 """
 import qs
 import sys
-import datetime as dt
+import datetime as datetime
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
         if 'Assignment Date' in student_section_record:
             assign_date = student_section_record[u'Assignment Date']
         else:
-            assign_date = dt.date.today().strftime("%Y-%m-%d")
+            assign_date = qs.today()
 
         section = student_section_record[u'Section ID']
         cat_id = student_section_record[u'Category ID']
@@ -75,20 +75,16 @@ def main():
 
     # POST assignment and POST grades to it
     for section in sections:
+        section_data = sections[section]
+        new_grade = q.post_assignment_with_grades(section,
+                                                  section_data['assign_name'],
+                                                  section_data['assign_date'],
+                                                  section_data['total'],
+                                                  section_data['cat_id'],
+                                                  section_data['gr_id'],
+                                                  section_data['grades_data'])
+        qs.logger.info({"section": section, "grade": section_data['grades_data']})
 
-        new_assignment = q.post_assignment(section,
-                                           sections[section]['assign_name'],
-                                           sections[section]['assign_date'],
-                                           sections[section]['total'],
-                                           sections[section]['cat_id'],
-                                           sections[section]['gr_id'])
-        assignment = new_assignment[u'id']
-        new_grade = q.post_grades(section, assignment,
-                                  sections[section]['grades_data'])
 
-        qs.logger.info({"section": section,
-                        "new assignment id": assignment,
-                        "grade": sections[section]['grades_data'],
-                        "status": new_grade[u'success']})
 if __name__ == '__main__':
     main()

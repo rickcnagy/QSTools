@@ -389,6 +389,11 @@ def parse_datestring(datestring):
     return datetime.datetime.strptime(datestring, '%Y-%m-%d')
 
 
+def today():
+    """Get today's date in QS format - 2015-05-30"""
+    return datetime.date.today().strftime('%Y-%m-%d')
+
+
 # ==============
 # = Decorators =
 # ==============
