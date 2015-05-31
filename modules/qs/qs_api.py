@@ -866,7 +866,7 @@ class QSAPIWrapper(qs.APIWrapper):
             self._grade_cache.invalidate()
         return response
 
-    def post_assignment_with_grades(self, section, assignment_name,
+    def post_assignment_with_grades(self, section_id, assignment_name,
                                     assignment_date, total_marks_possible,
                                     category_id, grading_scale_id,
                                     student_ids_and_grades_list):
