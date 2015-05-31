@@ -34,18 +34,12 @@ def main():
     grading_scale_id = sys.argv[8]
     section = sys.argv[9]
 
-    new_assignment = q.post_assignment(section, assign_name, assign_date,
-                                       total_possible, category_id,
-                                       grading_scale_id)
+    new_grade = q.post_assignment_with_grades(section, assign_name,
+                                              assign_date, total_possible,
+                                              category_id, grading_scale_id,
+                                              grades_date)
+    qs.logger.info({"section": section, "grade": section_data['grades_data']})
 
-    grades_data = [{"studentId": student, "marks": marks}]
-    assignment = new_assignment[u'id']
-    new_grade = q.post_grades(section, assignment, grades_data)
-
-    qs.pp({"section": section,
-           "new assignment id": assignment,
-           "grade": grades_data,
-           "status":new_grade[u'success']})
 
 if __name__ == '__main__':
     main()
