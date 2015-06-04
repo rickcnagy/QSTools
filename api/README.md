@@ -7,7 +7,7 @@ This directory is for scripts that manipulate data on a school's account using t
 
 As a note about the schoolcode param: this stands in for the API key for a school. You can always enter the API key in directly or you may switch to using just the school code after you have run a script using the full API key in this param once. Your API keys are saved to a `.apiKeys.json` file in your home directory after you use the API key once. Check out ['api_keys.py'](./modules/qs/api_keys.py) for how this works.
 
-Scripts
+##Scripts
 ___
 
 Individual, general purpose scripts are listed in the main directory here. Check out the info and the docstring on the script itself to see the details and usage.
@@ -111,7 +111,7 @@ The CSV should have the following columns:
 Command line usage:
 ./import_fees {CSV filename} {schoolcode}
 
-Procedures
+##Procedures
 ___
 
 More complex, and repetitve, processes are grouped into subdirectories in the Procedures directory. In general, these collections of scripts are generally common requests that require little to no customization. 
@@ -122,7 +122,7 @@ More complex, and repetitve, processes are grouped into subdirectories in the Pr
 
 ####[`Rolling Enrollment Semester Migration/`](./procedures/Rolling Enrollment Semester Migration)
 
-Logging
+##Logging
 ___
 ####[`logs/`](./logs)
 
