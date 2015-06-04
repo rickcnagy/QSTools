@@ -1,5 +1,16 @@
-aAPI Scripts
+API Scripts
 ===
+
+This directory is for scripts that manipulate data on a school's account using the API. In general, scripts' usuage is something like:
+
+`./some_script.py {schoolcode} {other-params} {csv-filename.csv}`
+
+As a note about the schoolcode param: this stands in for the API key for a school. You can always enter the API key in directly or you may switch to using just the school code after you have run a script using the full API key in this param once. Your API keys are saved to a `.apiKeys.json` file in your home directory after you use the API key once. Check out ['api_keys.py'](./modules/qs/api_keys.py) for how this works.
+
+Scripts
+___
+
+Individual, general purpose scripts are listed in the main directory here. Check out the info and the docstring on the script itself to see the details and usage.
 
 ####[`check_section_name_match.py`](./check_section_name_match.py)
 
@@ -70,11 +81,6 @@ This has the advantage that the specific assignment-section mapping doesn't have
 Fills every assignment in every section with fake gradebook data - useful
 for creating fake gradebook data for demo schools or support trial schools.
 
-
-####[`Gradebook Import/`](./Gradebook Import)
-
-####[`Gradebook Migration/`](./Gradebook Migration)
-
 ####[`import_attendance.py`](./import_attendance.py)
 
 Import attendance records from a CSV.
@@ -105,11 +111,19 @@ The CSV should have the following columns:
 Command line usage:
 ./import_fees {CSV filename} {schoolcode}
 
+Procedures
+___
 
+More complex, and repetitve, processes are grouped into subdirectories in the Procedures directory. In general, these collections of scripts are generally common requests that require little to no customization. 
+
+####[`Report Card Grades to Transcripts/`](./procedures/Report Card Grades to Transcripts)
+
+####[`Gradebook Migration/`](./procedures/Gradebook Migration)
+
+####[`Rolling Enrollment Semester Migration/`](./procedures/Rolling Enrollment Semester Migration)
+
+Logging
+___
 ####[`logs/`](./logs)
 
-####[`Report Card Grades to Transcripts/`](./Report Card Grades to Transcripts)
-
-####[`Report Card Import/`](./Report Card Import)
-
-####[`Rolling Enrollment Semester Migration/`](./Rolling Enrollment Semester Migration)
+Since we're working with live data in a production setting, it's really important to keep good logs. Each of the subdirectories of the repo have a space for logs (these are not tracked with git). Check out [**qs_logger**](../modules/qs) for more about that. 
