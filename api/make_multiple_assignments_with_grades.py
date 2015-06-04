@@ -28,7 +28,6 @@
 """
 import qs
 import sys
-import datetime as datetime
 
 
 def main():

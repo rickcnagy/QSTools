@@ -1,15 +1,14 @@
 """
 Add Section IDs
 
-Designed to run after add_student_ids.py, which checks for
-duplicate names and gets the students' ids. This script is
-the next step for a gradebook import and gets the ids for
-the sections students are enrolled in. See /samples for an
-example csv.
+Designed to run after add_student_ids.py, which checks for duplicate student
+names and gets the students' ids. This script is the next step for a gradebook
+import and gets the ids for the sections students are enrolled in. See /samples
+for an example csv.
 
-This script doesn't check for duplicates, so you should
-either know your csv is free of duplicates, or run this one
-after running add_student_ids.py, which checks for duplicates.
+This script doesn't check for duplicates, so you should either know your
+database is free of duplicate students, or run this one after running
+add_student_ids.py, which checks for this.
 
 Usage:
 ./add_student_id {schoolcode} {filename.csv}
@@ -18,8 +17,8 @@ Requires:
 CSV with "Student ID" column, with an exact match to the provided
 school database for each student id.
 
-The semester for the subjects you're getting ids for is currently
-active in the school's account.
+The semester for the subjects you're getting ids for is currently active in the
+school's account.
 
 Outputs:
 The same CSV with an "Section ID" column

@@ -1,4 +1,4 @@
-API Scripts
+aAPI Scripts
 ===
 
 ####[`check_section_name_match.py`](./check_section_name_match.py)
