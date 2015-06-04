@@ -126,4 +126,4 @@ Logging
 ___
 ####[`logs/`](./logs)
 
-Since we're working with live data in a production setting, it's really important to keep good logs. Each of the subdirectories of the repo have a space for logs (these are not tracked with git). Check out [**qs_logger**](../modules/qs) for more about that. 
+Since we're working with live data in a production setting, it's really important to keep good logs. Each of the subdirectories of the repo have a space for logs (these are not tracked with git). Check out [**qs_logger**](../modules/qs/logger.py) for more about that. 
