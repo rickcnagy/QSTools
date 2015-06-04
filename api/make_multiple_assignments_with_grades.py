@@ -73,8 +73,10 @@ def main():
     for section in sections:
         sections[section]['grades_data'] = grades[section]
 
+    qs.logger.info(sections)
+
     # POST assignment and POST grades to it
-    for section in sections:
+    for section in qs.bar(sections):
         section_data = sections[section]
         new_grade = q.post_assignment_with_grades(section,
                                                   section_data['assign_name'],
@@ -83,7 +85,8 @@ def main():
                                                   section_data['cat_id'],
                                                   section_data['gr_id'],
                                                   section_data['grades_data'])
-        qs.logger.info({"section": section, "grade": section_data['grades_data']})
+        qs.logger.info({"section": sections[section]['section_id']},
+                       cc_print=True)
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@
  * blank.
  */
 
-var startingTeacher = "Zahir";
+var startingTeacher = "";
 
 new QSGradebookIterator(function() {
     if ($(".formulaColumn").length) {
@@ -21,7 +21,7 @@ new QSGradebookIterator(function() {
 
     this.click("Edit it anyways");
     this.click("Add Formula");
-    $("tr.category:contains(Assignment) input").click();
+    $("tr.category:contains(Classwork) input").click();
     this.click("Add");
     this.click("Save");
 

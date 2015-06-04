@@ -876,12 +876,12 @@ class QSAPIWrapper(qs.APIWrapper):
             of both of these methods. The final value returned is the status
             of the POST grades request"""
 
-        new_assignment = self.post_assignment(section, assignment_name,
+        new_assignment = self.post_assignment(section_id, assignment_name,
                                               assignment_date,
                                               total_marks_possible,
                                               category_id, grading_scale_id)
         assignment = new_assignment[u'id']
-        new_grade = self.post_grades(section, assignment,
+        new_grade = self.post_grades(section_id, assignment,
                                      student_ids_and_grades_list)
         return new_grade[u'success']
 

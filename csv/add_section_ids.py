@@ -37,8 +37,7 @@ def main():
     q = qs.API(schoolcode)
     row_num = 1
 
-    for csv_section_info in csv_sections:
-        print csv_section_info
+    for csv_section_info in qs.bar(csv_sections):
         section_name = csv_section_info[u'Section Name']
         student = csv_section_info[u'Student ID']
         row_num = row_num + 1
@@ -52,7 +51,7 @@ def main():
         qs.logger.info({"row_num": row_num,
                         "section_name": section_name,
                         "student": student,
-                        "section_id": section_id})
+                        "section_id": section_id}, cc_print=True)
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
     csv_sections.save(filepath)
