@@ -76,4 +76,4 @@ At this point, there are `2` dependencies to running scripts in this repo:
 * QS Support Tools ([install extension here](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh))
 
 ###Support
-If you have any questions on this repo, feel free to contact us ([Rick](https://github.com/br1ckb0t) and [Anna](https://github.com/sirfrancium) on HipChat :smile:
+If you have any questions on this repo, feel free to contact us ([Rick](https://github.com/br1ckb0t) and [Anna](https://github.com/sirfrancium)) on HipChat :smile:
