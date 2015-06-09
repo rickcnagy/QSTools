@@ -1,14 +1,7 @@
 """
-Add Section IDs
+Add Section IDs by Code
 
-Designed to run after add_student_ids.py, which checks for duplicate student
-names and gets the students' ids. This script is the next step for a gradebook
-import and gets the ids for the sections students are enrolled in. See /samples
-for an example csv.
-
-This script doesn't check for duplicates, so you should either know your
-database is free of duplicate students, or run this one after running
-add_student_ids.py, which checks for this.
+Gets Section ID for subjects by subject name and code - enrollment is not needed
 
 Usage:
 ./add_student_id {schoolcode} {filename.csv}
@@ -39,18 +32,16 @@ def main():
 
     for csv_section_info in qs.bar(csv_sections):
         section_name = csv_section_info[u'Section Name']
-        student = csv_section_info[u'Student ID']
+        section_code = csv_section_info[u'Section Code']
         row_num = row_num + 1
 
         section = q.match_section(
             identifier=section_name,
-            student_id=student,
-            match_name=True)
+            match_code=True)
         section_id = section[u'id']
         csv_section_info['Section ID'] = section_id
         qs.logger.info({"row_num": row_num,
                         "section_name": section_name,
-                        "student": student,
                         "section_id": section_id}, cc_print=True)
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
