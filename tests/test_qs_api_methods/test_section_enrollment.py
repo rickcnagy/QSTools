@@ -43,10 +43,17 @@ def test_get_student_enrollment():
     assert_in(SECTION_ID, q.get_student_enrollment(SECTION_ENROLLMENT[0]))
 
 
+def test_check_section_enrollment_match():
+    match_1 = SECTION_WITH_ENROLLMENT_1
+    match_2 = SECTION_WITH_ENROLLMENT_2
+    bad_match = SECTION_ID
+
+    assert_true(q.check_section_enrollment_match(match_1, match_2))
+    assert_false(q.check_section_enrollment_match(match_1, bad_match))
+
+
 def assert_valid_enrollment(enrollment):
     ids = []
     for student in enrollment['students']:
-        print student
-        print
         ids.append(student['id'])
     return set(ids) == set(SECTION_ENROLLMENT)

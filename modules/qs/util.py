@@ -158,6 +158,13 @@ def make_id(*args):
     return ':'.join(str(i) for i in args)
 
 
+def make_qs_id(string):
+    """Make a qs-style id, which has the format: some-id-here"""
+    string = string.lower()
+    string = string.replace(' ', '-')
+    return string
+
+
 def sets_to_lists(list_of_dicts):
     """Convert all sets in the values in a list of dicts to lists. This is good
     when list_of_dicts will be JSON-serialized, since JSON doesn't take sets.

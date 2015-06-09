@@ -90,8 +90,8 @@ class ListWithIDCache(RestCache):
         if type(new_data) not in [dict, list]:
             raise TypeError('new_data must be a dict or list, not {}'.format(
                 type(new_data)))
-        elif (type(new_data) is list
-                and not all(type(i) is dict for i in new_data)):
+        elif (type(new_data) is list and not
+                all(type(i) is dict for i in new_data)):
             raise TypeError('new_data must contain only dicts')
         elif type(new_data) is dict:
             new_data = [new_data]

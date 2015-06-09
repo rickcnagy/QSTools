@@ -11,23 +11,28 @@ Usage is as follows:
 ####[`fill_in_pivot.py`](./fill_in_pivot.py)
 
 Fill in a pivot table CSV such that this:
-+------+------+------+
-| Col1 | Col2 | Col3 |
-+------+------+------+
-|    1 |    1 |    1 |
-|      |      |    2 |
-|      |    2 |    4 |
-|      |      |    5 |
-+------+------+------+
++------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|    1 |    1 |    1 |    1 |
+|      |      |    2 |      |
+|      |    2 |    4 |    1 |
+|      |      |    5 |      |
++------+------+------+------+
 
 Turns into this:
-| Col1 | Col2 | Col3 |
-+------+------+------+
-|    1 |    1 |    1 |
-|    1 |    1 |    2 |
-|    1 |    2 |    4 |
-|    1 |    2 |    5 |
-+------+------+------+
++------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|    1 |    1 |    1 |    1 |
+|    1 |    1 |    2 |      |
+|    1 |    2 |    4 |    1 |
+|    1 |    2 |    5 |      |
++------+------+------+------+
+
+It stops trying to fill columns once it finds a column that has no empty fields
+in it, indicating that blank cells after that column are actually blank data as
+opposed to fields to be filled.
 
 Example input sheet:
 examples/fill_in_pivot.sample.csv

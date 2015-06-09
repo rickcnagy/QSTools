@@ -70,8 +70,8 @@ class QSRequest(qs.RestRequest):
         """For now, until QSPaginatedRequest is implemented, exit if more than
         1000 entries are received
         """
-        if (self.return_type == 'Paged List'
-                and int(self.paging_info['number_of_pages']) > 1):
+        if (self.return_type == 'Paged List' and
+                int(self.paging_info['number_of_pages']) > 1):
             qs.logger.critical('Receieved too may responses', self._log_dict())
 
 

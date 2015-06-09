@@ -113,16 +113,34 @@ Command line usage:
 
 ##Procedures
 
+<<<<<<< HEAD
 More complex, and repetitve, processes are grouped into subdirectories in the Procedures directory. In general, these collections of scripts are generally common requests that require little to no customization. 
 
 ####[`Report Card Grades to Transcripts/`](./procedures/Report Card Grades to Transcripts)
 
 ####[`Gradebook Migration/`](./procedures/Gradebook Migration)
+=======
+####[`import_rc_section_level.py`](./import_rc_section_level.py)
 
-####[`Rolling Enrollment Semester Migration/`](./procedures/Rolling Enrollment Semester Migration)
+Import report card data at the section level.
 
-##Logging
+Combines things so no more than one POST per student.
 
-####[`logs/`](./logs)
+Uses the current report cycle.
 
-Since we're working with live data in a production setting, it's really important to keep good logs. Each of the subdirectories of the repo have a space for logs (these are not tracked with git). Check out [**qs_logger**](../modules/qs/logger.py) for more about that. 
+Will soft error if an entry fails (error but not exit).
+
+Takes a CSV with the following format:
++------------+------------+--------------+-------+
+| Student ID | Section ID |  Identifier  | Value |
++------------+------------+--------------+-------+
+|     252251 |     669067 | marks        | 110   |
+|     252251 |     669067 | letter-grade | A++   |
++------------+------------+--------------+-------+
+
+
+See examples/import_section_level.example.csv for an example import file.
+
+CLI Usage:
+python import_section_level.py {schoolcode} {csv_filename}
+

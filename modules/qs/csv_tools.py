@@ -74,7 +74,9 @@ def dict_to_csv(data_dict, cols):
 
 def _sanitized_row_for_csv(row):
     for key, val in row.iteritems():
-        if type(val) is list:
+        if not val:
+            row[key] = ''
+        elif type(val) is list:
             row[key] = FLATTEN_DELIM.join([str(i for i in val)])
         elif type(val) is not str:
             row[key] = str(val)
@@ -91,7 +93,10 @@ class CSV(object):
 
     Can work standalone or as the backbone for CSVMatch.
 
-    Each row is a dictionary.
+    Each row is a dictionary, and self.cols is the correctly ordered list of
+    columns.
+
+    Empty rows are removed.
     """
 
     def __init__(self, filepath):
@@ -111,6 +116,9 @@ class CSV(object):
             raw_csv = csv.DictReader(f)
 
             for row in raw_csv:
+                if not any(v for k, v in row.iteritems()):
+                    continue
+
                 row = {
                     self._sanitized(key): self._sanitized(val)
                     for key, val in row.iteritems()
@@ -122,7 +130,12 @@ class CSV(object):
 
     def save(self, filepath=None, overwrite=False):
         """Save the CSV to disk. Returns the filepath of the saved file."""
-        output_filepath = self._prepare_for_saving(filepath, overwrite, 'csv')
+        self._prepare_for_saving()
+        output_filepath = self._get_output_filepath(
+            filepath,
+            overwrite,
+            'csv')
+
         write_csv(
             self.rows,
             output_filepath,
@@ -133,7 +146,12 @@ class CSV(object):
 
     def save_as_json(self, filepath=None, overwrite=False):
         """Save the CSV as a JSON object. Returns the filepath of the file."""
-        output_filepath = self._prepare_for_saving(filepath, overwrite, 'json')
+        self._prepare_for_saving()
+        output_filepath = self._get_output_filepath(
+            filepath,
+            overwrite,
+            'json')
+
         qs.write(self.get_json(), output_filepath)
         return output_filepath
 
@@ -141,19 +159,24 @@ class CSV(object):
         return qs.dumps(self.rows)
 
     def _sanitized(self, key):
-        if key:
+        if not isinstance(key, basestring):
+            return key
+        if isinstance(key, unicode):
+            return key
+        elif key:
             return qs.unicode_decode(key)
         else:
             return None
 
-    def _prepare_for_saving(self, filepath, overwrite, new_extension):
-        """Processes the rows for saving and returns the filepath to use."""
-        filepath = filepath or self.filepath
-
+    def _prepare_for_saving(self):
+        """Processes the rows for saving"""
         for row in self.rows:
             new_cols = {i for i in row.keys() if i not in self.cols}
             self.cols.extend(new_cols)
+        return True
 
+    def _get_output_filepath(self, filepath, overwrite, new_extension):
+        filepath = filepath or self.filepath
         original_extension = os.path.splitext(self.filepath)[1]
         if overwrite:
             return self.filepath.replace(original_extension, new_extension)
@@ -172,6 +195,42 @@ class CSV(object):
 
     def __getitem__(self, index):
         return self.rows[index]
+
+
+class CSVFromJSONFile(CSV):
+
+    def read(self):
+        data = self._get_json()
+        self.cols = data[0].keys()
+
+        for row in data:
+            row = {
+                self._sanitized(key): self._sanitized(val)
+                for key, val in row.iteritems()
+            }
+            self.rows.append(row)
+            self.values += row.values()
+
+        return True
+
+    def _get_json(self):
+        with open(self.filepath, 'rU') as f:
+            return json.load(f)
+
+
+class CSVFromRowList(CSVFromJSONFile):
+
+    def __init__(self, row_list, output_filepath):
+        self.row_list = row_list
+        self.output_filepath = output_filepath
+
+        super(CSVFromRowList, self).__init__(None)
+
+    def _get_json(self):
+        return self.row_list
+
+    def _get_output_filepath(self, filepath, overwrite, new_extension):
+        return self.output_filepath
 
 
 class CSVTree(CSV):
@@ -299,7 +358,10 @@ class CSVMatch(CSV):
         ]
 
         if use_sanitized:
-            matches = [self.row_for_sanitizeded(cleaned) for cleaned in matches]
+            matches = [
+                self.row_for_sanitizeded(cleaned)
+                for cleaned in matches
+            ]
 
         if len(matches) > 1:
             if multiple_ok:
