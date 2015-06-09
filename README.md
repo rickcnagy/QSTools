@@ -19,14 +19,14 @@ After doing this, a `qs` module will be importable from all Python scripts, and 
 * This is a toolset designed to be the **building blocks for large and complicated scripts that can be written and run under a time pressure *without failing*.** As a result, it consists of lots of small, contained, and useful scripts.
 * If a script has a docstring at the top, it will not be deleted. Instead, it will be maintained and tested to continue to match that docstring, even if the implementation has to completely change.
 * The scripts, utilities, and modules contained in this repo are organized by type:
-    * [**api**](./api): any script that somehow leverages the [QuickSchools REST API](http://apidocs.quickschools.com/). This is currently all Python scripts, but could also be JavaScript (or any other language).
-    * [**csv**](./csv): any script that manipulates CSV's somehow, especially for imports.
+    * [**api**](./api): any script that somehow leverages the [QuickSchools REST API](http://apidocs.quickschools.com/) for the purpose of changing data within QuickSchools. This is currently all Python scripts, but could also be JavaScript (or any other language).
+    * [**csv**](./csv): any script that manipulates CSV's somehow, especially for imports. While they may access the api to GET information, these scripts don't impact the data on QuickSchools on thier own. 
     * [**gui**](./gui): any script that programmatically manipulates the GUI (e.g. [ricknagy.quickschools.com](http://ricknagy.quickschools.com/)) to do things that can't be done with the API. These scripts rely heavily on QSIterator, which comes with [QuickSchools Support Tools](https://chrome.google.com/webstore/detail/quickschools-support-tool/hibklcekgpmoheniagkbaeebmelihonh) ([repo here](https://github.com/br1ckb0t/qs-supporttools)).
-    * [**modules**](./modules): Files that can be *imported*, *included*, etc in scripts in other folders. Importable code here is considered an **API** in and of itself. Properties in this API will generally not be deprecated (or at least not often) in order to avoid refactoring issues throughout the codebase, though properties can and will be added over time.
+    * [**modules**](./modules): Files that can be *imported*, *included*, etc in scripts in other folders. Importable code here is considered an **API** in and of itself. Properties in this API will generally not be deprecated (or at least not often) in order to avoid refactoring issues throughout the codebase, though properties can and will be added over time. The [**qs**](./modules/qs) subdirectory contains the code for the API wrapper utilized throughout this project. 
     * [**utility**](./utility): Anything that you run locally that’s a utility - like converting stuff, counting stuff, etc. These generally don't rely on QSTools modules (though can) but more just are useful utilities for automating things locally.
     * [**deprecated**](./deprecated): When something changes in the API, GUI, etc to make a script either useless or impossible, it is moved here. These scripts are here just for archive purposes and won't be maintained.
     * [**tests**](./tests): All unit tests and integration tests, covering Python only for now. As stated above, *any file with a docstring* will be included in the coverage metrics and tested if possible. More on this below.
-    * [**examples**](./examples): Example data for what scripts need to ingest to run properly.
+    * [**examples**](./examples): Example data for what scripts need to ingest to run properly. (*remember: this is a public repo so no school data here, please*)
     * [**fun**](./fun): Fun stuff, like changing the labels on Zendesk for `Tickets` to `Mysteries` :smiley:
 
 ###Git Hooks, the Build, and Coverage
@@ -101,4 +101,4 @@ export PYTHONPATH=$PYTHONPATH:path/to/QSTools/modules
 Be sure to replace `path/to/QSTools/modules` with the actual path.
 
 ###Support
-If you have any questions on this repo, feel free to contact me on HipChat :smile:
+If you have any questions on this repo, feel free to contact us ([Rick](https://github.com/br1ckb0t) and [Anna](https://github.com/sirfrancium)) on HipChat :smile:

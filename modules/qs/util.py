@@ -23,7 +23,6 @@ import datetime
 import requests
 import chardet
 
-
 def dumps(arbitry_obj, sort=False, indent=4):
     """Dumps like json.dumps. Note that by default, list order is not
     maintained and non JSON objects are printed as their __str__.
@@ -395,6 +394,11 @@ def parse_datestring(datestring):
     representing the datestring,
     """
     return datetime.datetime.strptime(datestring, '%Y-%m-%d')
+
+
+def today():
+    """Get today's date in QS format - 2015-05-30"""
+    return datetime.date.today().strftime('%Y-%m-%d')
 
 
 # ==============

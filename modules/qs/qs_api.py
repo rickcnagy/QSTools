@@ -848,7 +848,6 @@ class QSAPIWrapper(qs.APIWrapper):
             kwargs['cache_filter'].update({'studentId': student_id})
         return cache.get(**kwargs)
 
-    @qs.clean_arg
     def post_grades(self, section_id, assignment_id, grades, **kwargs):
         """POST grades to /grades endpoint.
 
@@ -877,6 +876,25 @@ class QSAPIWrapper(qs.APIWrapper):
         if request.successful is True:
             self._grade_cache.invalidate()
         return response
+
+    def post_assignment_with_grades(self, section_id, assignment_name,
+                                    assignment_date, total_marks_possible,
+                                    category_id, grading_scale_id,
+                                    student_ids_and_grades_list):
+        """ POST new assignment and then POST grades to this same assignment.
+            Please note that this method is dependant on post_assignment
+            and post_grades. As a result, it will return the response
+            of both of these methods. The final value returned is the status
+            of the POST grades request"""
+
+        new_assignment = self.post_assignment(section_id, assignment_name,
+                                              assignment_date,
+                                              total_marks_possible,
+                                              category_id, grading_scale_id)
+        assignment = new_assignment[u'id']
+        new_grade = self.post_grades(section_id, assignment,
+                                     student_ids_and_grades_list)
+        return new_grade[u'success']
 
     # ==============
     # = Attendance =
