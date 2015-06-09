@@ -1,21 +1,21 @@
 """
-    Make Single Assignment with grade
+Make Single Assignment with grade
 
-    Similar to upcoming wrapper function, this script makes an assignment
-    and posts a grade to it for a single student. Just in case you want to
-    do this via API for some reason.
+Similar to upcoming wrapper function, this script makes an assignment
+and posts a grade to it for a single student. Just in case you want to
+do this via API for some reason.
 
-    Usage:
-    ./make-single-assignment-with-grade-py schoolcode studentID
-        name_of_assignment date total_possible_points
-        category_id marks grading_scale_id section_id
+Usage:
+./make-single-assignment-with-grade-py schoolcode studentID
+name_of_assignment date total_possible_points
+category_id marks grading_scale_id section_id
 
-    Please note, the name must be in a 'string' format and the
-    date must be in a YYYY-MM-DD format
+Please note, the name must be in a 'string' format and the
+date must be in a YYYY-MM-DD format
 
-    Requires: valid ids
+Requires: valid ids
 
-    Returns: success message, and if successful, will post a grade
+Returns: success message, and if successful, will post a grade
 """
 import qs
 import sys

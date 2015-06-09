@@ -1,30 +1,30 @@
 """
-    Make Multiple Assignments with grade
+Make Multiple Assignments with grade
 
-    Similar to upcoming wrapper function, this script makes an assignment
-    and posts a grade to it for a single student. Just in case you want to
-    do this via API for some reason.
+Similar to upcoming wrapper function, this script makes an assignment
+and posts a grade to it for a single student. Just in case you want to
+do this via API for some reason.
 
-    Usage:
-    ./make-single-assignment-with-grade-py schoolcode filename.csv
+Usage:
+./make-single-assignment-with-grade-py schoolcode filename.csv
 
-    Requires: CSV with the following column headings
-        Student ID, Total Pts, Category ID,
-        Marks, Grd ID, Section ID
+Requires: CSV with the following column headings
+Student ID, Total Pts, Category ID,
+Marks, Grd ID, Section ID
 
-        Please note the date must be in YYYY-MM-DD format. Also 'Gr ID'
-        referrs to the grading scale id - *not the letter grade*
+Please note the date must be in YYYY-MM-DD format. Also 'Gr ID'
+referrs to the grading scale id - *not the letter grade*
 
-        Additional columns supported: Name, Date (these are both for
-        assignments)
+Additional columns supported: Name, Date (these are both for
+assignments)
 
-        By default, if Name nad Date not included, the assignment name will
-        be set to the name of the CSV and and the assignment date will
-        be set to the current date (today).
+By default, if Name nad Date not included, the assignment name will
+be set to the name of the CSV and and the assignment date will
+be set to the current date (today).
 
-        Assumes one grade per student per section
+Assumes one grade per student per section
 
-    Returns: success message, and if successful, will post a grade
+Returns: success message, and if successful, will post a grade
 """
 import qs
 import sys

@@ -1,4 +1,4 @@
-'''
+"""
 Enroll in Existing Sections
 
 Imports enrollment from CSV for already created subjects (such as ones imported
@@ -12,7 +12,7 @@ Usage: ./enroll_in_existing_sections.py {school code} {semester} filename.csv
 
 Returns: Nothing - just enrolls students in their sections.
 
-'''
+"""
 
 import qs
 import sys
