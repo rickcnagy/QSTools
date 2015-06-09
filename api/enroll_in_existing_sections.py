@@ -11,7 +11,6 @@ CSV must have the following columns: Student ID, Section Code
 Usage: ./enroll_in_existing_sections.py {school code} {semester} filename.csv
 
 Returns: Nothing - just enrolls students in their sections.
-
 """
 
 import qs
