@@ -1,5 +1,5 @@
 """
-Compare CSV for New Students
+Compare CSV for New Names
 
 This script looks at 2 csv's of student data to find unique names. The unique
 names are returned on a new spreadsheet, with all of their data, and the
@@ -22,6 +22,7 @@ import sys
 
 
 def main():
+    qs.logger.config(__file__)
     filename1 = sys.argv[1]
     filename2 = sys.argv[2]
     csv_orig_students = qs.CSV(filename1)
@@ -31,31 +32,39 @@ def main():
     new_students = []
     unique_students = []
     duplicate_students = []
+    new_csv_data = []
+
+    # Make lists of duplicate and unique students
 
     for student in csv_orig_students:
-        print student
         student_name = student['Full Name']
         orig_students.append(student_name)
-    print orig_students
 
     for student in csv_new_students:
         student_name = student['Full Name']
         new_students.append(student_name)
-    print
-    print new_students
 
-    for name in orig_students:
-        if name in new_students:
+    for name in new_students:
+        qs.logger.info(name, cc_print=False)
+        if name in orig_students:
             duplicate_students.append(name)
         else:
             unique_students.append(name)
 
-    print duplicate_students
-    print
-    print unique_students
+    # Write CSV of unique students
 
+    for student in csv_new_students:
+        student_name = student['Full Name']
+        if student_name in unique_students:
+            new_csv_data.append(student)
 
+    qs.logger.info('Duplicate Students (not returned in output csv):',
+                   cc_print=True)
+    qs.logger.info(duplicate_students, cc_print=True)
+    qs.logger.info('Unique Students (returned):', cc_print=True)
+    qs.logger.info(unique_students, cc_print=True)
 
+    qs.write_csv(new_csv_data, '~/Desktop/new_students.csv')
 
 if __name__ == ('__main__'):
     main()
