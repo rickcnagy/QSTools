@@ -25,7 +25,7 @@ def main():
     q = qs.API(schoolcode)
 
     if not ('Teacher' in csv_teachers.cols):
-        raise ValueError('Teacher columns required.')
+        raise ValueError('Teacher column required.')
 
     db_teachers = q.get_teachers()
     db_duplicates = qs.find_dups_in_dict_list(db_teachers, 'fullName')

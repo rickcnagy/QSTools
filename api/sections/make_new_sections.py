@@ -13,7 +13,6 @@ Usage: ./make_new_sections.py {schoolcode} {filename.csv}
 
 Returns: Nothing - just makes the sections in the school account
 """
-#section_name, section_code, class_id, teacher_id, credit_hours=1
 
 import qs
 import sys
@@ -28,7 +27,7 @@ def main():
     q = qs.API(schoolcode)
     sections = {}
 
-    qs.logger.info('Retrieving section info from CSV...')
+    qs.logger.info('Retrieving section info from CSV...', cc_print=True)
     for section in csv_sections:
         section_name = section['Section Name']
         section_code = section['Section Code']
@@ -38,19 +37,31 @@ def main():
         sections[section_code] = {'section_name': section_name,
                                   'section_code': section_code,
                                   'class_id': class_id,
-                                  'teacher_id:': teacher_id}
+                                  'teacher_id': teacher_id}
 
         if 'Credit Hours' in section:
             credit_hours = section['Credit Hours']
 
-            sections[section_code]['class_id'] = class_id
+            sections[section_code]['credit_hours'] = credit_hours
 
-        print sections[section_code]
-        print ""
-        
+    qs.logger.info('POSTing sections...', cc_print=True)
+    for section in sections:
+        new_sect = sections[section]
 
+        if 'credit_hours' in new_sect:
+            new_section = q.post_section(section_name=new_sect['section_name'],
+                                         section_code=new_sect['section_code'],
+                                         class_id=new_sect['class_id'],
+                                         teacher_id=new_sect['teacher_id'],
+                                         credit_hours=new_sect['credit_hours'])
+        else:
+            new_section = q.post_section(section_name=new_sect['section_name'],
+                                         section_code=new_sect['section_code'],
+                                         class_id=new_sect['class_id'],
+                                         teacher_id=new_sect['teacher_id'])
 
-
+        qs.logger.info({"section name": new_section['sectionName'],
+                        "id": new_section['id']}, cc_print=True)
 
 if __name__ == '__main__':
     main()
