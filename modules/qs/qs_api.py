@@ -472,6 +472,42 @@ class QSAPIWrapper(qs.APIWrapper):
             self._section_cache.add(response)
         return response
 
+    def post_sections(self, sections_dict, print_log=False, **kwargs):
+        """POST to create a new sections from a dict of section
+        information. Teacher_id should be a single teacher id or a list
+        of teacher ids. The print_log param is to log and print section_code
+        info as the sections are created:
+
+        Dict structure should be as such:
+        {'section_code':  {'section_name': section_name,
+                           'section_code': section_code,
+                           'class_id:': class_id,
+                           'teacher_id': teacher_id,
+                           'credit_hours': credit_hours}}
+        Note: credit_hours is optional
+        """
+        for section in sections_dict:
+            new_sect = sections_dict[section]
+
+            if 'credit_hours' in new_sect:
+                new_section = self.post_section(section_name=new_sect['section_name'],
+                                                section_code=new_sect['section_code'],
+                                                class_id=new_sect['class_id'],
+                                                teacher_id=new_sect['teacher_id'],
+                                                credit_hours=new_sect['credit_hours'])
+            else:
+                new_section = self.post_section(section_name=new_sect['section_name'],
+                                                section_code=new_sect['section_code'],
+                                                class_id=new_sect['class_id'],
+                                                teacher_id=new_sect['teacher_id'])
+
+            if print_log:
+                qs.logger.info({"section name": new_section['sectionName'],
+                                "class name": new_section['className'],
+                                "id": new_section['id']}, cc_print=True)
+
+        return None
+
     @qs.clean_arg
     def update_section(self, section_id, section_dict, **kwargs):
         """POST to update an existing section by id. section_id should be a
