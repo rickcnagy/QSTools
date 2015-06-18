@@ -10,7 +10,7 @@ Usage:
 
 Requires: CSV with the following column headings
 Student ID, Total Pts, Category ID,
-Marks, Grd ID, Section ID
+Marks, Grading Scale ID, Section ID
 
 Please note the date must be in YYYY-MM-DD format. Also 'Gr ID'
 referrs to the grading scale id - *not the letter grade*
@@ -55,17 +55,17 @@ def main():
         section = student_section_record[u'Section ID']
         cat_id = student_section_record[u'Category ID']
         total = student_section_record[u'Total Pts']
-        gr_id = student_section_record[u'Grd ID']
+        grade_scale = student_section_record[u'Grading Scale ID']
         marks = student_section_record[u'Marks']
         student = student_section_record[u'Student ID']
-        
+
         if section not in grades:
             grades[section] = list()
         grades[section].append({'studentId': student, 'marks': marks})
 
         sections[section] = {'cat_id': cat_id,
                              'total': total,
-                             'gr_id': gr_id,
+                             'grade_scale': grade_scale,
                              'assign_date': assign_date,
                              'assign_name': assign_name,
                              'section_id': section}
@@ -82,7 +82,7 @@ def main():
                                                   section_data['assign_date'],
                                                   section_data['total'],
                                                   section_data['cat_id'],
-                                                  section_data['gr_id'],
+                                                  section_data['grade_scale'],
                                                   section_data['grades_data'])
         qs.logger.info({"section": sections[section]['section_id']},
                        cc_print=True)

@@ -296,6 +296,8 @@ class QSAPIWrapper(qs.APIWrapper):
                     **kwargs)
                 request.params.update({'semesterId': semester_id})
                 sections = self._make_request(request, **kwargs)
+                if not sections:
+                    return []
                 mark_sections(sections, semester_id)
                 cache.add(sections)
 
