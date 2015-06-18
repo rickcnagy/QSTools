@@ -1,9 +1,9 @@
 """
 Make Multiple Assignments with grade
 
-Similar to upcoming wrapper function, this script makes an assignment
-and posts a grade to it for a single student. Just in case you want to
-do this via API for some reason.
+This script takes a CSV of grades for particular sections and
+makes an assignment for that section and posts students' grades
+to the assignment.
 
 Usage:
 ./make-single-assignment-with-grade-py schoolcode filename.csv

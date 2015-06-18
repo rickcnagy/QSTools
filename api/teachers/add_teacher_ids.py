@@ -24,8 +24,8 @@ def main():
     csv_teachers = qs.CSV(filename)
     q = qs.API(schoolcode)
 
-    if not ('Teacher' in csv_teachers.cols):
-        raise ValueError('Teacher column required.')
+    if not ('Teacher Name' in csv_teachers.cols):
+        raise ValueError('Teacher Name column required.')
 
     db_teachers = q.get_teachers()
     db_duplicates = qs.find_dups_in_dict_list(db_teachers, 'fullName')
@@ -44,7 +44,7 @@ def main():
 
     teacher_names_not_matched = set()
     for csv_teacher in csv_teachers:
-        csv_full_name = csv_teacher['Teacher']
+        csv_full_name = csv_teacher['Teacher Name']
 
         if ignore_case:
             csv_full_name = csv_full_name.lower()

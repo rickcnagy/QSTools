@@ -486,7 +486,7 @@ class QSAPIWrapper(qs.APIWrapper):
                            'credit_hours': credit_hours}}
         Note: credit_hours is optional
         """
-        for section in sections_dict:
+        for section in qs.bar(sections_dict):
             new_sect = sections_dict[section]
 
             if 'credit_hours' in new_sect:

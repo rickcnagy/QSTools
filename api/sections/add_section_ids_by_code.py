@@ -36,7 +36,7 @@ def main():
         row_num = row_num + 1
 
         section = q.match_section(
-            identifier=section_name,
+            identifier=section_code,
             match_code=True)
         section_id = section[u'id']
         csv_section_info['Section ID'] = section_id
