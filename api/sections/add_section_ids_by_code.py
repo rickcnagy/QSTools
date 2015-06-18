@@ -28,21 +28,36 @@ def main():
     filename = sys.argv[2]
     csv_sections = qs.CSV(filename)
     q = qs.API(schoolcode)
+    sections = {}
+    sections_with_id = {}
     row_num = 1
 
-    for csv_section_info in qs.bar(csv_sections):
+    qs.logger.info('Retrieving section code from csv...',
+                   cc_print=True)
+    for csv_section_info in csv_sections:
         section_name = csv_section_info[u'Section Name']
         section_code = csv_section_info[u'Section Code']
         row_num = row_num + 1
 
-        section = q.match_section(
-            identifier=section_code,
-            match_code=True)
-        section_id = section[u'id']
-        csv_section_info['Section ID'] = section_id
-        qs.logger.info({"row_num": row_num,
-                        "section_name": section_name,
-                        "section_id": section_id}, cc_print=True)
+        if section_code not in sections:
+            sections[section_code] = {'sectionCode': section_code}
+
+    qs.logger.info('GETting matching section ids by section code...',
+                   cc_print=True)
+    for section_code in sections:
+
+        matched_section = q.match_section(sections[section_code],
+                                          match_code=True)
+        section_id = matched_section['id']
+
+        if section_id not in sections_with_id:
+            sections[section_code] = {'section_id': section_id}
+
+    qs.logger.info('Matching section ids to csv section data...',
+                   cc_print=True)
+    for csv_section_info in csv_sections:
+        section_code = csv_section_info['Section Code']
+        csv_section_info['Section ID'] = sections[section_code]['section_id']
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
     csv_sections.save(filepath)
