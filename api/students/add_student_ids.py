@@ -34,7 +34,7 @@ def main():
     if not ('Full Name' in csv_students.cols
             or ('First' in csv_students.cols
             and 'Last' in csv_students.cols)):
-        raise ValueError('Full Name or First and Last name columns required.')
+        raise ValueError('"Full Name" or "First" and "Last" columns required.')
 
     if enrolled_only is True:
         db_students = q.get_students()

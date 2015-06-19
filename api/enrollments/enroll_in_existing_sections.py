@@ -29,8 +29,9 @@ def main():
 
     # Get Section Info
 
-    qs.logger.info('GETting section ids...',cc_print=True)
-    sections = q.get_sections(semester_id=semester,active_only=True)
+    qs.logger.info('GETting section ids...', cc_print=True)
+    sections = q.get_sections(semester_id=semester,
+                              active_only=True)
     for section in sections:
         section_code = section[u'sectionCode']
         section_id = section[u'id']
@@ -56,7 +57,7 @@ def main():
         student_enrollments[section]['section_id'] = section_enrollments[section]["section_id"]
 
     # Do the enrollment import
-    qs.logger.info('Importing...')
+    qs.logger.info('Importing...', cc_print=True)
     for section in qs.bar(student_enrollments):
         students = student_enrollments[section]['students']
         section_id = student_enrollments[section]['section_id']
