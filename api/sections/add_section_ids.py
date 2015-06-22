@@ -49,7 +49,8 @@ def main():
                 match_name=True)
             section_id = section['id']
             csv_section_info['Section ID'] = section_id
-    else:
+
+    elif 'Section Code' in csv_sections.cols:
             sections = {}
             sections_with_id = {}
             row_num = 1
@@ -79,6 +80,9 @@ def main():
             for csv_section_info in csv_sections:
                 section_code = csv_section_info['Section Code']
                 csv_section_info['Section ID'] = sections[section_code]['section_id']
+    else:
+        qs.logger.critical('Student ID and Section Code required. Current columns:',
+                           csv_sections.cols)
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
     csv_sections.save(filepath)
