@@ -79,9 +79,9 @@ def main():
             for csv_section_info in csv_sections:
                 section_code = csv_section_info['Section Code']
                 csv_section_info['Section ID'] = sections[section_code]['section_id']
-"""
+
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
     csv_sections.save(filepath)
-"""
+
 if __name__ == '__main__':
     main()
