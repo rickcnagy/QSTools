@@ -41,7 +41,7 @@ def main():
         for csv_section_info in qs.bar(csv_sections):
             section_name = csv_section_info['Section Name']
             student = csv_section_info['Student ID']
-            row_num = row_num + 1
+            row_num += 1
 
             section = q.match_section(
                 identifier=section_name,
@@ -58,9 +58,9 @@ def main():
             qs.logger.info('Retrieving section code from csv...',
                            cc_print=True)
             for csv_section_info in csv_sections:
-                section_name = csv_section_info[u'Section Name']
-                section_code = csv_section_info[u'Section Code']
-                row_num = row_num + 1
+                section_name = csv_section_info['Section Name']
+                section_code = csv_section_info['Section Code']
+                row_num += 1
 
                 if section_code not in sections:
                     sections[section_code] = {'sectionCode': section_code}
