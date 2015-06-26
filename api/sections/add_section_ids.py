@@ -81,7 +81,7 @@ def main():
                 section_code = csv_section_info['Section Code']
                 csv_section_info['Section ID'] = sections[section_code]['section_id']
     else:
-        qs.logger.critical('Student ID and Section Code required. Current columns:',
+        qs.logger.critical('"Student ID" and "Section Code" columns required. Current columns:',
                            csv_sections.cols)
 
     filepath = qs.unique_path(csv_sections.filepath, suffix="with section IDs")
