@@ -1,12 +1,10 @@
 # .coveragerc to control coverage.py
 [run]
 include =
-    */qs/*
-
-omit =
-    *__init__*
-    */qs/logger.py
-    */qs/messages.py
-    */qs/status_bar.py
-    */qs/test_data.py
-    */qs/titlecase.py
+    */qs/api_keys.py
+    */qs/qs_api.py
+    */qs/rate_limiting.py
+    */qs/rest_cache.py
+    */qs.rest_foundation.py
+    */qs.rest_request_wrappers.py
+    */qs.util.py
