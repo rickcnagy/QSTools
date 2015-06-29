@@ -55,7 +55,6 @@ def main():
     for section in qs.bar(section_info):
         section_id = section_info[section]['section_id']
         students = section_info[section]['student_ids']
-        print students
 
         new_enrollment = q.post_section_enrollment(section_id, students)
 
