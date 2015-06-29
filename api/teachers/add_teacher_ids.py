@@ -61,9 +61,9 @@ def main():
                 ''.format(len(teacher_names_not_matched))),
             teacher_names_not_matched)
     else:
-        qs.logger.info('All teachers were matched in the db.')
-    filepath = qs.unique_path(csv_teachers.filepath, suffix="with teacher IDs")
-    csv_teachers.save(filepath)
+        qs.logger.info('All teachers were matched in the db.', cc_print=True)
+        filepath = qs.unique_path(csv_teachers.filepath, suffix="with teacher IDs")
+        csv_teachers.save(filepath)
 
 if __name__ == ('__main__'):
     main()

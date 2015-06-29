@@ -65,7 +65,7 @@ def main():
         qs.logger.info('Semester Names do not match DB:',
                        semester_names_not_matched, cc_print=True)
     else:
-        qs.logger.info('All semester names matched')
+        qs.logger.info('All semester names matched', cc_print=True)
         filepath = qs.unique_path(csv_semesters.filepath)
         csv_semesters.save(filepath)
 

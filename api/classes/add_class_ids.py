@@ -63,9 +63,9 @@ def main():
                 ''.format(len(class_names_not_matched))),
             class_names_not_matched)
     else:
-        qs.logger.info('All classes were matched in the db.')
-    filepath = qs.unique_path(csv_classes.filepath, suffix="with student IDs")
-    csv_classes.save(filepath)
+        qs.logger.info('All classes were matched in the db.', cc_print=True)
+        filepath = qs.unique_path(csv_classes.filepath, suffix="with student IDs")
+        csv_classes.save(filepath)
 
 if __name__ == ('__main__'):
     main()
