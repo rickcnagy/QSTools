@@ -3,7 +3,7 @@ Enroll in Existing Sections
 
 Imports enrollment from CSV for already created subjects (such as ones imported
 through the 'Subject (New Style)' importer). Matches by secion code
-(abbreviation).
+(abbreviation). Currently handles one semester at a time.
 
 Requires: CSV of enrollment data with subject codes, semester id.
 CSV must have the following columns: Student ID, Section Code
@@ -11,6 +11,8 @@ CSV must have the following columns: Student ID, Section Code
 Usage: ./enroll_in_existing_sections.py {school code} {semester} filename.csv
 
 Returns: Nothing - just enrolls students in their sections.
+
+## TO DO - MATCH BY SECTION CODE
 """
 
 import qs
