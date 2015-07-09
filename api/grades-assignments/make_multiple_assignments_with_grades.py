@@ -84,9 +84,6 @@ def main():
                                                   section_data['cat_id'],
                                                   section_data['grade_scale'],
                                                   section_data['grades_data'])
-        qs.logger.info({"section": sections[section]['section_id']},
-                       cc_print=True)
-
 
 if __name__ == '__main__':
     main()
