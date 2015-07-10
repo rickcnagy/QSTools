@@ -32,6 +32,8 @@ def main():
     elif 'Year' not in csv_student_sections.cols:
         raise ValueError("'Year' column required.")
 
+    # Make dict of student class info by year and count number of times a course appears
+
     for record in csv_student_sections:
         student_name = record['Student Name']
         if 'Class Name' in record:
@@ -42,16 +44,16 @@ def main():
 
         if student_name not in students:
             students[student_name] = dict()
-        
+    
         if year not in students[student_name]:
             students[student_name][year] = dict()
-        
+      
         if class_name not in students[student_name][year]:
             students[student_name][year][class_name] = 1
         else:
             students[student_name][year][class_name] += 1
 
-    print students
+    # 
 
 
 if __name__ == '__main__':

@@ -38,6 +38,7 @@ def main():
         raise ValueError("'Full Name' column required in original names csv")
     if 'Full Name' not in csv_new_students.cols:
         raise ValueError("'Full Name' column required in new names csv")
+    
     # Make lists of duplicate and unique students
 
     for student in csv_orig_students:
