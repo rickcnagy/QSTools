@@ -992,10 +992,9 @@ class QSAPIWrapper(qs.APIWrapper):
             }
         """
         cache = self._report_card_cache
-        report_cycle_id = (
-            qs.clean(report_cycle_id)
-            if report_cycle_id
-            else qs.clean_id(self.get_active_report_cycle()['id']))
+        if report_cycle_id is None:
+            report_cycle_id = self.get_active_report_cycle()['id']
+
         kwargs['cache_filter'] = {
             'reportCycleId': report_cycle_id,
             'studentId': student_id
