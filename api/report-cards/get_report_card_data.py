@@ -16,7 +16,7 @@ Returns: Same CSV, but with report card identifier a column
 
 import qs
 import sys
-import json
+
 
 def main():
     qs.logger.config(__file__)
@@ -39,18 +39,16 @@ def main():
         section_id = csv_student['Section ID']
         report_cycle_id = csv_student['Report Cycle ID']
 
-        report_card_data = q.get_report_card(student_id, report_cycle_id)
+        report_card_data = q.get_report_card(student_id, report_cycle_id)['sectionLevel']
 
-        if student_id not in student_report_card_data:
-            student_report_card_data[student_id] = list()
-        student_report_card_data[student_id] = report_card_data
+        csv_student[identifier] = report_card_data[section_id][identifier]
+    
+    qs.logger.info('Values retrieved for identifier:', identifier, cc_print=True)
+    filepath = qs.unique_path(csv_report_card_data.filepath, suffix="-values")
+    csv_report_card_data.save(filepath)
 
-    qs.logger.info('Retrieving values for {} identifier', identifier, cc_print=True)
-    for student in student_report_card_data:
-        qs.pp(student_report_card_data[student]['sectionLevel'])
-        for section in student:
-            identifier_value = student[section][identifier]
-            print identifier_value
+
+
 
 if __name__ == '__main__':
     main()
