@@ -1086,52 +1086,27 @@ class QSAPIWrapper(qs.APIWrapper):
         return cache.get(**kwargs)
     
     @qs.clean_arg
-    def post_transcript_section_level(self, student_id, section_level_data, **kwargs):
+    def post_transcript_section_level(self, student_id, section_id, section_level_data, **kwargs):
         """POST transcript semester data for a given student and section. 
         Student ID, Semester ID, Section ID and marks are required.
 
-        The section_level_data should be in this f
+        The section_level_data should be in this format:
+        {'sectionId': {'values': {'identifier1': 'value1',
+                                    'identifier2': ...}},
+        'sectionId': ...}
 
         """
-        # {'semesterId1': {'values': {'identifier1': 'value1', 'identifier2': ...}}, 'semesterId2': ...}
         student_id = qs.clean_id(student_id)
-        request_data = {
-            'sectionLevel': json.dumps(section_level_data)
-        }
+        section_id = qs.clean_id(section_id)
 
         url = '/transcripts/{}'.format(student_id)
         request = self._request('POST section-level Transcript data', url, **kwargs)
         request.verb = qs.POST
         request.request_data = {
-            'sectionLevel': json.dumps(section_level_data)
+            'sectionLevel': json.dumps({section_id: section_level_data})
         }
 
-        response = self._make_request(request, **kwargs)
-        if request.successful:
-            cache_id = self._tr_id_for_cache(student_id)
-            self._transcript_cache.invalidate()
-        return response 
-
-        """
-                report_cycle_id = qs.clean_id(report_cycle_id)
-        request_data = {
-            'sectionLevel': json.dumps(section_level_data)
-        }
-
-        url = '/students/{}/reportcards/{}'.format(student_id, report_cycle_id)
-        request = self._request('POST section-level rc data', url, **kwargs)
-        request.verb = qs.POST
-        request.request_data = {
-            'sectionLevel': json.dumps(section_level_data)
-        }
-
-        response = self._make_request(request, **kwargs)
-        if request.successful:
-            cache_id = self._rc_id_for_cache(student_id, report_cycle_id)
-            self._report_card_cache.invalidate()
-        return response
-        """
-
+        return self._make_request(request, **kwargs)
 
     # ================
     # = Fee Tracking =
