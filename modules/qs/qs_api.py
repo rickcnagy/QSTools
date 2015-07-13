@@ -1084,9 +1084,9 @@ class QSAPIWrapper(qs.APIWrapper):
             transcript['studentId'] = student_id
             cache.add(transcript)
         return cache.get(**kwargs)
-    
+
     @qs.clean_arg
-    def post_transcript_section_level(self, student_id, section_id, section_level_data, **kwargs):
+    def post_transcript_section_level(self, student_id, section_level_data, **kwargs):
         """POST transcript semester data for a given student and section. 
         Student ID, Semester ID, Section ID and marks are required.
 
@@ -1097,13 +1097,13 @@ class QSAPIWrapper(qs.APIWrapper):
 
         """
         student_id = qs.clean_id(student_id)
-        section_id = qs.clean_id(section_id)
+        # section_id = qs.clean_id(section_id)
 
         url = '/transcripts/{}'.format(student_id)
         request = self._request('POST section-level Transcript data', url, **kwargs)
         request.verb = qs.POST
         request.request_data = {
-            'sectionLevel': json.dumps({section_id: section_level_data})
+            'sectionLevel': json.dumps(section_level_data)
         }
 
         return self._make_request(request, **kwargs)
