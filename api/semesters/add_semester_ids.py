@@ -57,7 +57,6 @@ def main():
             csv_semester['Semester ID'] = db_match['id']
         else:
             semester_names_not_matched.add(csv_original_semester_name)
-            print 'db_matcn NOT exists'
 
     # Match semesters if all are matched
 

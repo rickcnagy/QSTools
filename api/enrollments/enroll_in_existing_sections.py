@@ -5,7 +5,7 @@ Imports enrollment from CSV for already created subjects (such as ones imported
 through the 'Subject (New Style)' importer). Matches by section_id.
 
 Requires: CSV of enrollment data with subject codes, semester id.
-CSV must have the following columns: Student ID, Section Code
+CSV must have the following columns: "Student ID", "Section Code"
 
 Usage: ./enroll_in_existing_sections.py {school code} {filename.csv}
 

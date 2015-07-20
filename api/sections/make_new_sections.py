@@ -46,7 +46,7 @@ def main():
 
     qs.logger.info('POSTing sections...', cc_print=True)
 
-    new_sections = q.post_sections(sections_dict=sections, print_log=True)
+    new_sections = q.post_sections(sections_dict=sections)
 
 if __name__ == '__main__':
     main()

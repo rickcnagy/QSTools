@@ -9,8 +9,8 @@ Usage:
 ./make-single-assignment-with-grade-py schoolcode filename.csv
 
 Requires: CSV with the following column headings
-Student ID, Total Pts, Category ID,
-Marks, Grading Scale ID, Section ID
+"Student ID", "Total Pts", "Category ID",
+"Marks", "Grading Scale ID", "Section ID"
 
 Please note the date must be in YYYY-MM-DD format. Also 'Gr ID'
 referrs to the grading scale id - *not the letter grade*
@@ -48,16 +48,16 @@ def main():
             assign_name = 'Grade Import'
 
         if 'Assignment Date' in student_section_record:
-            assign_date = student_section_record[u'Assignment Date']
+            assign_date = student_section_record['Assignment Date']
         else:
             assign_date = qs.today()
 
-        section = student_section_record[u'Section ID']
-        cat_id = student_section_record[u'Category ID']
-        total = student_section_record[u'Total Pts']
-        grade_scale = student_section_record[u'Grading Scale ID']
-        marks = student_section_record[u'Marks']
-        student = student_section_record[u'Student ID']
+        section = student_section_record['Section ID']
+        cat_id = student_section_record['Category ID']
+        total = student_section_record['Total Pts']
+        grade_scale = student_section_record['Grading Scale ID']
+        marks = student_section_record['Marks']
+        student = student_section_record['Student ID']
 
         if section not in grades:
             grades[section] = list()
