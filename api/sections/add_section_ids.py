@@ -49,9 +49,15 @@ def main():
             semester_id = csv_section_info['Semester ID']
             row_num += 1
 
-            section = q.match_section(identifier=section_name,
-                                      target_semester_id=semester_id)
-            section_id = section['id']
+            if 'Section Code' in csv_sections.cols:
+                section_code = csv_section_info['Section Code']
+                section = {'sectionCode': section_code}
+                matched_section = q.match_section(section, match_code=True,
+                                                  target_semester_id=semester_id)
+            else:
+                matched_section = q.match_section(identifier=section_name,
+                                                  target_semester_id=semester_id)
+            section_id = matched_section['id']
             csv_section_info['Section ID'] = section_id
 
     elif 'Section Code' in csv_sections.cols:
