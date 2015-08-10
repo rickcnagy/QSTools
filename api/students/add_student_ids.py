@@ -38,7 +38,7 @@ def main():
 
     if enrolled_only is True:
         db_students = q.get_students()
-    else:
+    elif enrolled_only is False:
         db_students = q.get_students(
             show_has_left=True,
             show_deleted=True,
