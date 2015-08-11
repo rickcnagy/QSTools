@@ -14,7 +14,7 @@ columns that make it into the output are:
 
 Requires: CSV with 'Student ID' column
 
-Usage: ./get_report_card_enrollment.py {schoolcode} {filename}
+Usage: ./get_report_card_enrollment.py {schoolcode} {server} {filename}
 
 Returns: CSV with a 'Section ID' column, with one row per section
 """
@@ -27,8 +27,9 @@ def main():
     qs.logger.config(__file__)
 
     schoolcode = sys.argv[1]
-    filename = sys.argv[2]
-    q = qs.API(schoolcode)
+    server = sys.argv[2]
+    filename = sys.argv[3]
+    q = qs.API(schoolcode, server)
     csv_student_report_cycles = qs.CSV(filename)
     tr_enrollments = list()
 
