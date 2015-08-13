@@ -48,7 +48,5 @@ def main():
     csv_report_card_data.save(filepath)
 
 
-
-
 if __name__ == '__main__':
     main()

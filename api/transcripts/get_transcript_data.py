@@ -43,7 +43,11 @@ def main():
 
         transcript_data = q.get_transcript(student_id)['sectionLevel']
 
-        csv_student[identifier] = transcript_data[section_id][identifier]
+        if section_id in transcript_data:
+            if identifier in transcript_data[section_id]:
+                csv_student[identifier] = transcript_data[section_id][identifier]
+            else:
+                csv_student[identifier] = None
     
     qs.logger.info('Values retrieved for identifier:', identifier, cc_print=True)
     filepath = qs.unique_path(csv_transcript_data.filepath, suffix="-values")
