@@ -6,7 +6,7 @@ not handle any enrollments - just makes the sections in the current active
 semester. It does not get section ids (the add_section_ids scripts are good
 for this)
 
-Requires: CSV with 'Section Name' 'Section Code' 'Teacher' and 'Class ID'
+Requires: CSV with 'Section Name' 'Section Code' 'Teacher ID' and 'Class ID'
 column headers. 'Credit Hours' is an option
 
 Usage: ./make_new_sections.py {schoolcode} {filename.csv}
@@ -46,7 +46,7 @@ def main():
 
     qs.logger.info('POSTing sections...', cc_print=True)
 
-    new_sections = q.post_sections(sections_dict=sections, print_log=True)
+    new_sections = q.post_sections(sections_dict=sections)
 
 if __name__ == '__main__':
     main()

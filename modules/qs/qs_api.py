@@ -916,9 +916,8 @@ class QSAPIWrapper(qs.APIWrapper):
         return response
 
     def post_assignment_with_grades(self, section_id, assignment_name,
-                                    assignment_date, total_marks_possible,
-                                    category_id, grading_scale_id,
-                                    student_ids_and_grades_list):
+            assignment_date, total_marks_possible, category_id, grading_scale_id,
+            student_ids_and_grades_list):
         """ POST new assignment and then POST grades to this same assignment.
             Please note that this method is dependant on post_assignment
             and post_grades. As a result, it will return the response
@@ -992,10 +991,9 @@ class QSAPIWrapper(qs.APIWrapper):
             }
         """
         cache = self._report_card_cache
-        report_cycle_id = (
-            qs.clean(report_cycle_id)
-            if report_cycle_id
-            else qs.clean_id(self.get_active_report_cycle()['id']))
+        if report_cycle_id is None:
+            report_cycle_id = self.get_active_report_cycle()['id']
+
         kwargs['cache_filter'] = {
             'reportCycleId': report_cycle_id,
             'studentId': student_id
@@ -1086,6 +1084,29 @@ class QSAPIWrapper(qs.APIWrapper):
             transcript['studentId'] = student_id
             cache.add(transcript)
         return cache.get(**kwargs)
+
+    @qs.clean_arg
+    def post_transcript_section_level(self, student_id, section_level_data, **kwargs):
+        """POST transcript semester data for a given student and section. 
+        Student ID, Semester ID, Section ID and marks are required.
+
+        The section_level_data should be in this format:
+        {'sectionId': {'values': {'identifier1': 'value1',
+                                    'identifier2': ...}},
+        'sectionId': ...}
+
+        """
+        student_id = qs.clean_id(student_id)
+        # section_id = qs.clean_id(section_id)
+
+        url = '/transcripts/{}'.format(student_id)
+        request = self._request('POST section-level Transcript data', url, **kwargs)
+        request.verb = qs.POST
+        request.request_data = {
+            'sectionLevel': json.dumps(section_level_data)
+        }
+
+        return self._make_request(request, **kwargs)
 
     # ================
     # = Fee Tracking =
