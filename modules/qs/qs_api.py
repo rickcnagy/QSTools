@@ -428,7 +428,7 @@ class QSAPIWrapper(qs.APIWrapper):
         # try to return a match
         try:
             if len(matches) == 0:
-                raise LookupError('No matches found for section')
+                raise LookupError('No matches found for section. Identifier: {}'.format(identifier))
             elif allow_multiple:
                 return matches
             elif len(matches) == 1:
@@ -805,6 +805,31 @@ class QSAPIWrapper(qs.APIWrapper):
         else:
             return cache.get(**kwargs)
 
+
+    @qs.clean_arg
+    def get_grade_category_ids(self, section_id, **kwargs):
+        """ GET grade category ids from assignments. Requires a section setup with
+            assignments in all categories. Returns a dict in the form:
+                {"category_name": "category_id"}
+            where all category_ids are unique.
+        """
+
+        section_assignments = self.get_assignments(section_id)
+        category_ids = {}
+        duplicate_category_names = []
+        for assignment in section_assignments:
+            category_name = assignment['categoryName']
+            category_id = assignment['categoryId']
+            if category_name not in category_ids:
+                category_ids[category_name] = category_id
+            else:
+                duplicate_category_names.add(category_name)
+
+        if duplicate_category_names:
+            qs.logger.info('Duplicate categories: {}' . duplicate_category_names, cc_print=True)
+
+        return category_ids
+
     @qs.clean_arg
     def post_assignment(self, section_id, name, date, total_marks_possible,
             column_category_id=None, grading_scale_id=None, **kwargs):
@@ -1113,7 +1138,7 @@ class QSAPIWrapper(qs.APIWrapper):
     # ================
 
     @qs.clean_arg
-    def post_fee(self, student_id, amount, date, description='', **kwargs):
+    def post_fee(self, student_id, category, amount, date, description='', **kwargs):
         """POST a charge to a student's profile via the Fee Tracking API,
         which is documented on Assembla #2210.
 
@@ -1126,13 +1151,17 @@ class QSAPIWrapper(qs.APIWrapper):
             fee_type: Either 'C' for charge or 'P' for Payment
         """
         amount = qs.finance_to_float(amount)
-        fee_type = 'C' if amount > 0 else 'P'
+        fee_type = 'C'
+        if amount < 0:
+            fee_type = 'P'
+            amount = (0 - amount)
         request = self._request(
             'POST charge',
             '/students/{}/fees'.format(student_id),
             **kwargs)
         request.verb = qs.POST
         request.request_data = {
+            'feeCategoryId': category,
             'date': date,
             'description': description,
             'amount': amount,
