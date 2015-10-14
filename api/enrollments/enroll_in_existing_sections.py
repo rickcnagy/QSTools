@@ -4,8 +4,7 @@ Enroll in Existing Sections
 Imports enrollment from CSV for already created subjects (such as ones imported
 through the 'Subject (New Style)' importer). Matches by section_id.
 
-Requires: CSV of enrollment data with subject codes, semester id.
-CSV must have the following columns: "Student ID", "Section Code"
+Requires: CSV must have the following columns: "Student ID", "Section ID"
 
 Usage: ./enroll_in_existing_sections.py {school code} {filename.csv}
 
@@ -30,7 +29,10 @@ def main():
 
     if 'Section ID' not in csv_enrollments.cols:
         qs.logger.critical('"Section ID" column required. Current columns: ',
-                           csv_enrollments.cols, cc_print=True)
+            csv_enrollments.cols, cc_print=True)
+    if 'Student ID' not in csv_enrollments.cols:
+        qs.logger.critical('"Student ID" column required. Current columns: ',
+            csv_enrollments.cols, cc_print=True)
 
     qs.logger.info('Setting up enrollment info from csv data...', cc_print=True)
     for enrollment in csv_enrollments:
@@ -47,9 +49,8 @@ def main():
         student_enrollments[section_id].append(student_id)
 
         section_info[section_id] = {'section_name': section_name,
-                                    'section_id': section_id,
-                                    'section_code': section_code,
-                                    'student_ids': student_enrollments[section_id]}
+            'section_id': section_id, 'section_code': section_code,
+            'student_ids': student_enrollments[section_id]}
 
     qs.logger.info('POSTing sections...', cc_print=True)
     for section in qs.bar(section_info):
