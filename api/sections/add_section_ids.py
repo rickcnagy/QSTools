@@ -47,7 +47,6 @@ def main():
         for csv_section_info in qs.bar(csv_sections):
             section_name = csv_section_info['Section Name']
             semester_id = csv_section_info['Semester ID']
-            row_num += 1
 
             if 'Section Code' in csv_sections.cols:
                 section_code = csv_section_info['Section Code']
@@ -59,7 +58,6 @@ def main():
                                                   target_semester_id=semester_id)
             section_id = matched_section['id']
             csv_section_info['Section ID'] = section_id
-
     elif 'Section Code' in csv_sections.cols:
         qs.logger.info('Matching with db by Section Code...', cc_print=True)
 

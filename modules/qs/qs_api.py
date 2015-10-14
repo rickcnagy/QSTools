@@ -428,7 +428,7 @@ class QSAPIWrapper(qs.APIWrapper):
         # try to return a match
         try:
             if len(matches) == 0:
-                raise LookupError('No matches found for section')
+                raise LookupError('No matches found for section. Identifier: {}'.format(identifier))
             elif allow_multiple:
                 return matches
             elif len(matches) == 1:
@@ -804,6 +804,31 @@ class QSAPIWrapper(qs.APIWrapper):
             # TODO: after #2219, sectionId doesn't have to be known
         else:
             return cache.get(**kwargs)
+
+
+    @qs.clean_arg
+    def get_grade_category_ids(self, section_id, **kwargs):
+        """ GET grade category ids from assignments. Requires a section setup with
+            assignments in all categories. Returns a dict in the form:
+                {"category_name": "category_id"}
+            where all category_ids are unique.
+        """
+
+        section_assignments = self.get_assignments(section_id)
+        category_ids = {}
+        duplicate_category_names = []
+        for assignment in section_assignments:
+            category_name = assignment['categoryName']
+            category_id = assignment['categoryId']
+            if category_name not in category_ids:
+                category_ids[category_name] = category_id
+            else:
+                duplicate_category_names.add(category_name)
+
+        if duplicate_category_names:
+            qs.logger.info('Duplicate categories: {}' . duplicate_category_names, cc_print=True)
+
+        return category_ids
 
     @qs.clean_arg
     def post_assignment(self, section_id, name, date, total_marks_possible,
