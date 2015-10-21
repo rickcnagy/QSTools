@@ -1,3 +1,5 @@
+// See examples/setStandardsGroupings.example.json
+
 new QSImporter.iterator(function() {
 	$("tr:contains(" + this.item["Name"] + ") button:contains(Edit):last").click();
 
