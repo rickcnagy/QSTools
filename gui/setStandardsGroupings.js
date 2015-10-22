@@ -1,7 +1,10 @@
 // See examples/setStandardsGroupings.example.json
 
 new QSImporter.iterator(function() {
-    $("tr:contains(" + this.item["Name"] + ") button:contains(Edit):last").click();
+	var regex = new RegExp("^" + this.item["Name"] + "\W");
+	$("tr").filter(function() {
+		return regex.test($(this).text());
+	}).find("button:contains(Edit):last").click();
 
     this.afterLoad(function() {
         var groupingCreator = new QSImporter.iterator(function(grouping) {
