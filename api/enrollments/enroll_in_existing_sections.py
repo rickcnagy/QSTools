@@ -29,10 +29,10 @@ def main():
 
     if 'Section ID' not in csv_enrollments.cols:
         qs.logger.critical('"Section ID" column required. Current columns: ',
-            csv_enrollments.cols, cc_print=True)
+            csv_enrollments.cols)
     if 'Student ID' not in csv_enrollments.cols:
         qs.logger.critical('"Student ID" column required. Current columns: ',
-            csv_enrollments.cols, cc_print=True)
+            csv_enrollments.cols)
 
     qs.logger.info('Setting up enrollment info from csv data...', cc_print=True)
     for enrollment in csv_enrollments:

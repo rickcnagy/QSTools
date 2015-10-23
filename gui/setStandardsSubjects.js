@@ -4,7 +4,13 @@ var standardsIter = new QSTableIterator(function() {
     if(name.match(/^GR/)) {
         var gradeNumber = name.match(/^[a-zA-Z]*(\d)/)[1];
     } else {
-        var gradeNumber = name.match(/^[a-zA-Z]*(\d)/)[1];
+        var gradeNumber = name.match(/^(\w+) /)[1];
+    
+            if (gradeNumber == "TK"){
+                gradeNumber = "Transitional Kindergarten";
+            } else {
+                gradeNumber = "Kindergarten";
+            }
     }
 
     var subjectName = name.match(/ - (.+)/)[1];

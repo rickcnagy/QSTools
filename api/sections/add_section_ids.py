@@ -58,6 +58,7 @@ def main():
                                                   target_semester_id=semester_id)
             section_id = matched_section['id']
             csv_section_info['Section ID'] = section_id
+
     elif 'Section Code' in csv_sections.cols:
         qs.logger.info('Matching with db by Section Code...', cc_print=True)
 
