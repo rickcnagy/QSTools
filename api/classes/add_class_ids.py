@@ -23,8 +23,8 @@ def main():
     csv_classes = qs.CSV(filename)
     q = qs.API(schoolcode)
 
-    if not ('Class Name' in csv_classes.cols or ('Grade' in csv_classes.cols)):
-        raise ValueError('Class Name or Grade column required.')
+    if not ('Class Name' in csv_classes.cols or ('Grade' in csv_classes.cols) or ('Grade Level' in csv_classes.cols)):
+        raise ValueError('Class Name, Grade Level, or Grade column required.')
 
     db_classes = q.get_classes()
     db_duplicates = qs.find_dups_in_dict_list(db_classes, 'name')
@@ -45,8 +45,10 @@ def main():
     for csv_class in csv_classes:
         if 'Class Name' in csv_class:
             csv_class_name = csv_class['Class Name']
-        else:
+        elif 'Grade' in csv_class:
             csv_class_name = csv_class['Grade']
+        else:
+            csv_class_name = csv_class['Grade Level']
 
         csv_orginal_class_name = csv_class_name
         if ignore_case:

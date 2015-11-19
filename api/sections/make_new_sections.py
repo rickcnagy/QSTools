@@ -3,7 +3,7 @@ Make New Sections
 
 This script makes sections from identifying data entered in a csv file. It does
 not handle any enrollments - just makes the sections in the current active
-semester. It does not get section ids (the add_section_ids scripts are good
+semester. It does not get section ids (the add_section_id script is good
 for this)
 
 Requires: CSV with 'Section Name' 'Section Code' 'Teacher ID' and 'Class ID'

@@ -59,6 +59,21 @@ def main():
             section_id = matched_section['id']
             csv_section_info['Section ID'] = section_id
 
+    elif 'Student ID' in csv_sections.cols:
+        qs.logger.info('Matching with db by Student ID...', cc_print=True)
+
+        for csv_section_info in qs.bar(csv_sections):
+            section_name = csv_section_info['Section Name']
+            student = csv_section_info['Student ID']
+            row_num += 1
+
+            section = q.match_section(
+                identifier=section_name,
+                student_id=student,
+                match_name=True)
+            section_id = section['id']
+            csv_section_info['Section ID'] = section_id
+
     elif 'Section Code' in csv_sections.cols:
         qs.logger.info('Matching with db by Section Code...', cc_print=True)
 
@@ -90,20 +105,6 @@ def main():
             section_code = csv_section_info['Section Code']
             csv_section_info['Section ID'] = sections[section_code]['section_id']
 
-    elif 'Student ID' in csv_sections.cols:
-        qs.logger.info('Matching with db by Student ID...', cc_print=True)
-
-        for csv_section_info in qs.bar(csv_sections):
-            section_name = csv_section_info['Section Name']
-            student = csv_section_info['Student ID']
-            row_num += 1
-
-            section = q.match_section(
-                identifier=section_name,
-                student_id=student,
-                match_name=True)
-            section_id = section['id']
-            csv_section_info['Section ID'] = section_id
     else:
         qs.logger.critical('"Student ID", "Semester ID", or "Section Code" columns required. Current columns:',
                            csv_sections.cols)

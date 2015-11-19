@@ -21,7 +21,7 @@ new QSGradebookIterator(function() {
 
     this.click("Edit it anyways");
     this.click("Add Formula");
-    $("tr.category:contains(Formative) input").click();
+    $("tr.category:contains(Final Grade) input").click();
     this.click("Add");
     this.click("Save");
 

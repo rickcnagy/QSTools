@@ -2,11 +2,11 @@
 Make Multiple Assignments with grade
 
 This script takes a CSV of grades for particular sections and
-makes an assignment for that section and posts students' grades
+makes assignments for that section and posts students' grades
 to the assignment.
 
 Usage:
-./make-single-assignment-with-grade-py schoolcode filename.csv
+./make-multiple-assignment-with-grade-py schoolcode filename.csv
 
 Requires: CSV with the following column headings
 "Student ID", "Total Pts", "Category ID",
@@ -38,6 +38,19 @@ def main():
     csv_grades = qs.CSV(filename)
     sections = {}
     grades = {}
+
+    required_columns = ['Student ID', 'Total Pts', 'Category ID', 'Marks',
+        'Grading Scale ID', 'Section ID']
+
+    for column in csv_grades.cols:
+        if required_columns in csv_grades.cols:
+            required_columns.reomve(column)
+
+    if required_columns:
+        for required_column in required_columns:
+            print "Column Missing: {}" . format(required_column)
+        sys.tracebacklimit = 0
+        raise ValueError("Columns are missing from CSV. See above for details.")
 
     # Make dict of assignment data
 

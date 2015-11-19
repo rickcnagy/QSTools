@@ -6,6 +6,6 @@
 
 
 new QSTableIterator(function() {
-    this.click("Save");
+    this.click("Save Ctrl-");
     this.next();
 }).start();
