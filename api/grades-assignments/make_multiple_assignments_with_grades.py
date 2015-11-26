@@ -39,20 +39,21 @@ def main():
     sections = {}
     grades = {}
 
-    required_columns = ['Student ID', 'Total Pts', 'Category ID', 'Marks',
-        'Grading Scale ID', 'Section ID']
+    required_columns = ['Section ID', 'Student ID', 'Total Pts', 'Category ID',
+        'Marks', 'Grading Scale ID']
+    missing_columns = []
 
-    for column in csv_grades.cols:
-        if required_columns in csv_grades.cols:
-            required_columns.reomve(column)
+    for required_column in required_columns:
+        if required_column not in csv_grades.cols:
+                missing_columns.append(required_column)
 
-    if required_columns:
-        for required_column in required_columns:
-            print "Column Missing: {}" . format(required_column)
+    if missing_columns:
+        for missing_column in missing_columns:
+            print "Column Missing: {}" . format(missing_column)
         sys.tracebacklimit = 0
         raise ValueError("Columns are missing from CSV. See above for details.")
 
-    # Make dict of assignment data
+    # Make dict of students' assignment grades and assignment metadata
 
     for student_section_record in csv_grades:
         if 'Assignment Name' in student_section_record:
@@ -72,31 +73,49 @@ def main():
         marks = student_section_record['Marks']
         student = student_section_record['Student ID']
 
+        # List out students' assignment grades
         if section not in grades:
-            grades[section] = list()
-        grades[section].append({'studentId': student, 'marks': marks})
+            grades[section] = dict()
+        
+        if assign_name not in grades[section]:
+            grades[section][assign_name] = list()
 
-        sections[section] = {'cat_id': cat_id,
-                             'total': total,
-                             'grade_scale': grade_scale,
-                             'assign_date': assign_date,
-                             'assign_name': assign_name,
-                             'section_id': section}
+        grades[section][assign_name].append({'studentId': student, 'marks': marks})
+
+        # List out assignment metadata
+        
+        print section
+
+        if section not in sections:
+            sections[section] = dict()
+
+        sections[section][assign_name] = {'cat_id': cat_id, 'total': total,
+            'grade_scale': grade_scale, 'assign_date': assign_date,
+            'assign_name': assign_name, 'section_id': section, 'grades_data': []}
+    
     for section in sections:
-        sections[section]['grades_data'] = grades[section]
+        for assign_name in sections[section]:
+            print ""
+            print grades[section][assign_name]
+            sections[section][assign_name]['grades_data'] = grades[section][assign_name]
+            print sections[section][assign_name]['grades_data']
 
-    qs.logger.info(sections)
+    qs.logger.info(sections, cc_print=True)
 
     # POST assignment and POST grades to it
     for section in qs.bar(sections):
-        section_data = sections[section]
-        new_grade = q.post_assignment_with_grades(section,
-                                                  section_data['assign_name'],
-                                                  section_data['assign_date'],
-                                                  section_data['total'],
-                                                  section_data['cat_id'],
-                                                  section_data['grade_scale'],
-                                                  section_data['grades_data'])
+        for assign_name in sections[section]:
+            assign_data = sections[section][assign_name]
+            print ""
+            print assign_data
+            print assign_data['grades_data']
+            
+            new_grade = q.post_assignment_with_grades(section,
+                assign_data['assign_name'], assign_data['assign_date'],
+                assign_data['total'], assign_data['cat_id'],
+                assign_data['grade_scale'], assign_data['grades_data'])
+            
+
 
 if __name__ == '__main__':
     main()

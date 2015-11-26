@@ -10,7 +10,7 @@ Required Columns:
     Description
 
 Command Line Usage:
-    ./import_attendance {filename} {schoolcode}
+    ./import_attendance {schoolcode} {filename} 
 """
 
 import sys
@@ -19,8 +19,8 @@ import qs
 
 def main():
     qs.logger.config(__file__)
-    filename = sys.argv[1]
-    schoolcode = sys.argv[2]
+    schoolcode = sys.argv[1]
+    filename = sys.argv[2]
     attendance = qs.CSV(filename)
     q = qs.API(schoolcode)
 

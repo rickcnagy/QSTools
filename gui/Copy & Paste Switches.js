@@ -1,4 +1,4 @@
-/**
+post_assignment_with_grades/**
  * Copy & Paste switches between Zeus templates.
  * #TODO: move to qs-supporttools
  */
