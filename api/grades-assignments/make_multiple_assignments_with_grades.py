@@ -83,8 +83,6 @@ def main():
         grades[section][assign_name].append({'studentId': student, 'marks': marks})
 
         # List out assignment metadata
-        
-        print section
 
         if section not in sections:
             sections[section] = dict()
@@ -95,21 +93,15 @@ def main():
     
     for section in sections:
         for assign_name in sections[section]:
-            print ""
-            print grades[section][assign_name]
             sections[section][assign_name]['grades_data'] = grades[section][assign_name]
-            print sections[section][assign_name]['grades_data']
 
-    qs.logger.info(sections, cc_print=True)
+    qs.logger.info(sections)
 
     # POST assignment and POST grades to it
     for section in qs.bar(sections):
         for assign_name in sections[section]:
             assign_data = sections[section][assign_name]
-            print ""
-            print assign_data
-            print assign_data['grades_data']
-            
+
             new_grade = q.post_assignment_with_grades(section,
                 assign_data['assign_name'], assign_data['assign_date'],
                 assign_data['total'], assign_data['cat_id'],
