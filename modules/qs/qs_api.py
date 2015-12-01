@@ -341,9 +341,9 @@ class QSAPIWrapper(qs.APIWrapper):
         return cache.get(section_id, **kwargs)
 
     def match_section(self, identifier, target_semester_id=None,
-            student_id=None, allow_multiple=False, critical=False,
-            match_name=True, match_code=True, match_class_id=False,
-            match_class_name=True, match_teachers=True):
+            student_id=None, allow_multiple=False, fail_silent=False,
+            critical=False, match_name=True, match_code=True,
+            match_class_id=False, match_class_name=True, match_teachers=True, **kwargs):
         """Match a section based on id, name, or section dict.
 
         Args:
@@ -358,6 +358,8 @@ class QSAPIWrapper(qs.APIWrapper):
                 taken by this student.
             allow_multiple: Allow multiple matches. A list is always returned
                 if there are matches, else None (or raise an error).
+            fail_silent: If supplied, sections without matches will be returned
+                with a value of "FALSE"
             critical: Make a critical log if there isn't the correct number of
                 matches. If this is False, None is returned with the incorrect
                 number.
@@ -428,7 +430,10 @@ class QSAPIWrapper(qs.APIWrapper):
         # try to return a match
         try:
             if len(matches) == 0:
-                raise LookupError('No matches found for section. Identifier: {}'.format(identifier))
+                if not fail_silent:
+                    raise LookupError('No matches found for section. Identifier: {}'.format(identifier))
+                else:
+                    return "FALSE"
             elif allow_multiple:
                 return matches
             elif len(matches) == 1:

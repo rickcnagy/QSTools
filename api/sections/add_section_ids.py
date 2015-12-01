@@ -37,6 +37,7 @@ def main():
 
     schoolcode = sys.argv[1]
     filename = sys.argv[2]
+    silent = bool(sys.argv[3]) if len(sys.argv) > 3 else False
     csv_sections = qs.CSV(filename)
     q = qs.API(schoolcode)
     row_num = 1
@@ -51,12 +52,16 @@ def main():
             if 'Section Code' in csv_sections.cols:
                 section_code = csv_section_info['Section Code']
                 section = {'sectionCode': section_code}
-                matched_section = q.match_section(section, match_code=True,
-                                                  target_semester_id=semester_id)
+                matched_section = q.match_section(section, fail_silent=silent, match_code=True,
+                    target_semester_id=semester_id)
             else:
-                matched_section = q.match_section(identifier=section_name,
-                                                  target_semester_id=semester_id)
-            section_id = matched_section['id']
+                matched_section = q.match_section(identifier=section_name, fail_silent=silent,
+                    target_semester_id=semester_id)
+            if matched_section is "FALSE":
+                section_id = "FALSE"
+            else:
+                section_id = matched_section['id']
+            
             csv_section_info['Section ID'] = section_id
 
     elif 'Student ID' in csv_sections.cols:
