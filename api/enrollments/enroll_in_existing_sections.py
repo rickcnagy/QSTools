@@ -1,3 +1,4 @@
+
 """
 Enroll in Existing Sections
 
@@ -52,7 +53,7 @@ def main():
             'section_id': section_id, 'section_code': section_code,
             'student_ids': student_enrollments[section_id]}
 
-    qs.logger.info('POSTing sections...', cc_print=True)
+    qs.logger.info('POSTing section enrollments...', cc_print=True)
     for section in qs.bar(section_info):
         section_id = section_info[section]['section_id']
         students = section_info[section]['student_ids']
