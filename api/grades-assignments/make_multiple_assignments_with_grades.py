@@ -12,14 +12,13 @@ Requires: CSV with the following column headings
 "Student ID", "Total Pts", "Category ID",
 "Marks", "Grading Scale ID", "Section ID"
 
-Please note the date must be in YYYY-MM-DD format. Also 'Gr ID'
-referrs to the grading scale id - *not the letter grade*
+Please note the date must be in YYYY-MM-DD format.
 
 Additional columns supported: Name, Date (these are both for
 assignments)
 
 By default, if Name nad Date not included, the assignment name will
-be set to the name of the CSV and and the assignment date will
+be set to 'Grade Import'and and the assignment date will
 be set to the current date (today).
 
 Assumes one grade per student per section
@@ -34,9 +33,9 @@ def main():
     qs.logger.config(__file__)
 
     schoolcode = sys.argv[1]
-    filepath = sys.argv[2]
+    filename = sys.argv[2]
     q = qs.API(schoolcode)
-    csv_grades = qs.CSV(filepath)
+    csv_grades = qs.CSV(filename)
     sections = {}
     grades = {}
 
@@ -103,8 +102,8 @@ def main():
     # POST assignment and POST grades to it
     qs.logger.info('POSTing assignments...', cc_print=True)
 
-    for section in sections:
-        for assign_name in qs.bar(sections[section]):
+    for section in qs.bar(sections):
+        for assign_name in sections[section]:
             assign_data = sections[section][assign_name]
 
             new_grade = q.post_assignment_with_grades(section,
@@ -113,8 +112,9 @@ def main():
                 assign_data['grade_scale'], assign_data['grades_data'])
             
             qs.logger.info('--> NEW ASSIGNMENT ID: ', new_grade)
+            qs.logger.info('--> NEW SECTION ID': assign_data['section_id'])
 
-            new_assignments.append({'POSTED Assignment ID': new_grade,
+            new_assignments.append({'Assignment ID': new_grade,
                 'Section ID': assign_data['section_id']})
 
     qs.logger.info('All Assignments are posted....', cc_print=True)

@@ -45,6 +45,7 @@ def main():
             unmatched_categories.append(category_name)
 
     # Return new csv if successful
+
     if 'Category ID' in csv_grade:
         qs.logger.info("Completed getting category ids. {} categories matched." .format(len(matched_categories)), cc_print=True)
         qs.logger.info("{} outstanding unmatched categories\n"  . format(len(unmatched_categories)), cc_print=True)
