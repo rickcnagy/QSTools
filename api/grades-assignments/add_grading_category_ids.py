@@ -51,7 +51,9 @@ def main():
         filepath = qs.unique_path(csv_grades.filepath, suffix="w category IDs")
         csv_grades.save(filepath)
     else:
-        qs.logger.info("All categories ({}) are unmatched\n" . format(len(unmatched_categories)), cc_print=True)
+        qs.logger.info("Outstanding categories ({}) are unmatched\n" . format(len(unmatched_categories)), cc_print=True)
+        for unmatched_category in unmatched_categories:
+            qs.logger.info(unmatched_category, cc_print=True)
 
 
 if __name__ == '__main__':

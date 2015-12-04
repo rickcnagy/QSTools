@@ -959,9 +959,9 @@ class QSAPIWrapper(qs.APIWrapper):
                                               total_marks_possible,
                                               category_id, grading_scale_id)
         assignment = new_assignment[u'id']
-        new_grade = self.post_grades(section_id, assignment,
+        response = self.post_grades(section_id, assignment,
                                      student_ids_and_grades_list)
-        return new_grade[u'success']
+        return assignment
 
     # ==============
     # = Attendance =

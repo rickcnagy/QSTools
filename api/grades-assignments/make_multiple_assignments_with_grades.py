@@ -32,12 +32,15 @@ import sys
 
 def main():
     qs.logger.config(__file__)
+
     schoolcode = sys.argv[1]
-    filename = sys.argv[2]
+    filepath = sys.argv[2]
     q = qs.API(schoolcode)
-    csv_grades = qs.CSV(filename)
+    csv_grades = qs.CSV(filepath)
     sections = {}
     grades = {}
+
+    new_assignments = []
 
     required_columns = ['Section ID', 'Student ID', 'Total Pts', 'Category ID',
         'Marks', 'Grading Scale ID']
@@ -98,8 +101,10 @@ def main():
     qs.logger.info(sections)
 
     # POST assignment and POST grades to it
-    for section in qs.bar(sections):
-        for assign_name in sections[section]:
+    qs.logger.info('POSTing assignments...', cc_print=True)
+
+    for section in sections:
+        for assign_name in qs.bar(sections[section]):
             assign_data = sections[section][assign_name]
 
             new_grade = q.post_assignment_with_grades(section,
@@ -107,7 +112,14 @@ def main():
                 assign_data['total'], assign_data['cat_id'],
                 assign_data['grade_scale'], assign_data['grades_data'])
             
+            qs.logger.info('--> NEW ASSIGNMENT ID: ', new_grade)
 
+            new_assignments.append({'POSTED Assignment ID': new_grade,
+                'Section ID': assign_data['section_id']})
+
+    qs.logger.info('All Assignments are posted....', cc_print=True)
+    filepath = qs.unique_path(csv_grades.filepath, suffix='_posted_asignments')
+    qs.write_csv(new_assignments, filepath)
 
 if __name__ == '__main__':
     main()
