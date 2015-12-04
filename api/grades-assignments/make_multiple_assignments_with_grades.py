@@ -112,7 +112,7 @@ def main():
                 assign_data['grade_scale'], assign_data['grades_data'])
             
             qs.logger.info('--> NEW ASSIGNMENT ID: ', new_grade)
-            qs.logger.info('--> NEW SECTION ID': assign_data['section_id'])
+            qs.logger.info('--> NEW SECTION ID: ' assign_data['section_id'])
 
             new_assignments.append({'Assignment ID': new_grade,
                 'Section ID': assign_data['section_id']})
