@@ -105,6 +105,7 @@ def main():
     for section in qs.bar(sections):
         for assign_name in sections[section]:
             assign_data = sections[section][assign_name]
+            section_id = assign_data['section_id']
 
             new_grade = q.post_assignment_with_grades(section,
                 assign_data['assign_name'], assign_data['assign_date'],
@@ -112,10 +113,10 @@ def main():
                 assign_data['grade_scale'], assign_data['grades_data'])
             
             qs.logger.info('--> NEW ASSIGNMENT ID: ', new_grade)
-            qs.logger.info('--> NEW SECTION ID: ' assign_data['section_id'])
+            qs.logger.info('--> NEW SECTION ID: ', section_id)
 
             new_assignments.append({'Assignment ID': new_grade,
-                'Section ID': assign_data['section_id']})
+                'Section ID': section_id})
 
     qs.logger.info('All Assignments are posted....', cc_print=True)
     filepath = qs.unique_path(csv_grades.filepath, suffix='_posted_asignments')
