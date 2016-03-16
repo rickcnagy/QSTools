@@ -33,13 +33,16 @@ def main():
     db_by_name = qs.dict_list_to_dict(db_report_cycles, 'name')
 
     if db_duplicates:
-        qs.logger.critical('Report Cycle names are not unique', cc_print=True)
+        qs.logger.info('Report Cycle names are not unique', cc_print=True)
     else:
         qs.logger.info('Report Cycle names are unique', cc_print=True)
 
     report_cycle_names_not_matched = set()
     for csv_report_cycle in csv_report_cycles:
         csv_report_cycle_name = csv_report_cycle['Report Cycle']
+
+        if csv_report_cycle_name in db_duplicates:
+            qs.logger.info('Report Cycle name has multiple matches', cc_print=True)
 
         db_match = db_by_name.get(csv_report_cycle_name)
         if db_match:

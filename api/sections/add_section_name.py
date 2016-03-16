@@ -1,16 +1,14 @@
 """
-Add Section IDs
+Add Section Names
 
-This script gets the section IDs for a set of sections either by student
-semester ("Semester ID" col), section code ("Section Code" col) or by
-student id ("Student ID" col)
+This script gets the  name of a section based on it's id. 
 
-This script doesn't check for duplicate sections, so you should either know
-your database is free of duplicate section, or run this one after running
+This script doesn't check for duplicate students, so you should either know
+your database is free of duplicate students, or run this one after running
 add_student_ids.py, which checks for this.
 
 Usage:
-./add_section_id {schoolcode} {filename.csv}
+./add_student_id {schoolcode} {filename.csv}
 
 Requires:
 CSV with "Section Name" columns and "Semester ID", "Section Code" or
